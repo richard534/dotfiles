@@ -1,0 +1,12 @@
+#!/bin/bash
+
+git submodule update --init --recursive
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# vim
+ln -s ${BASEDIR}/vimrc ~/.vimrc
+ln -s ${BASEDIR}/vim/ ~/.vim
+
+# tmux
+ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf

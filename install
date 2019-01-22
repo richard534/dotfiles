@@ -14,8 +14,15 @@ if ! brew ls --versions tmux > /dev/null; then
     brew install tmux
 fi
 
+# vim (more up-to-date then osx default)
+if ! brew ls --versions vim > /dev/null; then
+    brew install vim 
+fi
+
 ########################################
 
+# Link dotfiles
+# get source directory within which this bash script is located
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # vim
@@ -24,3 +31,6 @@ ln -s ${BASEDIR}/vim/ ~/.vim
 
 # tmux
 ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
+
+# zsh
+ln -s ${BASEDIR}/zshrc ~/.zshrc

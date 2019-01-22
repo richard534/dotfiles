@@ -25,6 +25,18 @@ if ! brew ls --versions diff-so-fancy > /dev/null; then
     brew install diff-so-fancy 
 fi
 
+# ag
+if ! brew ls --versions ag > /dev/null; then
+    brew install ag
+fi
+
+# fzf
+# To install useful key bindings and fuzzy completion:
+# $(brew --prefix)/opt/fzf/install
+if ! brew ls --versions fzf > /dev/null; then
+    brew install fzf
+fi
+
 ########################################
 
 # download oh-my-zsh

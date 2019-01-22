@@ -64,3 +64,10 @@ set wildmenu
 :nnoremap <Leader>c :set cursorline!<CR>
 :nnoremap <Leader>cc :set cursorline! cursorcolumn!<CR>
 
+
+" bind key to buffers command
+nmap ; :Buffers<CR>
+
+" bind fzf.vim keys
+nmap <Leader>t :Files<CR>
+nmap <Leader>r :Tags<CR>

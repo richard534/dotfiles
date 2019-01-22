@@ -1,0 +1,36 @@
+# git reset to common ancestor of head commit -- origin/master
+gitrca() {
+  common=$(git merge-base HEAD origin/master)
+  git reset $common
+}
+
+# git hard reset to origin version of current branch
+gitrho() {
+  HEADBRANCH=$(git rev-parse --abbrev-ref HEAD)
+  git reset —hard origin/$HEADBRANCH
+}
+
+# git reset to origin version of current branch
+gitro() {
+  HEADBRANCH=$(git rev-parse --abbrev-ref HEAD)
+  git reset origin/$HEADBRANCH
+}
+
+# git squash from current branch up until provided commit
+# and concatenate log messages
+gitsqu() {
+ if [ "$1" != "" ]
+    then
+      git reset --soft $1 &&
+      git commit --edit -m"$(git log --format=%B --reverse HEAD..HEAD@\{1\})"
+    else
+     echo "Please provide SHA of commit to squash until"
+   fi
+}
+
+# git reset to HEAD@{1} (last head position)
+# used in conjunction with gitrca to reset to latest commit
+gitrh1() {
+  git reset HEAD@{1}
+}
+

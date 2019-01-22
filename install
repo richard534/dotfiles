@@ -56,6 +56,7 @@ ln -s ${BASEDIR}/vim/ ~/.vim
 ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
 
 # zsh/oh-my-zsh
+echo "# Put secrets here" > ~/zshrc_local
 ln -s ${BASEDIR}/zshrc ~/.zshrc
 ln -s ${BASEDIR}/git-custom.zsh ~/.oh-my-zsh/custom/git-custom.zsh
 

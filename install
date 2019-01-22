@@ -2,9 +2,19 @@
 
 git submodule update --init --recursive
 
+########################################
+
 # Check to see if Homebrew is installed, and install it if it is not
 command -v brew >/dev/null 2>&1 || { echo >&2 "Installing Homebrew Now"; \
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
+
+# Install packages via homebrew
+# tmux
+if ! brew ls --versions tmux > /dev/null; then
+    brew install tmux
+fi
+
+########################################
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

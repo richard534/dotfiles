@@ -11,5 +11,6 @@ Plugin 'vim-airline/vim-airline'
 Plugin '907th/vim-auto-save'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'junegunn/fzf.vim'
+Plugin 'tmhedberg/simpylfold'
 call vundle#end()
 

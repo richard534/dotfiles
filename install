@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Update/init all submodules in this repo 
+# Update/init all submodules in this repo
 git submodule update --init --recursive --remote
 
 ########################################
@@ -17,12 +17,12 @@ fi
 
 # vim (more up-to-date then osx default)
 if ! brew ls --versions vim > /dev/null; then
-    brew install vim 
+    brew install vim
 fi
 
 # diff-so-fancy
 if ! brew ls --versions diff-so-fancy > /dev/null; then
-    brew install diff-so-fancy 
+    brew install diff-so-fancy
 fi
 
 # ag
@@ -31,10 +31,15 @@ if ! brew ls --versions ag > /dev/null; then
 fi
 
 # fzf
-# To install useful key bindings and fuzzy completion:
+# To install useful key bindings and fuzzy completion uncomment && run:
 # $(brew --prefix)/opt/fzf/install
 if ! brew ls --versions fzf > /dev/null; then
     brew install fzf
+fi
+
+# tree
+if ! brew ls --versions tree > /dev/null; then
+    brew install tree
 fi
 
 ########################################
@@ -56,7 +61,7 @@ ln -s ${BASEDIR}/vim/ ~/.vim
 ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
 
 # zsh/oh-my-zsh
-echo "# Put secrets here" > ~/zshrc_local
+echo "# Put secret zsh config here" > ~/zshrc_local
 ln -s ${BASEDIR}/zshrc ~/.zshrc
 ln -s ${BASEDIR}/git-custom.zsh ~/.oh-my-zsh/custom/git-custom.zsh
 chsh -s /bin/zsh # set default shell to zsh

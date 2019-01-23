@@ -1,6 +1,5 @@
 " turn off vi compatability mode
 set nocompatible
-
 " source external vundle plugins file
 so ~/.vim/plugins.vim
 
@@ -21,7 +20,7 @@ set number
 set ruler
 
 " enable AutoSave on Vim startup
-let g:auto_save = 1  
+let g:auto_save = 1
 
 " highlight all matches when searching
 set hlsearch
@@ -45,11 +44,6 @@ else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
 endif
 
-" remap split navigation keys
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
 " more natural split opening
 set splitbelow
 set splitright
@@ -71,3 +65,19 @@ nmap ; :Buffers<CR>
 " bind fzf.vim keys
 nmap <Leader>t :Files<CR>
 nmap <Leader>r :Tags<CR>
+
+" enable folding
+set foldmethod=indent " creates folds based upon line indents
+set foldlevel=99
+noremap <space> za
+
+" python folding plugin "simpylfold" config
+let g:SimpylFold_docstring_preview=1
+
+" highlight trailing whitespace
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
+" set backspace to delete over line-breaks
+set backspace=indent,eol,start
+

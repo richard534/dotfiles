@@ -1,6 +1,6 @@
 [user]
     name = Richard Taylor
-    email = richard53496@gmail.com
+    email = richard_taylor@rapid7.com
 [core]
     editor = vim
     excludesfile = ~/.gitignore_global

@@ -13,5 +13,6 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'junegunn/fzf.vim'
 Plugin 'tmhedberg/simpylfold'
 Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-fugitive'
 call vundle#end()
 

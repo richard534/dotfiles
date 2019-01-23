@@ -84,3 +84,7 @@ set backspace=indent,eol,start
 " map key to open NERDtree
 map <C-n> :NERDTreeToggle<CR>
 
+" fugitive git bindings
+nnoremap <space>gs :Gstatus<CR>
+nnoremap <space>gb :Gblame<CR>
+

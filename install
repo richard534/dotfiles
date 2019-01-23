@@ -42,6 +42,11 @@ if ! brew ls --versions tree > /dev/null; then
     brew install tree
 fi
 
+# ctags (universal c-tags)
+if ! brew ls --versions ctags > /dev/null; then
+    brew install ctags
+fi
+
 ########################################
 
 # download oh-my-zsh

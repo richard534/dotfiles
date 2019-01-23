@@ -16,6 +16,9 @@ syntax enable
 " show line-numbers
 set number
 
+" don't wrap lines by default
+set nowrap
+
 " show the line and column number of the cursor position, separated by a comma.
 set ruler
 
@@ -85,6 +88,6 @@ set backspace=indent,eol,start
 map <C-n> :NERDTreeToggle<CR>
 
 " fugitive git bindings
-nnoremap <space>gs :Gstatus<CR>
-nnoremap <space>gb :Gblame<CR>
+nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gb :Gblame<CR>
 

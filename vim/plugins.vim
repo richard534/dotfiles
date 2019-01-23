@@ -12,5 +12,6 @@ Plugin '907th/vim-auto-save'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'junegunn/fzf.vim'
 Plugin 'tmhedberg/simpylfold'
+Plugin 'scrooloose/nerdtree'
 call vundle#end()
 

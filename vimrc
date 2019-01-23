@@ -81,3 +81,6 @@ match ExtraWhitespace /\s\+$/
 " set backspace to delete over line-breaks
 set backspace=indent,eol,start
 
+" map key to open NERDtree
+map <C-n> :NERDTreeToggle<CR>
+

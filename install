@@ -59,6 +59,7 @@ ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
 echo "# Put secrets here" > ~/zshrc_local
 ln -s ${BASEDIR}/zshrc ~/.zshrc
 ln -s ${BASEDIR}/git-custom.zsh ~/.oh-my-zsh/custom/git-custom.zsh
+chsh -s /bin/zsh # set default shell to zsh
 
 # git
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global

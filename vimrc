@@ -118,3 +118,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 
 " bind key to goto previous (last accessed) window
 nmap <C-i> <c-w><c-p>
+
+" set vim to read "external-tags" file in .git dir
+set tags=./tags;,tags,.git/external-tags;
+

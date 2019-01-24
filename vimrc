@@ -13,6 +13,9 @@ set clipboard=unnamed
 " enable syntax highlighting
 syntax enable
 
+" set vim colourscheme to default
+colorscheme default
+
 " show line-numbers
 set number
 
@@ -29,6 +32,10 @@ let g:auto_save = 1
 set hlsearch
 " remap enter key to remove search highlight
 nnoremap <CR> :nohlsearch<CR><CR>
+
+" set vim updatetime option to lower then default(4000)
+" Doing this to improve vim-airgutter plugin
+set updatetime=100
 
 " on pressing tab, insert spaces
 set expandtab
@@ -61,13 +68,16 @@ set wildmenu
 :nnoremap <Leader>c :set cursorline!<CR>
 :nnoremap <Leader>cc :set cursorline! cursorcolumn!<CR>
 
-
 " bind key to buffers command
 nmap ; :Buffers<CR>
 
 " bind fzf.vim keys
+" search for file names
 nmap <Leader>t :Files<CR>
+" search for tags
 nmap <Leader>r :Tags<CR>
+" search for text inside files
+nmap <Leader>i :Rg<CR>
 
 " enable folding
 set foldmethod=indent " creates folds based upon line indents
@@ -84,10 +94,27 @@ match ExtraWhitespace /\s\+$/
 " set backspace to delete over line-breaks
 set backspace=indent,eol,start
 
+" NERDtree config
 " map key to open NERDtree
-map <C-n> :NERDTreeToggle<CR>
+nmap ,m :NERDTreeToggle<CR>
+" map key to find current file in nerdtree
+nmap ,n :NERDTreeFind<CR>
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+" auto delete the buffer of a file you delete with nerdtree
+let NERDTreeAutoDeleteBuffer = 1
+" auto-close nerdTree when its the only remaining window
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " fugitive git bindings
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gb :Gblame<CR>
 
+" map key to toggle tagbar plugin
+nmap <F8> :TagbarToggle<CR>
+
+" vim-indent-guides plugin config
+let g:indent_guides_enable_on_vim_startup = 1
+
+" bind key to goto previous (last accessed) window
+nmap <C-i> <c-w><c-p>

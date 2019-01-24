@@ -25,9 +25,9 @@ if ! brew ls --versions diff-so-fancy > /dev/null; then
     brew install diff-so-fancy
 fi
 
-# ag
-if ! brew ls --versions ag > /dev/null; then
-    brew install ag
+# ripgrep
+if ! brew ls --versions ripgrep > /dev/null; then
+    brew install ripgrep 
 fi
 
 # fzf
@@ -47,6 +47,11 @@ if ! brew ls --versions ctags > /dev/null; then
     brew install ctags
 fi
 
+# tldr
+if ! brew ls --versions tldr > /dev/null; then
+    brew install tldr
+fi
+
 ########################################
 
 # download oh-my-zsh
@@ -61,6 +66,9 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # vim
 ln -s ${BASEDIR}/vimrc ~/.vimrc
 ln -s ${BASEDIR}/vim/ ~/.vim
+
+# ctags
+ln -s ${BASEDIR}/ctags/ ~/.ctags
 
 # tmux
 ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf

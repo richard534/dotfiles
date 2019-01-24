@@ -13,6 +13,10 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'junegunn/fzf.vim'
 Plugin 'tmhedberg/simpylfold'
 Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
+Plugin 'majutsushi/tagbar'
+Plugin 'nathanaelkane/vim-indent-guides'
 call vundle#end()
 

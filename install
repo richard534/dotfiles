@@ -5,7 +5,7 @@ git submodule update --init --recursive --remote
 
 ########################################
 
-# Check to see if Homebrew is installed, and install it if it is not
+# Check to see if Homebrew is installed -  if not, install it
 command -v brew >/dev/null 2>&1 || { echo >&2 "Installing Homebrew Now"; \
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
 
@@ -81,10 +81,12 @@ ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
 echo "# Put secret zsh config here" > ~/zshrc_local
 ln -s ${BASEDIR}/zshrc ~/.zshrc
 ln -s ${BASEDIR}/git-custom.zsh ~/.oh-my-zsh/custom/git-custom.zsh
+ln -s ${BASEDIR}/docker-custom.zsh ~/.oh-my-zsh/custom/docker-custom.zsh
 chsh -s /bin/zsh # set default shell to zsh
 
 # git
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global
 ln -s ${BASEDIR}/gitconfig ~/.gitconfig
-ln -s ${BASEDIR}/git_template ~/.git_template
+rm -rf ~/.git_template
+ln -s ${BASEDIR}/git_template/ ~/.git_template
 

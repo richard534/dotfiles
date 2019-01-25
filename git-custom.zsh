@@ -1,3 +1,5 @@
+＃!/usr/bin/zsh
+
 # git reset to common ancestor of head commit -- origin/master
 gitrca() {
   common=$(git merge-base HEAD origin/master)

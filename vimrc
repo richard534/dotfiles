@@ -26,6 +26,9 @@ set nowrap
 " show the line and column number of the cursor position, separated by a comma.
 set ruler
 
+" enable mouse wheel scrolling
+set mouse=a
+
 " enable AutoSave on Vim startup
 let g:auto_save = 1
 

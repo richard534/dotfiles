@@ -61,10 +61,26 @@ fi
 if ! brew ls --versions pipenv  > /dev/null; then
     brew install pipenv
 fi
+
+# mysql
+if ! brew ls --versions mysql  > /dev/null; then
+    brew install mysql
+fi
+
+# nodejs
+if ! brew ls --versions node  > /dev/null; then
+    brew install node
+fi
+
 ########################################
 
 # python (pip) packages
 pip install virtualenv
+
+########################################
+
+# npm packages
+npm install --global git-open
 
 ########################################
 

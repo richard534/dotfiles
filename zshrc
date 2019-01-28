@@ -16,6 +16,9 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin"
 # Load oh-my-ssh
 source $ZSH/oh-my-zsh.sh
 
+# 10ms for key sequences
+KEYTIMEOUT=1
+
 # User defined alias's
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias python='python3'

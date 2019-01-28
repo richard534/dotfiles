@@ -38,6 +38,10 @@ nnoremap <CR> :nohlsearch<CR><CR>
 " Doing this to improve vim-airgutter plugin
 set updatetime=100
 
+" set timeout for mapped key-sequence to complete
+set timeoutlen=1000
+set ttimeoutlen=0
+
 " on pressing tab, insert spaces
 set expandtab
 " specifies the number of columns that a tab character should represent

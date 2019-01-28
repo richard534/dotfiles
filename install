@@ -67,6 +67,11 @@ if ! brew ls --versions mysql  > /dev/null; then
     brew install mysql
 fi
 
+# postgres
+if ! brew ls --versions postgres > /dev/null; then
+    brew install postgres
+fi
+
 # nodejs
 if ! brew ls --versions node  > /dev/null; then
     brew install node
@@ -115,4 +120,7 @@ ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global
 ln -s ${BASEDIR}/gitconfig ~/.gitconfig
 rm -rf ~/.git_template
 ln -s ${BASEDIR}/git_template/ ~/.git_template
+
+# psql
+ln -s ${BASEDIR}/psqlrc ~/.psqlrc
 

@@ -1,4 +1,4 @@
-＃!/usr/bin/zsh
+#!/usr/bin/env zsh
 
 # Docker containers list (with nicer format)
 dps() { docker ps --format="table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Command}}\t{{.Status}}"; }

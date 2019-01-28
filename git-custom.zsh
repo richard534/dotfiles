@@ -1,4 +1,4 @@
-＃!/usr/bin/zsh
+#!/usr/bin/env zsh
 
 # git reset to common ancestor of head commit -- origin/master
 gitrca() {

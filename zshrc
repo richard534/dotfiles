@@ -8,7 +8,7 @@ export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="pygmalion"
 
 # oh-my-zsh plugins
-plugins=(git osx)
+plugins=(git osx virtualenv)
 
 # User configuration
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin"

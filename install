@@ -52,9 +52,19 @@ if ! brew ls --versions tldr > /dev/null; then
     brew install tldr
 fi
 
+# reattach-to-user-namespace
 if ! brew ls --versions reattach-to-user-namespace > /dev/null; then
     brew install reattach-to-user-namespace
 fi
+
+# pipenv
+if ! brew ls --versions pipenv  > /dev/null; then
+    brew install pipenv
+fi
+########################################
+
+# python (pip) packages
+pip install virtualenv
 
 ########################################
 

@@ -79,6 +79,23 @@ fi
 
 ########################################
 
+# brew casks
+
+# add alternative versions of casks
+brew tap homebrew/cask-versions
+
+# java
+# brew cask install java # latest
+brew cask install java8 # java8
+
+# keepassxc
+brew cask install keepassxc
+
+# keycastr
+brew cask install keycastr
+
+########################################
+
 # python (pip) packages
 pip install virtualenv
 

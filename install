@@ -105,6 +105,7 @@ pip install flake8
 
 # npm packages
 npm install --global git-open
+npm install --global instant-markdown-d
 
 ########################################
 

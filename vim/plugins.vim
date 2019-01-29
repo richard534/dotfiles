@@ -22,5 +22,6 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'tomasr/molokai'
 Plugin 'yggdroot/indentline'
 Plugin 'vim-syntastic/syntastic'
+Plugin 'suan/vim-instant-markdown'
 call vundle#end()
 

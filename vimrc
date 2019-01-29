@@ -13,9 +13,11 @@ set clipboard=unnamed
 " enable syntax highlighting
 syntax enable
 
-" set vim colourscheme to default
+" set vim colourscheme
 set t_Co=256
-colorscheme default
+colorscheme molokai
+let g:rehash256 = 1
+set background=dark
 
 " show line-numbers
 set number
@@ -28,6 +30,10 @@ set ruler
 
 " enable mouse wheel scrolling
 set mouse=a
+
+" enable mouse resizing panes
+set mouse=n
+set ttymouse=xterm2
 
 " enable AutoSave on Vim startup
 let g:auto_save = 1
@@ -54,14 +60,6 @@ set shiftwidth=4
 " set how many columns vim uses when you hit Tab in insert mode
 set softtabstop=4
 
-" add subtle verticle line to show 80chars
-if exists('+colorcolumn')
-  set colorcolumn=120
-  hi ColorColumn ctermbg=lightgray
-else
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
-endif
-
 " more natural split opening
 set splitbelow
 set splitright
@@ -86,6 +84,8 @@ nmap <Leader>t :Files<CR>
 nmap <Leader>r :Tags<CR>
 " search for text inside files
 nmap <Leader>i :Rg<CR>
+" bind key to open last file opened
+nmap <silent> <leader>m :History<CR>
 
 " enable folding
 set foldmethod=indent " creates folds based upon line indents
@@ -113,16 +113,23 @@ let NERDTreeDirArrows = 1
 let NERDTreeAutoDeleteBuffer = 1
 " auto-close nerdTree when its the only remaining window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" sync nerdtree with currently open file
+nnoremap <leader>w :NERDTreeFind<cr><c-w><c-p>
+" WIP nerdtree "autoscroll from source"
+" autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
+" Open nerdtree automatically
+autocmd vimenter * NERDTree
 
 " fugitive git bindings
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gb :Gblame<CR>
 
 " map key to toggle tagbar plugin
-nmap <F8> :TagbarToggle<CR>
-
-" vim-indent-guides plugin config
-let g:indent_guides_enable_on_vim_startup = 1
+nnoremap <silent> <Leader>b :TagbarToggle<CR>
+" set tagbar to sort functions/method by order in file
+let g:tagbar_sort = 0
+" do not show help tip on tagbar
+let g:tagbar_compact = 1
 
 " bind key to goto previous (last accessed) window
 nmap <C-i> <c-w><c-p>
@@ -132,4 +139,23 @@ set tags=./tags;,tags,.git/external-tags;
 
 " config vim-indent-guides plugin
 set ts=4 sw=4 noet
+
+" syntastic recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" size of syntastic location window
+let g:syntastic_loc_list_height = 3
+
+" bind key to toggle syntastic passive/active mode
+nmap <Leader>st :SyntasticToggleMode<CR>
+
+" flake8-vim plugin config
+let g:flake8_quickfix_height=3
 

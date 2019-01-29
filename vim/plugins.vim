@@ -17,7 +17,10 @@ Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'majutsushi/tagbar'
-Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'google/vim-searchindex'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'tomasr/molokai'
+Plugin 'yggdroot/indentline'
+Plugin 'vim-syntastic/syntastic'
 call vundle#end()
 

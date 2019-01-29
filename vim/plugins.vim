@@ -23,5 +23,6 @@ Plugin 'tomasr/molokai'
 Plugin 'yggdroot/indentline'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'suan/vim-instant-markdown'
+Plugin 'hashivim/vim-terraform'
 call vundle#end()
 

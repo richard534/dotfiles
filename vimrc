@@ -159,3 +159,7 @@ nmap <Leader>st :SyntasticToggleMode<CR>
 " flake8-vim plugin config
 let g:flake8_quickfix_height=3
 
+" vim-terraform plugin config
+let g:terraform_fold_sections=1
+let g:terraform_remap_spacebar=1
+

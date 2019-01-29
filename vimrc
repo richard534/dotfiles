@@ -118,7 +118,8 @@ nnoremap <leader>w :NERDTreeFind<cr><c-w><c-p>
 " WIP nerdtree "autoscroll from source"
 " autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
 " Open nerdtree automatically
-autocmd vimenter * NERDTree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 
 " fugitive git bindings
 nnoremap <Leader>gs :Gstatus<CR>

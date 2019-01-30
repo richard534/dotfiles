@@ -24,5 +24,6 @@ Plugin 'yggdroot/indentline'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'hashivim/vim-terraform'
+Plugin 'jez/vim-superman'
 call vundle#end()
 

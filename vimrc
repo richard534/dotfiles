@@ -13,6 +13,11 @@ set clipboard=unnamed
 " enable syntax highlighting
 syntax enable
 
+" enable reading manpages in vim
+runtime! ftplugin/man.vim
+" disable indentlines when man page open
+au FileType man :IndentLinesToggle
+
 " set vim colourscheme
 set t_Co=256
 colorscheme molokai
@@ -34,6 +39,12 @@ set mouse=a
 " enable mouse resizing panes
 set mouse=n
 set ttymouse=xterm2
+
+" bind keys to resize panes
+set winheight=30
+set winminheight=5
+nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
 
 " enable AutoSave on Vim startup
 let g:auto_save = 1

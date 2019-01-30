@@ -126,7 +126,21 @@ let NERDTreeAutoDeleteBuffer = 1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " sync nerdtree with currently open file
 nnoremap <leader>w :NERDTreeFind<cr><c-w><c-p>
-" WIP nerdtree "autoscroll from source"
+" nerdtree "autoscroll from source"
+function! AutoNTFinder()
+    if g:NERDTree.IsOpen() && &buftype == ''
+        let l:winnr = winnr()
+        let l:altwinnr = winnr('#')
+
+        :NERDTreeFind
+
+        execute l:altwinnr . 'wincmd w'
+        execute l:winnr . 'wincmd w'
+    endif
+endfunction
+
+autocmd BufEnter * silent! call AutoNTFinder()
+
 " autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
 " Open nerdtree automatically
 autocmd StdinReadPre * let s:std_in=1
@@ -142,9 +156,6 @@ nnoremap <silent> <Leader>b :TagbarToggle<CR>
 let g:tagbar_sort = 0
 " do not show help tip on tagbar
 let g:tagbar_compact = 1
-
-" bind key to goto previous (last accessed) window
-nmap <C-i> <c-w><c-p>
 
 " set vim to read "external-tags" file in .git dir
 set tags=./tags;,tags,.git/external-tags;

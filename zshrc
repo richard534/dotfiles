@@ -27,6 +27,7 @@ compdef vman="man"
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias python='python3'
 alias pip='pip3'
+alias man='vman'
 
 # fzf + ag configuration
 export FZF_DEFAULT_COMMAND='rg --files'

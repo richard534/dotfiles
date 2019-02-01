@@ -42,12 +42,6 @@ if !has('nvim')
 	set ttymouse=xterm2
 endif
 
-" bind keys to resize panes
-set winheight=30
-set winminheight=5
-nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
-
 " enable AutoSave on Vim startup
 let g:auto_save = 1
 
@@ -169,14 +163,13 @@ set ts=4 sw=4 noet
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
-
 " size of syntastic location window
 let g:syntastic_loc_list_height = 3
+let g:syntastic_auto_loc_list = 0
 
 " bind key to toggle syntastic passive/active mode
 nmap <Leader>st :SyntasticToggleMode<CR>
@@ -187,4 +180,10 @@ let g:flake8_quickfix_height=3
 " vim-terraform plugin config
 let g:terraform_fold_sections=1
 let g:terraform_remap_spacebar=1
+
+" quickfix window height is automatically adjusted to fit its contents (maximum 10 lines).
+au FileType qf call AdjustWindowHeight(3, 10)
+function! AdjustWindowHeight(minheight, maxheight)
+  exe max([min([line("$")+1, a:maxheight]), a:minheight]) . "wincmd _"
+endfunction
 

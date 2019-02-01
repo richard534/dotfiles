@@ -38,7 +38,9 @@ set mouse=a
 
 " enable mouse resizing panes
 set mouse=n
-set ttymouse=xterm2
+if !has('nvim')
+	set ttymouse=xterm2
+endif
 
 " bind keys to resize panes
 set winheight=30

@@ -18,11 +18,17 @@ runtime! ftplugin/man.vim
 " disable indentlines when man page open
 au FileType man :IndentLinesToggle
 
+" set text encoding to utf-8
+set encoding=utf-8
+
 " set vim colourscheme
 set t_Co=256
 colorscheme molokai
 let g:rehash256 = 1
 set background=dark
+
+" set leader key to space
+let mapleader=" "
 
 " show line-numbers
 set number
@@ -97,7 +103,6 @@ nmap <silent> <leader>m :History<CR>
 " enable folding
 set foldmethod=indent " creates folds based upon line indents
 set foldlevel=99
-noremap <space> za
 
 " python folding plugin "simpylfold" config
 let g:SimpylFold_docstring_preview=1
@@ -186,4 +191,20 @@ au FileType qf call AdjustWindowHeight(3, 10)
 function! AdjustWindowHeight(minheight, maxheight)
   exe max([min([line("$")+1, a:maxheight]), a:minheight]) . "wincmd _"
 endfunction
+
+" youcompleteme plugin config
+let g:ycm_autoclose_preview_window_after_completion=1
+nnoremap <leader>g :YcmCompleter GoTo<CR>
+nnoremap <leader>n :YcmCompleter GoToReferences<CR>
+nnoremap <leader>d :YcmCompleter GetDoc<CR>
+nnoremap <leader>a :YcmCompleter GetType<CR>
+
+"python with virtualenv support
+let g:ycm_python_interpreter_path = ''
+let g:ycm_python_sys_path = []
+let g:ycm_extra_conf_vim_data = [
+  \  'g:ycm_python_interpreter_path',
+  \  'g:ycm_python_sys_path'
+  \]
+let g:ycm_global_ycm_extra_conf = '~/global_extra_conf.py'
 

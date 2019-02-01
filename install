@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Manual steps:
+# install you-complete-me ~/.vim/bundle/youcompleteme/install.py
+
 # Update/init all submodules in this repo
 git submodule update --init --recursive --remote
 
@@ -13,11 +16,6 @@ command -v brew >/dev/null 2>&1 || { echo >&2 "Installing Homebrew Now"; \
 # tmux
 if ! brew ls --versions tmux > /dev/null; then
     brew install tmux
-fi
-
-# vim (more up-to-date then osx default)
-if ! brew ls --versions vim > /dev/null; then
-    brew install vim
 fi
 
 # diff-so-fancy
@@ -75,6 +73,22 @@ fi
 # nodejs
 if ! brew ls --versions node  > /dev/null; then
     brew install node
+fi
+
+# cmake (for vim youcompleteme plugin)
+if ! brew ls --versions cmake  > /dev/null; then
+    brew install cmake
+fi
+
+# vim (macvim depends on)
+if ! brew ls --versions vim  > /dev/null; then
+    brew install vim
+fi
+
+# macvim
+if ! brew ls --versions macvim  > /dev/null; then
+    brew install macvim
+	brew link macvim
 fi
 
 ########################################
@@ -147,4 +161,7 @@ ln -s ${BASEDIR}/psqlrc ~/.psqlrc
 
 # flake8 (python linter)
 ln -s ${BASEDIR}/flake8 ~/.config/flake8
+
+# youcompleteme virtualenv utility python script
+ln -s ${BASEDIR}/global_extra_conf.py ~/global_extra_conf.py
 

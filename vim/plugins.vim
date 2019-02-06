@@ -20,11 +20,12 @@ Plugin 'majutsushi/tagbar'
 Plugin 'google/vim-searchindex'
 Plugin 'tomasr/molokai'
 Plugin 'yggdroot/indentline'
-Plugin 'vim-syntastic/syntastic'
+Plugin 'w0rp/ale'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'hashivim/vim-terraform'
 Plugin 'jez/vim-superman'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'valloric/youcompleteme'
+Plugin 'tpope/vim-commentary'
 call vundle#end()
 

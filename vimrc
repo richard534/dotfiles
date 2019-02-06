@@ -53,8 +53,8 @@ let g:auto_save = 1
 
 " highlight all matches when searching
 set hlsearch
-" remap enter key to remove search highlight
-nnoremap <CR> :nohlsearch<CR><CR>
+" remap key to remove search highlight
+nnoremap <silent> \ :let @/=""<return>
 
 " set vim updatetime option to lower then default(4000)
 " Doing this to improve vim-airgutter plugin
@@ -85,7 +85,7 @@ set wildmenu
 :hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 :hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 :nnoremap <Leader>c :set cursorline!<CR>
-:nnoremap <Leader>cc :set cursorline! cursorcolumn!<CR>
+:nnoremap <Leader>cc :set cursorcolumn!<CR>
 
 " bind key to buffers command
 nmap ; :Buffers<CR>
@@ -150,6 +150,7 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 " fugitive git bindings
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gb :Gblame<CR>
+nnoremap <Leader>gd :Gdiff<CR>
 
 " map key to toggle tagbar plugin
 nnoremap <silent> <Leader>b :TagbarToggle<CR>
@@ -163,21 +164,6 @@ set tags=./tags;,tags,.git/external-tags;
 
 " config vim-indent-guides plugin
 set ts=4 sw=4 noet
-
-" syntastic recommended settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-" size of syntastic location window
-let g:syntastic_loc_list_height = 3
-let g:syntastic_auto_loc_list = 0
-
-" bind key to toggle syntastic passive/active mode
-nmap <Leader>st :SyntasticToggleMode<CR>
 
 " flake8-vim plugin config
 let g:flake8_quickfix_height=3
@@ -197,9 +183,9 @@ let g:ycm_autoclose_preview_window_after_completion=1
 nnoremap <leader>g :YcmCompleter GoTo<CR>
 nnoremap <leader>n :YcmCompleter GoToReferences<CR>
 nnoremap <leader>d :YcmCompleter GetDoc<CR>
-nnoremap <leader>a :YcmCompleter GetType<CR>
+nnoremap <leader>a :YcmCompleter GetType<CR>1gs
 
-"python with virtualenv support
+" add virtualenv support to youcompleteme
 let g:ycm_python_interpreter_path = ''
 let g:ycm_python_sys_path = []
 let g:ycm_extra_conf_vim_data = [
@@ -207,4 +193,14 @@ let g:ycm_extra_conf_vim_data = [
   \  'g:ycm_python_sys_path'
   \]
 let g:ycm_global_ycm_extra_conf = '~/global_extra_conf.py'
+
+" bind keys to vanilla vim session management commands
+map <F2> :mksession! ~/vim_session <cr> " Quick write session with F2
+map <F3> :source ~/vim_session <cr>     " And load session with F3
+
+" set vim to read files that have changed outside of vim
+set autoread
+
+" disable swapfiles
+set noswapfile
 

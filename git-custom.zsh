@@ -6,10 +6,10 @@ gitrca() {
   git reset $common
 }
 
-# git hard reset to origin version of current branch
-gitrho() {
-  HEADBRANCH=$(git rev-parse --abbrev-ref HEAD)
-  git reset —hard origin/$HEADBRANCH
+# git reset to HEAD@{1} (last head position)
+# used in conjunction with gitrca to reset to latest commit
+gitrh1() {
+  git reset HEAD@{1}
 }
 
 # git reset to origin version of current branch
@@ -28,11 +28,5 @@ gitsqu() {
     else
      echo "Please provide SHA of commit to squash until"
    fi
-}
-
-# git reset to HEAD@{1} (last head position)
-# used in conjunction with gitrca to reset to latest commit
-gitrh1() {
-  git reset HEAD@{1}
 }
 

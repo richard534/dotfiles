@@ -208,3 +208,6 @@ set noswapfile
 nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
 
+" disable vim concealing for json
+let g:vim_json_syntax_conceal = 0
+

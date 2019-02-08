@@ -27,5 +27,6 @@ Plugin 'jez/vim-superman'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'valloric/youcompleteme'
 Plugin 'tpope/vim-commentary'
+Plugin 'elzr/vim-json'
 call vundle#end()
 

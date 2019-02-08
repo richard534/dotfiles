@@ -101,6 +101,11 @@ if ! brew ls --versions bat  > /dev/null; then
     brew install bat
 fi
 
+# yapf
+if ! brew ls --versions yapf  > /dev/null; then
+    brew install yapf
+fi
+
 ########################################
 
 # brew casks

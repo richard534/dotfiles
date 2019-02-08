@@ -96,6 +96,11 @@ if ! brew ls --versions jq  > /dev/null; then
     brew install jq
 fi
 
+# bat
+if ! brew ls --versions bat  > /dev/null; then
+    brew install bat
+fi
+
 ########################################
 
 # brew casks

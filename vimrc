@@ -204,3 +204,7 @@ set autoread
 " disable swapfiles
 set noswapfile
 
+" bind key to insert newline w/o entering insert mode
+nnoremap <Leader>o o<Esc>
+nnoremap <Leader>O O<Esc>
+

@@ -103,6 +103,9 @@ nmap <silent> <leader>m :History<CR>
 " enable folding
 set foldmethod=indent " creates folds based upon line indents
 set foldlevel=99
+" bind key to fold top level folds
+nnoremap <F4> :%foldc<CR>
+nnoremap <F5> :%foldo<CR>
 
 " python folding plugin "simpylfold" config
 let g:SimpylFold_docstring_preview=1

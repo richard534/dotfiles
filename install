@@ -91,6 +91,11 @@ if ! brew ls --versions macvim  > /dev/null; then
 	brew link macvim
 fi
 
+# jq
+if ! brew ls --versions jq  > /dev/null; then
+    brew install jq
+fi
+
 ########################################
 
 # brew casks
@@ -150,6 +155,9 @@ ln -s ${BASEDIR}/git-custom.zsh ~/.oh-my-zsh/custom/git-custom.zsh
 ln -s ${BASEDIR}/docker-custom.zsh ~/.oh-my-zsh/custom/docker-custom.zsh
 ln -s ${BASEDIR}/ctags-custom.zsh ~/.oh-my-zsh/custom/ctags-custom.zsh
 chsh -s /bin/zsh # set default shell to zsh
+
+# intelij vimrc
+ln -s ${BASEDIR}/ideavimrc ~/.ideavimrc
 
 # git
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global

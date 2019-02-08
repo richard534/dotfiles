@@ -1,0 +1,8 @@
+" allow vim to use system clipboard
+set clipboard+=unnamed
+
+" highlight all matches when searching
+set hlsearch
+" remap key to remove search highlight
+nnoremap <silent> \ :noh<cr>
+

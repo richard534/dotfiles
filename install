@@ -2,6 +2,7 @@
 
 # Manual steps:
 # install you-complete-me ~/.vim/bundle/youcompleteme/install.py
+# install emacs for mac (https://emacsformacosx.com/)
 
 # Update/init all submodules in this repo
 git submodule update --init --recursive --remote
@@ -183,4 +184,8 @@ ln -s ${BASEDIR}/flake8 ~/.config/flake8
 
 # youcompleteme virtualenv utility python script
 ln -s ${BASEDIR}/global_extra_conf.py ~/global_extra_conf.py
+
+# emacs
+ln -s ${BASEDIR}/emacs ~/.emacs
+ln -s ${BASEDIR}/emacs.d/ ~/.emacs.d
 

@@ -9,7 +9,7 @@
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-echo-area-message "richard")
  '(menu-bar-mode nil)
- '(package-selected-packages (quote (doom-themes scala-mode evil)))
+ '(package-selected-packages (quote (spaceline doom-themes scala-mode evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -40,9 +40,28 @@
 (setq visible-bell t)
 (defun display-startup-echo-area-message ()
   (message "Tell yee"))
-
 ; font settings
 (set-frame-font "Open Sans 16" nil t)
+(require 'spaceline-config)
+(spaceline-spacemacs-theme)
+
+;; A small minor mode to use a big fringe
+(defvar bzg-big-fringe-mode nil)
+(define-minor-mode bzg-big-fringe-mode
+  "Minor mode to use big fringe in the current buffer."
+  :init-value nil
+  :global t
+  :variable bzg-big-fringe-mode
+  :group 'editing-basics
+  (if (not bzg-big-fringe-mode)
+      (set-fringe-style nil)
+    (set-fringe-mode
+     (/ (- (frame-pixel-width)
+           (* 100 (frame-char-width)))
+        2))))
+
+;; Now activate this global minor mode
+(bzg-big-fringe-mode 1)
 
 ; custom function to set frame size depending on resolution of computer
 (defun set-frame-size-according-to-resolution ()

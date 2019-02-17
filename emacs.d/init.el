@@ -8,27 +8,26 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(menu-bar-mode nil)
- '(package-selected-packages (quote (leuven-theme scala-mode evil)))
+ '(package-selected-packages (quote (doom-themes scala-mode evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-block ((t (:background "gray24")))))
 
 ; enable evil mode
 (setq evil-want-C-u-scroll t) ; enable vim-like crtl-u pgUp
 (require 'evil)
 (evil-mode 1)
 
-; set emacs theme
-(load-theme 'leuven t)
-
 ; disable gui toolbar
 (tool-bar-mode -1)
 ; disable mac menubar
 (menu-bar-mode -1)
+; disable scrollbar
+(toggle-scroll-bar -1)
 ; disable startup screen
 (setq inhibit-startup-screen t)
 
@@ -61,4 +60,30 @@
 
 ; set line break mode
 (global-visual-line-mode t)
+
+; set emacs theme (Doom-themes package config)
+;; Global settings (defaults)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+;; may have their own settings.
+(load-theme 'doom-vibrant t)
+
+;; Enable flashing mode-line on errors
+(doom-themes-visual-bell-config)
+
+;; Enable custom neotree theme (all-the-icons must be installed!)
+(doom-themes-neotree-config)
+;; or for treemacs users
+(doom-themes-treemacs-config)
+
+;; Corrects (and improves) org-mode's native fontification.
+(doom-themes-org-config)
+
+; org-mode config
+(setq org-startup-indented t)
+(setq org-indent-mode t)
+(setq org-hide-leading-stars t) ; hide orgmode heading stars
+(setq org-hide-emphasis-markers t) ; hide bold bullet points etc
 

@@ -7,6 +7,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(inhibit-startup-echo-area-message "richard")
  '(menu-bar-mode nil)
  '(package-selected-packages (quote (doom-themes scala-mode evil)))
  '(tool-bar-mode nil))
@@ -22,14 +23,23 @@
 (require 'evil)
 (evil-mode 1)
 
+;; User interface settings
 ; disable gui toolbar
 (tool-bar-mode -1)
 ; disable mac menubar
 (menu-bar-mode -1)
 ; disable scrollbar
 (toggle-scroll-bar -1)
+; Prevent the cursor from blinking
+(blink-cursor-mode 0)
+; remove initial scratch message
+(setq initial-scratch-message "")
 ; disable startup screen
 (setq inhibit-startup-screen t)
+; Don't let Emacs hurt your ears
+(setq visible-bell t)
+(defun display-startup-echo-area-message ()
+  (message "Tell yee"))
 
 ; font settings
 (set-frame-font "Open Sans 16" nil t)

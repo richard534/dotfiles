@@ -9,7 +9,9 @@
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-echo-area-message "richard")
  '(menu-bar-mode nil)
- '(package-selected-packages (quote (spaceline doom-themes scala-mode evil)))
+ '(package-selected-packages
+   (quote
+    (evil-anzu anzu spaceline doom-themes scala-mode evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -42,8 +44,17 @@
   (message "Tell yee"))
 ; font settings
 (set-frame-font "Open Sans 16" nil t)
+
+; configure spaceline package
 (require 'spaceline-config)
 (spaceline-spacemacs-theme)
+
+; configure anzu package
+(global-anzu-mode +1)
+(with-eval-after-load 'evil
+  (require 'evil-anzu))
+(setq anzu-search-threshold 1000
+anzu-cons-mode-line-p nil)
 
 ;; A small minor mode to use a big fringe
 (defvar bzg-big-fringe-mode nil)

@@ -36,6 +36,11 @@ set number
 " don't wrap lines by default
 set nowrap
 
+" org file specific
+" wrap lines
+" only wrap line at specified 'breakat' char's
+autocmd FileType org set wrap | set linebreak
+
 " show the line and column number of the cursor position, separated by a comma.
 set ruler
 

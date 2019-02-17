@@ -23,6 +23,9 @@ KEYTIMEOUT=1
 export PATH="$PATH:$HOME/.vim/bundle/vim-superman/bin"
 compdef vman="man"
 
+# prepend dotfiles bin dir to path
+export PATH=$HOME/dotfiles/bin:$PATH
+
 # User defined alias's
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias python='python3'

@@ -7,7 +7,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (leuven-theme scala-mode evil))))
+ '(menu-bar-mode nil)
+ '(package-selected-packages (quote (leuven-theme scala-mode evil)))
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -30,6 +32,9 @@
 ; disable startup screen
 (setq inhibit-startup-screen t)
 
+; font settings
+(set-frame-font "Open Sans 16" nil t)
+
 ; custom function to set frame size depending on resolution of computer
 (defun set-frame-size-according-to-resolution ()
   (interactive)
@@ -50,4 +55,10 @@
                              (frame-char-height)))))))
 
 (set-frame-size-according-to-resolution)
+
+; start emacs-server (for use with emacsclient)
+(server-start)
+
+; set line break mode
+(global-visual-line-mode t)
 

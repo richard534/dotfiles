@@ -11,7 +11,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (evil-anzu anzu spaceline doom-themes scala-mode evil)))
+    (highlight-symbol evil-anzu anzu spaceline doom-themes scala-mode evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -126,4 +126,11 @@ anzu-cons-mode-line-p nil)
 (setq org-indent-mode t)
 (setq org-hide-leading-stars t) ; hide orgmode heading stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
+
+; highlight-symbol config
+(require 'highlight-symbol)
+(global-set-key [(control f3)] 'highlight-symbol)
+(global-set-key [f3] 'highlight-symbol-next)
+(global-set-key [(shift f3)] 'highlight-symbol-prev)
+(global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 

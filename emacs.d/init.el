@@ -42,8 +42,6 @@
 (setq visible-bell t)
 (defun display-startup-echo-area-message ()
   (message "Tell yee"))
-; font settings
-(set-frame-font "Open Sans 16" nil t)
 
 ; configure spaceline package
 (require 'spaceline-config)
@@ -56,44 +54,14 @@
 (setq anzu-search-threshold 1000
 anzu-cons-mode-line-p nil)
 
-;; A small minor mode to use a big fringe
-(defvar bzg-big-fringe-mode nil)
-(define-minor-mode bzg-big-fringe-mode
-  "Minor mode to use big fringe in the current buffer."
-  :init-value nil
-  :global t
-  :variable bzg-big-fringe-mode
-  :group 'editing-basics
-  (if (not bzg-big-fringe-mode)
-      (set-fringe-style nil)
-    (set-fringe-mode
-     (/ (- (frame-pixel-width)
-           (* 100 (frame-char-width)))
-        2))))
-
-;; Now activate this global minor mode
-(bzg-big-fringe-mode 1)
-
-; custom function to set frame size depending on resolution of computer
-(defun set-frame-size-according-to-resolution ()
-  (interactive)
-  (if window-system
-  (progn
-    ;; use 120 char wide window for largeish displays
-    ;; and smaller 80 column windows for smaller displays
-    ;; pick whatever numbers make sense for you
-    (if (> (x-display-pixel-width) 1280)
-           (add-to-list 'default-frame-alist (cons 'width 120))
-           (add-to-list 'default-frame-alist (cons 'width 80)))
-    ;; for the height, subtract a couple hundred pixels
-    ;; from the screen height (for panels, menubars and
-    ;; whatnot), then divide by the height of a char to
-    ;; get the height we want
-    (add-to-list 'default-frame-alist
-         (cons 'height (/ (- (x-display-pixel-height) 0)
-                             (frame-char-height)))))))
-
-(set-frame-size-according-to-resolution)
+; set default font
+(set-default-font "Open Sans 16")
+; set default font for emacs --daemon / emacsclient
+(setq default-frame-alist '((font . "Open Sans 16")
+							(left-fringe . 100)
+							(right-fringe . 100)
+							(height . 1000)
+							(width . 100)))
 
 ; start emacs-server (for use with emacsclient)
 (server-start)
@@ -133,4 +101,21 @@ anzu-cons-mode-line-p nil)
 (global-set-key [f3] 'highlight-symbol-next)
 (global-set-key [(shift f3)] 'highlight-symbol-prev)
 (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
+
+; mac - focus on emacs session when opening emacs gui
+(when (featurep 'ns)
+  (defun ns-raise-emacs ()
+    "Raise Emacs."
+    (ns-do-applescript "tell application \"Emacs\" to activate"))
+
+  (defun ns-raise-emacs-with-frame (frame)
+    "Raise Emacs and select the provided frame."
+    (with-selected-frame frame
+      (when (display-graphic-p)
+        (ns-raise-emacs))))
+
+  (add-hook 'after-make-frame-functions 'ns-raise-emacs-with-frame)
+
+  (when (display-graphic-p)
+    (ns-raise-emacs)))
 

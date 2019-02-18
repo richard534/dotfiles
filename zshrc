@@ -31,6 +31,9 @@ alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias python='python3'
 alias pip='pip3'
 alias man='vman'
+alias emd='/Applications/Emacs.app/Contents/MacOS/Emacs --daemon'
+alias em='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
+alias emn='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c --no-wait'
 
 # fzf + ag configuration
 export FZF_DEFAULT_COMMAND='rg --files'

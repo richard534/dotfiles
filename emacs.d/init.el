@@ -11,7 +11,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (highlight-symbol evil-anzu anzu spaceline doom-themes scala-mode evil)))
+    (helm highlight-symbol evil-anzu anzu spaceline doom-themes scala-mode evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -94,6 +94,7 @@ anzu-cons-mode-line-p nil)
 (setq org-startup-indented t)
 (setq org-indent-mode t)
 (setq org-hide-leading-stars t) ; hide orgmode heading stars
+(setq org-adapt-indentation nil) ; hide orgmode heading indented stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
 
 ; highlight-symbol config
@@ -119,4 +120,15 @@ anzu-cons-mode-line-p nil)
 
   (when (display-graphic-p)
     (ns-raise-emacs)))
+
+; helm config
+(require 'helm-config)
+
+; emacs backup files config
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+
+; enable flyspell spellchecker by default
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 

@@ -219,3 +219,7 @@ nnoremap <Leader>O O<Esc>
 " disable vim concealing for json
 let g:vim_json_syntax_conceal = 0
 
+" vim-gitgutter config
+nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
+

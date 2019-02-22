@@ -59,7 +59,7 @@ let g:auto_save = 1
 " highlight all matches when searching
 set hlsearch
 " remap key to remove search highlight
-nnoremap <silent> \ :let @/=""<return>
+nnoremap <silent> \ :noh<CR><CR>
 
 " set vim updatetime option to lower then default(4000)
 " Doing this to improve vim-airgutter plugin

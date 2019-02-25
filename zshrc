@@ -34,6 +34,7 @@ alias man='vman'
 alias emd='/Applications/Emacs.app/Contents/MacOS/Emacs --daemon'
 alias em='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
 alias emc='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c --no-wait'
+alias tree='tree -C'
 
 # fzf + ag configuration
 export FZF_DEFAULT_COMMAND='rg --files'

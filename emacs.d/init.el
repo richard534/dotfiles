@@ -97,6 +97,11 @@ anzu-cons-mode-line-p nil)
 (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
 
+; add python to org-mode babel (allows executing python code in org files src blocks)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+
 ; highlight-symbol config
 (require 'highlight-symbol)
 (global-set-key [(control f3)] 'highlight-symbol)
@@ -131,4 +136,11 @@ anzu-cons-mode-line-p nil)
 ; enable flyspell spellchecker by default
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+; bind key to reload emacs config
+(defun reload-init-file ()
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
+
+(global-set-key (kbd "C-c r") 'reload-init-file) 
 

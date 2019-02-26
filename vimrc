@@ -7,8 +7,13 @@ so ~/.vim/plugins.vim
 " (combination of filetype on, filetype plugin on, filetype indent on)
 filetype plugin indent on
 
-" allow vim to use system clipboard
-set clipboard=unnamed
+" Integrate with system clipboard
+set clipboard=unnamedplus,unnamed
+
+" All searches will be case insensitive
+set ignorecase
+" search will be case sensitive if it contains an uppercase letter (and vice-versa)
+set smartcase
 
 " enable syntax highlighting
 syntax enable
@@ -21,15 +26,14 @@ au FileType man :IndentLinesToggle
 " set text encoding to utf-8
 set encoding=utf-8
 
+" set leader key
+let mapleader = '\'
+
 " set vim colourscheme
 set t_Co=256
 colorscheme molokai
 let g:rehash256 = 1
 set background=dark
-
-" set leader key to space
-let mapleader=" "
-
 " show line-numbers
 set number
 
@@ -59,7 +63,7 @@ let g:auto_save = 1
 " highlight all matches when searching
 set hlsearch
 " remap key to remove search highlight
-nnoremap <silent> \ :noh<CR><CR>
+nnoremap <Leader><space> :noh<cr>
 
 " set vim updatetime option to lower then default(4000)
 " Doing this to improve vim-airgutter plugin

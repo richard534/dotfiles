@@ -187,6 +187,10 @@ ln -s ${BASEDIR}/psqlrc ~/.psqlrc
 # flake8 (python linter)
 ln -s ${BASEDIR}/flake8 ~/.config/flake8
 
+# yapf (python linter)
+mkdir ~/.config/yapf
+ln -s ${BASEDIR}/yapf-config ~/.config/yapf/style
+
 # youcompleteme virtualenv utility python script
 ln -s ${BASEDIR}/global_extra_conf.py ~/global_extra_conf.py
 

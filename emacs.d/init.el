@@ -55,9 +55,9 @@
 anzu-cons-mode-line-p nil)
 
 ; set default font
-(set-default-font "Open Sans 16")
+(set-default-font "Inconsolata 16")
 ; set default font for emacs --daemon / emacsclient
-(setq default-frame-alist '((font . "Open Sans 16")
+(setq default-frame-alist '((font . "Inconsolata 16")
 							(left-fringe . 100)
 							(right-fringe . 100)
 							(height . 1000)

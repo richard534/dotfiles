@@ -112,6 +112,12 @@ if ! brew ls --versions ispell  > /dev/null; then
     brew install ispell
 fi
 
+
+# moreutils (sponge command etc)
+if ! brew ls --versions moreutils  > /dev/null; then
+    brew install moreutils 
+fi
+
 ########################################
 
 # brew casks

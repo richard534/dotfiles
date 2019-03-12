@@ -148,6 +148,7 @@ pip install flake8
 npm install --global git-open
 npm install --global instant-markdown-d
 npm install --global jsonlint
+npm install --global prettier
 
 ########################################
 

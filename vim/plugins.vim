@@ -28,5 +28,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'valloric/youcompleteme'
 Plugin 'tpope/vim-commentary'
 Plugin 'elzr/vim-json'
+Plugin 'prettier/vim-prettier'
+Plugin 'jparise/vim-graphql'
 call vundle#end()
 

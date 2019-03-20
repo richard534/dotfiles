@@ -41,7 +41,7 @@
 ; Don't let Emacs hurt your ears
 (setq visible-bell t)
 (defun display-startup-echo-area-message ()
-  (message "Tell yee"))
+  (message "emacs for your face"))
 
 ; configure spaceline package
 (require 'spaceline-config)
@@ -66,6 +66,9 @@ anzu-cons-mode-line-p nil)
 
 ; start emacs-server (for use with emacsclient)
 (server-start)
+
+; set emacs to maximize on launch
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ; set line break mode
 (global-visual-line-mode t)
@@ -142,5 +145,5 @@ anzu-cons-mode-line-p nil)
   (interactive)
   (load-file "~/.emacs.d/init.el"))
 
-(global-set-key (kbd "C-c r") 'reload-init-file) 
+(global-set-key (kbd "C-c r") 'reload-init-file)
 

@@ -48,6 +48,3 @@
 \echo 'Type :extensions to see the available extensions.'
 \echo 'Type \\q to exit. \n'
 
--- Bind key to reverse search
-bind "^R" em-inc-search-prev
-

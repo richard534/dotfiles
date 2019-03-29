@@ -55,9 +55,9 @@
 anzu-cons-mode-line-p nil)
 
 ; set default font
-(set-default-font "Inconsolata 16")
+(set-default-font "Inconsolata 18")
 ; set default font for emacs --daemon / emacsclient
-(setq default-frame-alist '((font . "Inconsolata 16")
+(setq default-frame-alist '((font . "Inconsolata 18")
 							(left-fringe . 100)
 							(right-fringe . 100)
 							(height . 1000)
@@ -104,6 +104,13 @@ anzu-cons-mode-line-p nil)
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)))
+
+; Show inline images by default
+(setq org-startup-with-inline-images t)
+
+; enable auto fill mode on text files, set to wrap lines at certain char limit
+(add-hook 'text-mode-hook 'auto-fill-mode)
+(setq-default fill-column 120)
 
 ; highlight-symbol config
 (require 'highlight-symbol)

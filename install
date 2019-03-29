@@ -115,7 +115,12 @@ fi
 
 # moreutils (sponge command etc)
 if ! brew ls --versions moreutils  > /dev/null; then
-    brew install moreutils 
+    brew install moreutils
+fi
+
+# coreutils
+if ! brew ls --versions coreutils  > /dev/null; then
+    brew install  coreutils
 fi
 
 ########################################

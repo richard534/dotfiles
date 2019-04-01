@@ -152,5 +152,9 @@ anzu-cons-mode-line-p nil)
   (interactive)
   (load-file "~/.emacs.d/init.el"))
 
+; bind key to reaload this file
 (global-set-key (kbd "C-c r") 'reload-init-file)
+
+; turn off all alarms (flashing bottom of screen, audible)
+(setq ring-bell-function 'ignore)
 

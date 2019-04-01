@@ -120,7 +120,13 @@ fi
 
 # coreutils
 if ! brew ls --versions coreutils  > /dev/null; then
-    brew install  coreutils
+    brew install coreutils
+fi
+
+
+# pgcli
+if ! brew ls --versions pgcli  > /dev/null; then
+    brew install pgcli
 fi
 
 ########################################
@@ -209,4 +215,8 @@ ln -s ${BASEDIR}/global_extra_conf.py ~/global_extra_conf.py
 # emacs
 ln -s ${BASEDIR}/emacs ~/.emacs
 ln -s ${BASEDIR}/emacs.d/ ~/.emacs.d
+
+# pgcli
+mkdir ~/.config/pgcli
+ln -s ${BASEDIR}/pgcli-config ~/.config/pgcli/config
 

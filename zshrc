@@ -26,6 +26,12 @@ compdef vman="man"
 # prepend dotfiles bin dir to path
 export PATH=$HOME/dotfiles/bin:$PATH
 
+# set default pager to less
+export PAGER=less
+# set less envar (less options are taken from this envar to avoid typing each time)
+# -R enable colour
+export LESS="-R"
+
 # User defined alias's
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias python='python3'

@@ -129,6 +129,11 @@ if ! brew ls --versions pgcli  > /dev/null; then
     brew install pgcli
 fi
 
+# entr (event notify test runner)
+if ! brew ls --versions entr  > /dev/null; then
+    brew install entr
+fi
+
 ########################################
 
 # brew casks

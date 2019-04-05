@@ -29,8 +29,11 @@ export PATH=$HOME/dotfiles/bin:$PATH
 # set default pager to less
 export PAGER=less
 # set less envar (less options are taken from this envar to avoid typing each time)
-# -R enable colour
-export LESS="-R"
+# -R displays ANSI color escape sequences in "raw" form. (add colour to less)
+# -S disables line wrapping. Side-scroll to see long lines.
+# -X leaves file contents on the screen when less exits.
+# -F makes less quit if the entire output can be displayed on one screen.
+export LESS="-RSXF"
 
 # User defined alias's
 alias preview="fzf --preview 'bat --color \"always\" {}'"

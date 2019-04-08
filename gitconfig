@@ -17,6 +17,7 @@
     unstage = reset HEAD --
     last = log -1 HEAD
     visual = !gitk
+	rootexec = "!exec "
 [color]
 	ui = true
 [color "diff-highlight"]

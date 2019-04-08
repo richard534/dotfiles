@@ -206,6 +206,9 @@ let g:ycm_extra_conf_vim_data = [
   \]
 let g:ycm_global_ycm_extra_conf = '~/global_extra_conf.py'
 
+" bind key to run current buffer with python
+nnoremap <buffer> <F9> :exec '!clear; python' shellescape(@%, 1)<cr>
+
 " bind keys to vanilla vim session management commands
 map <F2> :mksession! ~/vim_session <cr> " Quick write session with F2
 map <F3> :source ~/vim_session <cr>     " And load session with F3

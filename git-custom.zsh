@@ -30,3 +30,12 @@ gitsqu() {
    fi
 }
 
+# git reset hard && clean
+gitreshardclean() {
+	git reset --hard
+	repoRootDir=$(git rev-parse --show-toplevel)
+	cd $repoRootDir # go to root directory of repo
+	git clean -df
+	cd - # go back to dir cmd initially called from
+}
+

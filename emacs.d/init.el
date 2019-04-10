@@ -55,9 +55,9 @@
 anzu-cons-mode-line-p nil)
 
 ; set default font
-(set-default-font "Inconsolata 18")
+(set-default-font "Source Code Pro 18")
 ; set default font for emacs --daemon / emacsclient
-(setq default-frame-alist '((font . "Inconsolata 18")
+(setq default-frame-alist '((font . "Source Code Pro 18")
 							(left-fringe . 100)
 							(right-fringe . 100)
 							(height . 1000)

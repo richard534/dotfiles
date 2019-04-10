@@ -39,3 +39,9 @@ gitreshardclean() {
 	cd - # go back to dir cmd initially called from
 }
 
+# git goto root dir of repo
+gitgotoroot() {
+	repoRootDir=$(git rev-parse --show-toplevel)
+	cd $repoRootDir # go to root directory of repo
+}
+

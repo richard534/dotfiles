@@ -45,6 +45,9 @@ set nowrap
 " only wrap line at specified 'breakat' char's
 autocmd FileType org set wrap | set linebreak
 
+" set avro schema files to json filetype
+au BufNewFile,BufRead *.avsc set filetype=json
+
 " show the line and column number of the cursor position, separated by a comma.
 set ruler
 

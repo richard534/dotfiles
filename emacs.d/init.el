@@ -136,9 +136,6 @@ anzu-cons-mode-line-p nil)
   (when (display-graphic-p)
     (ns-raise-emacs)))
 
-; helm config
-(require 'helm-config)
-
 ; emacs backup files config
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq backup-by-copying t)

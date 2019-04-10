@@ -134,6 +134,11 @@ if ! brew ls --versions entr  > /dev/null; then
     brew install entr
 fi
 
+# wget (event notify test runner)
+if ! brew ls --versions wget  > /dev/null; then
+    brew install wget
+fi
+
 ########################################
 
 # brew casks

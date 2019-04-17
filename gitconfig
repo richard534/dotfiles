@@ -9,6 +9,7 @@
     pretty = format:%C(auto)%h %d%Creset %s (%Cgreen%ar%Creset) %n%Cgreen%ai%Creset %aN <%aE>%n
 [alias]
     lg = log --graph --all # graph - shows what and where commits were merged; --all shows history of all branches, not just HEAD branch;
+	lg-overview = log --graph --oneline --all --decorate --simplify-by-decoration --pretty='%C(auto)%h %d %s (%Cgreen%ar%Creset)' # very low granularity git log for repo overview
     co = checkout
     cm = commit
     st = status
@@ -22,6 +23,7 @@
 	branchlog = !sh -c \"git log `git oldest-ancestor`..\"
 	roa = !sh -c \"git reset $(git oldest-ancestor)\" # reset to oldest ancestor
 	br  = !sh -c \"git for-each-ref --sort=committerdate refs/heads/ refs/remotes/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' \" # custom git branch command
+	prune-local = !sh -c \"git-prune-local\"
 [color]
 	ui = true
 [color "diff-highlight"]

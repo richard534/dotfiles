@@ -10,7 +10,6 @@
 [alias]
     lg = log --graph
     co = checkout
-    br = branch
     ci = commit
     st = status
     diffc = diff --cached
@@ -22,6 +21,7 @@
 	branchdiff = !sh -c \"git diff `git oldest-ancestor`..\"
 	branchlog = !sh -c \"git log `git oldest-ancestor`..\"
 	roa = !sh -c \"git reset $(git oldest-ancestor)\" # reset to oldest ancestor
+	br  = !sh -c \"git for-each-ref --sort=committerdate refs/heads/ refs/remotes/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' \" # custom git branch command
 [color]
 	ui = true
 [color "diff-highlight"]

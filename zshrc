@@ -53,10 +53,7 @@ export FZF_ALT_C_COMMAND="rg --files --case-sensitive"
 # java config
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8.0_202, x86_64` # latest java8 build
 
-# source local zshrc (for secret conf)
-if [ -f ~/.zshrc_local ]; then
-    source ~/.zshrc_local
-fi
+SECRET_CONF=~/.zshrc_local && test -f $SECRET_CONF && source $SECRET_CONF
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

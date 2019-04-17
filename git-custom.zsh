@@ -20,7 +20,7 @@ gitro() {
 
 # git squash from current branch up until provided commit
 # and concatenate log messages
-gitsqu() {
+git-squ() {
  if [ "$1" != "" ]
     then
       git reset --soft $1 &&
@@ -31,7 +31,7 @@ gitsqu() {
 }
 
 # git reset hard && clean
-gitreshardclean() {
+git-reshardclean() {
 	git reset --hard
 	repoRootDir=$(git rev-parse --show-toplevel)
 	cd $repoRootDir # go to root directory of repo
@@ -40,8 +40,15 @@ gitreshardclean() {
 }
 
 # git goto root dir of repo
-gitgotoroot() {
+git-gotoroot() {
 	repoRootDir=$(git rev-parse --show-toplevel)
 	cd $repoRootDir # go to root directory of repo
+}
+
+# prune locally tracked branches that do not exist on remote anymore
+# run "git fetch --prune" to delete references in /refs/remote that no longer exist on remote before running this command
+# https://stackoverflow.com/questions/13064613/how-to-prune-local-tracking-branches-that-do-not-exist-on-remote-anymore
+git-prune-local() {
+	git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -d
 }
 

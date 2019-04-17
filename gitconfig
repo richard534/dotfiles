@@ -6,11 +6,11 @@
     excludesfile = ~/.gitignore_global
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [format]
-    pretty = format:%C(auto)%h %d%Creset %s%n%Cgreen%ad%Creset %aN <%aE>%n
+    pretty = format:%C(auto)%h %d%Creset %s (%Cgreen%ar%Creset) %n%Cgreen%ai%Creset %aN <%aE>%n
 [alias]
-    lg = log --graph
+    lg = log --graph --all # graph - shows what and where commits were merged; --all shows history of all branches, not just HEAD branch;
     co = checkout
-    ci = commit
+    cm = commit
     st = status
     diffc = diff --cached
     unstage = reset HEAD --

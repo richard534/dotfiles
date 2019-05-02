@@ -8,6 +8,7 @@ so ~/.vim/plugins.vim
 filetype plugin indent on
 
 " Integrate with system clipboard
+""sets the default copy register to be both * and +
 set clipboard=unnamedplus,unnamed
 
 " All searches will be case insensitive

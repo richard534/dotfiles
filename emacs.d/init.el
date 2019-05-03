@@ -24,6 +24,10 @@
 (setq evil-want-C-u-scroll t) ; enable vim-like crtl-u pgUp
 (require 'evil)
 (evil-mode 1)
+;; :q should kill the current buffer rather than quitting emacs entirely
+(evil-ex-define-cmd "q" 'kill-this-buffer)
+;; Need to type out :quit to close emacs
+(evil-ex-define-cmd "quit" 'evil-quit)
 
 ;; User interface settings
 ; disable gui toolbar

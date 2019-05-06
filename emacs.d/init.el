@@ -11,7 +11,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (helm highlight-symbol evil-anzu anzu spaceline doom-themes scala-mode evil)))
+    (geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -20,7 +20,7 @@
  ;; If there is more than one, they won't work right.
  '(org-block ((t (:background "gray24")))))
 
-; enable evil mode
+; configure emacs evil package
 (setq evil-want-C-u-scroll t) ; enable vim-like crtl-u pgUp
 (require 'evil)
 (evil-mode 1)
@@ -28,6 +28,16 @@
 (evil-ex-define-cmd "q" 'kill-this-buffer)
 ;; Need to type out :quit to close emacs
 (evil-ex-define-cmd "quit" 'evil-quit)
+; rebind keys for moving between windows
+(define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
+(define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
+(define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
+; rebind keys for resizing windows
+(define-key evil-normal-state-map (kbd "M-k") #'evil-window-increase-height)
+(define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
+(define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
+(define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
 
 ;; User interface settings
 ; disable gui toolbar
@@ -152,10 +162,13 @@ anzu-cons-mode-line-p nil)
 (defun reload-init-file ()
   (interactive)
   (load-file "~/.emacs.d/init.el"))
-
 ; bind key to reaload this file
 (global-set-key (kbd "C-c r") 'reload-init-file)
 
 ; turn off all alarms (flashing bottom of screen, audible)
 (setq ring-bell-function 'ignore)
+
+; mit-scheme (sicp) setup
+(setq scheme-program-name "/usr/local/Cellar/mit-scheme/9.2_1/bin/mit-scheme")
+(require 'xscheme)
 

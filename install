@@ -2,7 +2,6 @@
 
 # Manual steps:
 # install you-complete-me ~/.vim/bundle/youcompleteme/install.py
-# install emacs for mac (https://emacsformacosx.com/)
 
 # Update/init all submodules in this repo
 git submodule update --init --recursive --remote
@@ -12,6 +11,9 @@ git submodule update --init --recursive --remote
 # Check to see if Homebrew is installed -  if not, install it
 command -v brew >/dev/null 2>&1 || { echo >&2 "Installing Homebrew Now"; \
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; }
+
+# Additional brew taps
+brew tap d12frosted/emacs-plus
 
 # Install packages via homebrew
 # tmux
@@ -137,6 +139,11 @@ fi
 # wget (event notify test runner)
 if ! brew ls --versions wget  > /dev/null; then
     brew install wget
+fi
+
+# emacs (emacs-plus to be specific)
+if ! brew ls --versions emacs-plus  > /dev/null; then
+    brew install emacs-plus
 fi
 
 ########################################

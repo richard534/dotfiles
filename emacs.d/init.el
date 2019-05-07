@@ -103,14 +103,14 @@ anzu-cons-mode-line-p nil)
 (setq org-hide-leading-stars t) ; hide orgmode heading stars
 (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
+# org-mode images config
+(setq org-startup-with-inline-images t) ; Show inline images by default
+(setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
 
 ; add python to org-mode babel (allows executing python code in org files src blocks)
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)))
-
-; Show inline images by default
-(setq org-startup-with-inline-images t)
 
 ; enable auto fill mode on text files, set to wrap lines at certain char limit
 (add-hook 'text-mode-hook 'auto-fill-mode)

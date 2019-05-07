@@ -113,7 +113,7 @@ anzu-cons-mode-line-p nil)
 (setq org-hide-leading-stars t) ; hide orgmode heading stars
 (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
-# org-mode images config
+; org-mode images config
 (setq org-startup-with-inline-images t) ; Show inline images by default
 (setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
 

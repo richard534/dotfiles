@@ -1,0 +1,66 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/ritaylor/dotfiles/" . "emacs.d/")
+ ("/Users/ritaylor/" . "dotfiles/")
+ ("/Users/ritaylor/Google Drive/dev/" . "notes/")
+ ("/Users/ritaylor/dev/notes/" . "spike-durable-storage/")
+ ("/Users/ritaylor/dev/scratch/" . "spike-durable-data/")
+ ("/Users/ritaylor/dev/" . "scratch/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/ritaylor/dotfiles/emacs.d/"
+ "/Users/ritaylor/Google Drive/dev/notes/"
+ "/Users/ritaylor/dev/notes/spike-durable-storage/"
+ "/Users/ritaylor/dev/notes/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "init.el"
+ "unix.org"
+ "spike-durable-storage.org"
+ "durable-data-spike.org"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/ritaylor/dotfiles/emacs.d/" (23793 5302 588533 317000) "elpa/" "emacs.d/" "init.el" "auto-save-list/" "ido.last" "../" "./")
+
+ ("/Users/ritaylor/" (23793 5307 425031 504000) ".account" ".groovy/" ".ptpython/" ".viminfo.tmp" ".httpie/" ".viminfo" ".nbprofiler/" ".bash_history" ".yapf.conf" ".gitconfig" ".aws/" ".python_history" "Downloads/" ".psqlrc" ".oh-my-zsh/" ".influx_history" ".m2/" "global_extra_conf.py" "Documents/" ".npm/" ".scala_history" ".git_template/" ".tldrc/" ".psql_history-ritaylor" ".zoomus/" "dev/" ".Trash/" ".gradle/" "Applications/" ".emacs" ".vimrc" "Movies/" ".ssh/" ".ctags.d/" ".sh_history" ".cisco/" ".idlerc/" ".ideavimrc" ".fzf.bash" "Public/" "kp-secrets.kdbx" ".fzf.zsh" ".sbt/" ".sqlite_history" "Google Drive/" ".bash_sessions/" ".zcompdump-BFS-MBP-5165-5.3" ".cups/" ".gitignore_global" ".pgadmin/" ".pgAdmin4.startup.log" ".android/" ".node_repl_history" ".emacs.d/" "Calibre Library/" ".oracle_jre_usage/" ".lesshst" ".awless/" "Library/" "Desktop/" ".zsh_history" ".zshrc_local" ".fpp/" ".saves/" "zshrc_local" ".zprofile" ".pylint.d/" ".scalac/" "Pictures/" ".psql_history" ".local/" ".psql_history-platform_analytics" ".zshrc" ".bashrc" "java_error_in_pycharm_41306.log" "Google Drive File Stream/" ".pytest_cache/" ".CFUserTextEncoding" ".tmux.conf" "dotfiles/" ".DS_Store" ".vim/" ".virtualenvs/" ".anyconnect" ".sbtrc" ".ivy2/" ".docker/" ".idea-build/" "Music/" ".config/" "../" "./")
+
+ ("/Users/ritaylor/Google Drive/dev/notes/work/r7/spike-durable-storage/" (23793 5302 614252 324000) "commands/" "spike-durable-storage.org" "#spike-durable-storage.org#" "jq-notes.org" "../" "./")
+
+ ("/Users/ritaylor/dotfiles/" (23784 7887 932793 565000) "ideavimrc" "psqlrc" "ctags-custom.zsh" ".git/" "misc-custom.zsh" "global_extra_conf.py" "emacs.d/" "gitignore_global" "docker-custom.zsh" ".gitignore" "gitconfig" "zshrc" "ctags.d/" "vimrc" ".gitmodules" "tmux.conf" "flake8" "git_template/" "install" "yapf-config" "pgcli-config" "git-custom.zsh" "vim/" "../" "./")
+
+ ("/Users/ritaylor/Google Drive/" (23788 63233 425441 419000) "Skiing 2019.gsheet" "travel/" "Hanoi - Sa Pa .gmap" "kickOff - Newday Data Engineering.pptx" "documents/" "finance/" "dev/" "Untitled map.gmap" "university/" "Kimmy's Tour.gmap" ".tmp.drivedownload/" "Icon
+" "United Kingdom Criminal (Basic Disclosure) (Professional Evidence of ID) (English).pdf" ".DS_Store" "tour de mont blanc pt1_2.gmap" "4-5 night Loop.gmap" "career/" "design/" "../" "./")
+
+ ("/Users/ritaylor/Google Drive/dev/notes/" (23791 61347 467068 637000) "idea.org" "kafka.org" "jenkins.org" "#kafka.org_archive#" "calibre.org" "understanding-computation.org" "design-patterns.org" "unix.org" "oop.org" "orgmode.org" "data-intensive-applications.org" "emacs.org" "work/" "domain-driven-design.org" "entr.org" "testing/" "kafka.org~" "computer-science.org" "bash.org" "postgres.org" "resources/" "influxdb.org" "vim.org" "python.org" "scala.org" "../" "./")
+
+ ("/Users/ritaylor/Google Drive/dev/notes/work/" (23769 14720 295657 268000) "r7/" "../" "./")
+
+ ("/Users/ritaylor/Google Drive/dev/notes/work/r7/" (23773 24778 869321 726000) "agent-count.org" "pyobject-sample-prod-sqs-event.txt" "meetings/" "pg-agent-status-queries.sql" "spike-durable-storage/" "q2-big-picture/" "pa-516.org" "#agent-count.org#" "pyobject-sample-prod-sqs-event-records-sns-0-message.txt" "../" "./")
+
+ ("/Users/ritaylor/Google Drive/dev/" (23725 45763 915689 796000) "AWS/" "appsync/" "notes/" "blog-posts/" "books/" ".DS_Store" "misc/" "../" "./")
+
+ ("/Users/ritaylor/dev/" (23764 9968 49513 813000) "platform-analytics/" "notes/" "scratch/" ".DS_Store" "tools/" "fake-data/" "razor/" "insightvm/" "../" "./")
+
+ ("/Users/ritaylor/dev/notes/spike-weekly-data-s3-ingestion/" (23764 7854 93058 40000) "pyobject-sample-prod-sqs-event.txt" "jq-notes.org" "pyobject-sample-prod-sqs-event-records-sns-0-message.txt" "../" "./")
+
+ ("/Users/ritaylor/dev/notes/spike-durable-storage/" (23762 40507 961546 312000) "spike-durable-storage.org" "../" "./")
+
+ ("/Users/ritaylor/dev/notes/" (23762 44950 670633 83000) "spike-weekly-data-s3-ingestion/" ".git/" "pg-agent-status-queries.sql" "spike-durable-storage/" "q2-big-picture/" "pa-516.org" "bug-analysis/" "../" "./")
+
+ ("/Users/ritaylor/dev/scratch/spike-durable-data/" (23753 36075 130543 674000) "avro4s-test/" "scratch/" "quickstart/" "durable-data/" "data-loader/" ".DS_Store" "avrohugger/" "../" "./")
+
+ ("/Users/" (23623 8133 822979 911000) "administrator/" "nxp-it-mac/" "ritaylor/" "Shared/" "insightidr-mac/" ".localized" "../" "./")
+
+ ("/Users/ritaylor/dev/scratch/" (23755 6867 214346 546000) "avroToParquet/" "unix-tools-data-processing-test/" "graphql2" "sqs-scratchy/" "graphql3" "scratchy-python/" "jq/" "agent-job-status/" "parquet/" "sdlc/" "s3-key-prefix-downloader/" "avro/" "sns-avro-converter/" "yapf/" "graphql1" "bashbrew" "avro-rpc-quickstart/" "linux-flatten/" "jq-file-merger/" "org/" "worlds-simplest-database/" "spike-durable-data/" "insightvm-remediation/" "githooktest/" "influx-sandbox/" ".DS_Store" "flask/" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t

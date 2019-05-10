@@ -173,6 +173,10 @@ anzu-cons-mode-line-p nil)
 ; org-mode images config
 (setq org-startup-with-inline-images t) ; Show inline images by default
 (setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
+(setq org-list-demote-modify-bullet (quote (("+" . "-")
+                                            ("*" . "-")
+                                            ("1." . "-")
+                                            ("1)" . "a)"))))
 
 ; add python to org-mode babel (allows executing python code in org files src blocks)
 (org-babel-do-load-languages
@@ -287,6 +291,6 @@ anzu-cons-mode-line-p nil)
        #'helm-projectile-find-file
        #'helm-find-files)))
 
-; indent-guide package config 
+; indent-guide package config
 (require 'indent-guide)
 (indent-guide-global-mode)

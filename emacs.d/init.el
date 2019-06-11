@@ -11,7 +11,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -82,7 +82,8 @@ anzu-cons-mode-line-p nil)
 (server-start)
 
 ; set emacs to maximize on launch
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(custom-set-variables
+ '(initial-frame-alist (quote ((fullscreen . maximized))))) ;; start maximized
 
 ; set line break mode
 (global-visual-line-mode t)
@@ -172,3 +173,9 @@ anzu-cons-mode-line-p nil)
 (setq scheme-program-name "/usr/local/Cellar/mit-scheme/9.2_1/bin/mit-scheme")
 (require 'xscheme)
 
+; diminish package config
+(require 'diminish)
+(diminish `anzu-mode)
+(diminish `undo-tree-mode)
+(diminish `eldoc-mode)
+(diminish `visual-line-mode)

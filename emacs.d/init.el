@@ -22,6 +22,7 @@
 
 ; configure emacs evil package
 (setq evil-want-C-u-scroll t) ; enable vim-like crtl-u pgUp
+(setq evil-search-module 'evil-search)
 (require 'evil)
 (evil-mode 1)
 ;; :q should kill the current buffer rather than quitting emacs entirely

@@ -71,9 +71,11 @@
 (defun display-startup-echo-area-message ()
   (message "emacs for your face"))
 
-; configure spaceline package
-(require 'spaceline-config)
-(spaceline-spacemacs-theme)
+; remove icons/text from title bar (transparent title bar)
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
+(setq ns-use-proxy-icon nil)
+(setq frame-title-format nil)
 
 ; configure anzu package
 (global-anzu-mode +1)
@@ -91,37 +93,29 @@ anzu-cons-mode-line-p nil)
 							(height . 1000)
 							(width . 100)
 							(vertical-scroll-bars . nil)))
-
 ; start emacs-server (for use with emacsclient)
 (server-start)
-
-; set emacs to maximize on launch
- ;; start maximized
-
 ; set line break mode
 (global-visual-line-mode t)
 
-; set emacs theme (Doom-themes package config)
-;; Global settings (defaults)
+;; set emacs theme (Doom-themes package config)
+; Global settings (defaults)
 (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
       doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-;; may have their own settings.
+; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+; may have their own settings.
 (load-theme 'doom-vibrant t)
-
-;; Enable flashing mode-line on errors
+; Enable flashing mode-line on errors
 (doom-themes-visual-bell-config)
-
-;; Enable custom neotree theme (all-the-icons must be installed!)
+; Enable custom neotree theme (all-the-icons must be installed!)
 (doom-themes-neotree-config)
-;; or for treemacs users
+; or for treemacs users
 (doom-themes-treemacs-config)
-
-;; Corrects (and improves) org-mode's native fontification.
+; Corrects (and improves) org-mode's native fontification.
 (doom-themes-org-config)
 
-; org-mode config
+;; org-mode config
 (setq org-startup-indented t)
 (setq org-indent-mode t)
 (setq org-hide-leading-stars t) ; hide orgmode heading stars
@@ -139,13 +133,6 @@ anzu-cons-mode-line-p nil)
 ; enable auto fill mode on text files, set to wrap lines at certain char limit
 (add-hook 'text-mode-hook 'auto-fill-mode)
 (setq-default fill-column 120)
-
-; highlight-symbol config
-(require 'highlight-symbol)
-(global-set-key [(control f3)] 'highlight-symbol)
-(global-set-key [f3] 'highlight-symbol-next)
-(global-set-key [(shift f3)] 'highlight-symbol-prev)
-(global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 
 ; mac - focus on emacs session when opening emacs gui
 (when (featurep 'ns)

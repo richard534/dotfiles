@@ -8,10 +8,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-echo-area-message "richard")
+ '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -20,14 +21,26 @@
  ;; If there is more than one, they won't work right.
  '(org-block ((t (:background "gray24")))))
 
-; configure emacs evil package
-(setq evil-want-C-u-scroll t) ; enable vim-like crtl-u pgUp
+;; configure emacs evil package/s
+; enable vim-like crtl-u pgUp
+(setq evil-want-C-u-scroll t)
+; Keep evil search highlights after moving cursor
 (setq evil-search-module 'evil-search)
+
+; configure evil-leader package
+(global-evil-leader-mode)
+(require 'evil-leader)
+; set evil leader key to backslash
+(evil-leader/set-leader "\\")
+(evil-leader/set-key
+  "<SPC>" 'evil-ex-nohighlight)
+
+; configure emacs evil package
 (require 'evil)
 (evil-mode 1)
-;; :q should kill the current buffer rather than quitting emacs entirely
+; :q should kill the current buffer rather than quitting emacs entirely
 (evil-ex-define-cmd "q" 'kill-this-buffer)
-;; Need to type out :quit to close emacs
+; Need to type out :quit to close emacs
 (evil-ex-define-cmd "quit" 'evil-quit)
 ; rebind keys for moving between windows
 (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
@@ -83,8 +96,7 @@ anzu-cons-mode-line-p nil)
 (server-start)
 
 ; set emacs to maximize on launch
-(custom-set-variables
- '(initial-frame-alist (quote ((fullscreen . maximized))))) ;; start maximized
+ ;; start maximized
 
 ; set line break mode
 (global-visual-line-mode t)
@@ -176,4 +188,3 @@ anzu-cons-mode-line-p nil)
 (diminish `undo-tree-mode)
 (diminish `eldoc-mode)
 (diminish `visual-line-mode)
-

@@ -52,6 +52,13 @@
 (define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
 (define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
 (define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
+; mapc ursor color to evil vim mode
+(setq evil-emacs-state-cursor '("red" box))
+(setq evil-normal-state-cursor '("green" box))
+(setq evil-visual-state-cursor '("orange" box))
+(setq evil-insert-state-cursor '("red" bar))
+(setq evil-replace-state-cursor '("red" bar))
+(setq evil-operator-state-cursor '("red" hollow))
 
 ;; User interface settings
 ; disable gui toolbar
@@ -172,6 +179,7 @@ anzu-cons-mode-line-p nil)
 (diminish `undo-tree-mode)
 (diminish `eldoc-mode)
 (diminish `visual-line-mode)
+(diminish `org-indent-mode)
 
 ;; Enable line numbers (when emacs-version compatible)
 (when (version<= "26.0.50" emacs-version )

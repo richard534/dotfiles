@@ -155,10 +155,6 @@ anzu-cons-mode-line-p nil)
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq backup-by-copying t)
 
-; enable flyspell spellchecker by default
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
 ; bind key to reload emacs config
 (defun reload-init-file ()
   (interactive)
@@ -179,3 +175,4 @@ anzu-cons-mode-line-p nil)
 (diminish `undo-tree-mode)
 (diminish `eldoc-mode)
 (diminish `visual-line-mode)
+

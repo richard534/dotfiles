@@ -12,7 +12,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -88,14 +88,11 @@ anzu-cons-mode-line-p nil)
 (set-default-font "Source Code Pro 18")
 ; set default font for emacs --daemon / emacsclient
 (setq default-frame-alist '((font . "Source Code Pro 18")
-							(left-fringe . 100)
-							(right-fringe . 100)
-							(height . 1000)
-							(width . 100)
-							(vertical-scroll-bars . nil)))
-; start emacs-server (for use with emacsclient)
+			    (vertical-scroll-bars . nil)))
+
+;; start emacs-server (for use with emacsclient)
 (server-start)
-; set line break mode
+;; set line break mode
 (global-visual-line-mode t)
 
 ;; set emacs theme (Doom-themes package config)
@@ -160,7 +157,7 @@ anzu-cons-mode-line-p nil)
   (interactive)
   (load-file "~/.emacs.d/init.el"))
 ; bind key to reaload this file
-(global-set-key (kbd "C-c r") 'reload-init-file)
+(global-set-key (kbd "C-c C-r") 'reload-init-file)
 
 ; turn off all alarms (flashing bottom of screen, audible)
 (setq ring-bell-function 'ignore)
@@ -169,9 +166,14 @@ anzu-cons-mode-line-p nil)
 (setq scheme-program-name "/usr/local/Cellar/mit-scheme/9.2_1/bin/mit-scheme")
 (require 'xscheme)
 
-; diminish package config
+;; diminish package config
 (require 'diminish)
 (diminish `anzu-mode)
 (diminish `undo-tree-mode)
 (diminish `eldoc-mode)
 (diminish `visual-line-mode)
+
+;; Enable line numbers (when emacs-version compatible)
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
+

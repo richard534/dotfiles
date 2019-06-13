@@ -12,7 +12,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -185,3 +185,6 @@ anzu-cons-mode-line-p nil)
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
 
+;; Which-key package config
+(require 'which-key)
+(which-key-mode)

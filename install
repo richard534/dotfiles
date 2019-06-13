@@ -205,6 +205,7 @@ ln -s ${BASEDIR}/zshrc ~/.zshrc
 ln -s ${BASEDIR}/git-custom.zsh ~/.oh-my-zsh/custom/git-custom.zsh
 ln -s ${BASEDIR}/docker-custom.zsh ~/.oh-my-zsh/custom/docker-custom.zsh
 ln -s ${BASEDIR}/ctags-custom.zsh ~/.oh-my-zsh/custom/ctags-custom.zsh
+ln -s ${BASEDIR}/misc-custom.zsh ~/.oh-my-zsh/custom/misc-custom.zsh
 chsh -s /bin/zsh # set default shell to zsh
 
 # intelij vimrc

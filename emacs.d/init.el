@@ -294,3 +294,8 @@ anzu-cons-mode-line-p nil)
 ; indent-guide package config
 (require 'indent-guide)
 (indent-guide-global-mode)
+
+;; org-download package config
+(require 'org-download)
+; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)

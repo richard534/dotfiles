@@ -41,8 +41,8 @@ alias python='python3'
 alias pip='pip3'
 alias man='vman'
 alias emd='/Applications/Emacs.app/Contents/MacOS/Emacs --daemon'
-alias em='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
-alias emc='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c --no-wait'
+alias em='emacsclient --no-wait'
+alias emc='emacsclient -c --no-wait'
 alias tree='tree -C'
 alias info='info --vi-keys'
 
@@ -53,6 +53,9 @@ export FZF_ALT_C_COMMAND="rg --files --case-sensitive"
 
 # java config
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8.0_202, x86_64` # latest java8 build
+
+# sbt config
+export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -Xmx2G"
 
 SECRET_CONF=~/.zshrc_local && test -f $SECRET_CONF && source $SECRET_CONF
 

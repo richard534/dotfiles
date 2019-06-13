@@ -12,7 +12,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (doom-modeline which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -118,6 +118,13 @@ anzu-cons-mode-line-p nil)
 (doom-themes-treemacs-config)
 ; Corrects (and improves) org-mode's native fontification.
 (doom-themes-org-config)
+;; doom-modeline package config
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+; set doom-modeline height
+(setq doom-modeline-height 1)
+; set doom-modeline width
+(setq doom-modeline-bar-width 2)
 
 ;; org-mode config
 (setq org-startup-indented t)
@@ -188,3 +195,7 @@ anzu-cons-mode-line-p nil)
 ;; Which-key package config
 (require 'which-key)
 (which-key-mode)
+
+;; emacs desktop-save-mode
+(desktop-save-mode 1)
+

@@ -1,25 +1,11 @@
-; install MELPA
+;; install MELPA
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(inhibit-startup-echo-area-message "richard")
- '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(menu-bar-mode nil)
- '(package-selected-packages
-   (quote
-    (doom-modeline which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
- '(tool-bar-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-block ((t (:background "gray24")))))
+
+;; Custom config
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
 
 ;; configure emacs evil package/s
 ; enable vim-like crtl-u pgUp
@@ -75,8 +61,6 @@
 (setq inhibit-startup-screen t)
 ; Don't let Emacs hurt your ears
 (setq visible-bell t)
-(defun display-startup-echo-area-message ()
-  (message "emacs for your face"))
 
 ; remove icons/text from title bar (transparent title bar)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
@@ -94,8 +78,10 @@ anzu-cons-mode-line-p nil)
 ; set default font
 (set-default-font "Source Code Pro 18")
 ; set default font for emacs --daemon / emacsclient
-(setq default-frame-alist '((font . "Source Code Pro 18")
+(setq default-frame-alist '((font . "Source Code Pro 16")
 			    (vertical-scroll-bars . nil)))
+(require 'all-the-icons)
+; run m-x all-the-icons-install-fonts
 
 ;; start emacs-server (for use with emacsclient)
 (server-start)
@@ -125,6 +111,9 @@ anzu-cons-mode-line-p nil)
 (setq doom-modeline-height 1)
 ; set doom-modeline width
 (setq doom-modeline-bar-width 2)
+
+;; Appearance
+(add-hook 'after-init-hook #'fancy-battery-mode)
 
 ;; org-mode config
 (setq org-startup-indented t)

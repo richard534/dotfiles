@@ -21,13 +21,12 @@
 (evil-leader/set-key
   "<SPC>" 'evil-ex-nohighlight)
 
-; configure emacs evil package
 (require 'evil)
 (evil-mode 1)
-; :q should kill the current buffer rather than quitting emacs entirely
-(evil-ex-define-cmd "q" 'kill-this-buffer)
-; Need to type out :quit to close emacs
-(evil-ex-define-cmd "quit" 'evil-quit)
+; :q deletes window - keeps buffer
+(evil-ex-define-cmd "q" 'delete-window)
+; :quit closes emacs
+(evil-ex-define-cmd "quit" 'save-buffers-kill-emacs)
 ; rebind keys for moving between windows
 (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
 (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
@@ -45,6 +44,28 @@
 (setq evil-insert-state-cursor '("red" bar))
 (setq evil-replace-state-cursor '("red" bar))
 (setq evil-operator-state-cursor '("red" hollow))
+; rebind split window keys
+(define-key evil-normal-state-map "|" 'split-window-horizontally)
+(define-key evil-normal-state-map "-" 'split-window-vertically)
+
+;; evil-config - esc/crtl-[ triggers emacs quit function
+(defun minibuffer-keyboard-quit ()
+  "Abort recursive edit.
+In Delete Selection mode, if the mark is active, just deactivate it;
+then it takes a second \\[keyboard-quit] to abort the minibuffer."
+  (interactive)
+  (if (and delete-selection-mode transient-mark-mode mark-active)
+      (setq deactivate-mark  t)
+    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (abort-recursive-edit)))
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key [escape] 'evil-exit-emacs-state)
 
 ;; User interface settings
 ; disable gui toolbar
@@ -62,6 +83,12 @@
 ; Don't let Emacs hurt your ears
 (setq visible-bell t)
 
+;; remember cursor position of files when reopening them 
+(setq save-place-file "~/.emacs.d/saveplace")
+(setq-default save-place t)
+(require 'saveplace)
+
+
 ; remove icons/text from title bar (transparent title bar)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
@@ -76,7 +103,7 @@
 anzu-cons-mode-line-p nil)
 
 ; set default font
-(set-default-font "Source Code Pro 18")
+(set-default-font "Source Code Pro 16")
 ; set default font for emacs --daemon / emacsclient
 (setq default-frame-alist '((font . "Source Code Pro 16")
 			    (vertical-scroll-bars . nil)))
@@ -109,6 +136,7 @@ anzu-cons-mode-line-p nil)
 (doom-modeline-mode 1)
 ; set doom-modeline height
 (setq doom-modeline-height 1)
+(set-face-attribute 'mode-line nil  :height 150)
 ; set doom-modeline width
 (setq doom-modeline-bar-width 2)
 

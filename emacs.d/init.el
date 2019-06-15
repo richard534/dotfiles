@@ -88,7 +88,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq-default save-place t)
 (require 'saveplace)
 
-
 ; remove icons/text from title bar (transparent title bar)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
@@ -136,7 +135,7 @@ anzu-cons-mode-line-p nil)
 (doom-modeline-mode 1)
 ; set doom-modeline height
 (setq doom-modeline-height 1)
-(set-face-attribute 'mode-line nil  :height 150)
+(set-face-attribute 'mode-line nil  :height 125)
 ; set doom-modeline width
 (setq doom-modeline-bar-width 2)
 
@@ -216,3 +215,10 @@ anzu-cons-mode-line-p nil)
 ;; emacs desktop-save-mode
 (desktop-save-mode 1)
 
+;; Helm package config
+(require 'helm)
+; turns on helm completions for most standard emacs completions
+(helm-mode 1)
+; re-bind keys to helm functions
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)

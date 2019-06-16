@@ -8,7 +8,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (discover-my-major flycheck exec-path-from-shell helm-rg helm-projectile projectile auto-complete rainbow-delimiters helm fancy-battery doom-modeline which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (company discover-my-major flycheck exec-path-from-shell helm-rg helm-projectile projectile rainbow-delimiters helm fancy-battery doom-modeline which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(projectile-mode t nil (projectile))
  '(tool-bar-mode nil))
 (custom-set-faces

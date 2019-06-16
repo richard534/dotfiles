@@ -256,8 +256,20 @@ anzu-cons-mode-line-p nil)
 ;; Rainbow-delimiters package config
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
-;; Auto-complete package config
-(ac-config-default)
-
 ;; flycheck package config
 (add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; company package config
+(add-hook 'after-init-hook 'global-company-mode)
+; No delay in showing suggestions.
+(setq company-idle-delay 0)
+; Show suggestions after entering one character.
+(setq company-minimum-prefix-length 1)
+; once at bottom of suggestions - wrap back to top
+(setq company-selection-wrap-around t)
+; rebind company keys
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous))

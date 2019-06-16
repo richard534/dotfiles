@@ -3,6 +3,11 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
+;; exec-path-from-shell package config
+; ensure environment variables inside Emacs look the same as in the user's shell.
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
 ;; Custom config
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
@@ -223,6 +228,10 @@ anzu-cons-mode-line-p nil)
 ;; emacs desktop-save-mode
 (desktop-save-mode 1)
 
+;; projectile package config
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
 ;; Helm package config
 (require 'helm)
 ; turns on helm completions for most standard emacs completions
@@ -230,6 +239,8 @@ anzu-cons-mode-line-p nil)
 ; re-bind keys to helm functions
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+; helm projectile config
+(require 'helm-projectile)
 
 ;; Rainbow-delimiters package config
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)

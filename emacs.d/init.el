@@ -25,6 +25,15 @@
 (evil-leader/set-leader "\\")
 (evil-leader/set-key
   "<SPC>" 'evil-ex-nohighlight)
+; bind key to ripgrep text search inside current project
+(evil-leader/set-key
+  "i" 'helm-projectile-rg)
+; bind key to file search inside current project
+(evil-leader/set-key
+  "t" 'helm-projectile-find-file)
+; bind key to helm buffers list
+(evil-leader/set-key
+  ";" 'helm-buffers-list)
 
 (require 'evil)
 (evil-mode 1)
@@ -231,6 +240,8 @@ anzu-cons-mode-line-p nil)
 ;; projectile package config
 (projectile-mode +1)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+; enable caching projectile results (used with helm-projectile-find-file)
+(setq projectile-enable-caching t)
 
 ;; Helm package config
 (require 'helm)

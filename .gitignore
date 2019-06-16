@@ -13,4 +13,4 @@ emacs.d/.emacs.desktop
 emacs.d/tramp
 emacs.d/.emacs.desktop.lock
 emacs.d/eshell
-
+emacs.d/ac-comphist.dat

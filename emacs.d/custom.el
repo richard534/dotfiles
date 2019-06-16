@@ -8,7 +8,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (helm fancy-battery doom-modeline which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (auto-complete rainbow-delimiters helm fancy-battery doom-modeline which-key magit evil-leader diminish geiser pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

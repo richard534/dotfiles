@@ -230,3 +230,9 @@ anzu-cons-mode-line-p nil)
 ; re-bind keys to helm functions
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+;; Rainbow-delimiters package config
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+;; Auto-complete package config
+(ac-config-default)

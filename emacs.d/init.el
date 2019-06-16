@@ -30,7 +30,7 @@
   "i" 'helm-projectile-rg)
 ; bind key to file search inside current project
 (evil-leader/set-key
-  "t" 'helm-projectile-find-file)
+  "t" 'maybe-projectile-find-file)
 ; bind key to helm buffers list
 (evil-leader/set-key
   ";" 'helm-buffers-list)
@@ -273,3 +273,11 @@ anzu-cons-mode-line-p nil)
   (define-key company-active-map (kbd "M-p") nil)
   (define-key company-active-map (kbd "C-n") #'company-select-next)
   (define-key company-active-map (kbd "C-p") #'company-select-previous))
+
+; defun - if inside project - do projectwide file search - otherwise - regular file search
+(defun maybe-projectile-find-file ()
+  (interactive)
+  (call-interactively
+   (if (projectile-project-p)
+       #'helm-projectile-find-file
+       #'helm-find-files)))

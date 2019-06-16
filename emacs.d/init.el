@@ -91,7 +91,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (defun display-startup-echo-area-message ()
   (message nil))
 
-;; remember cursor position of files when reopening them 
+;; remember cursor position of files when reopening them
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq-default save-place t)
 (require 'saveplace)
@@ -247,3 +247,6 @@ anzu-cons-mode-line-p nil)
 
 ;; Auto-complete package config
 (ac-config-default)
+
+;; flycheck package config
+(add-hook 'after-init-hook #'global-flycheck-mode)

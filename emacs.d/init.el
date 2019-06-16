@@ -283,6 +283,10 @@ anzu-cons-mode-line-p nil)
 (defun maybe-projectile-find-file ()
   (interactive)
   (call-interactively
-   (if (projectile-project-p)
+    (if (projectile-project-p)
        #'helm-projectile-find-file
        #'helm-find-files)))
+
+; indent-guide package config 
+(require 'indent-guide)
+(indent-guide-global-mode)

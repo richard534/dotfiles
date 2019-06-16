@@ -82,6 +82,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq inhibit-startup-screen t)
 ; Don't let Emacs hurt your ears
 (setq visible-bell t)
+; overwrite default emacs startup message
+(defun display-startup-echo-area-message ()
+  (message nil))
 
 ;; remember cursor position of files when reopening them 
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -178,8 +181,13 @@ anzu-cons-mode-line-p nil)
   (when (display-graphic-p)
     (ns-raise-emacs)))
 
-; emacs backup files config
-(setq backup-directory-alist `(("." . "~/.saves")))
+;; emacs backup files config
+; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+; make auto-save backups using copy instead of rename
 (setq backup-by-copying t)
 
 ; bind key to reload emacs config

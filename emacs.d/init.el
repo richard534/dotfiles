@@ -62,6 +62,11 @@
 (define-key evil-normal-state-map "|" 'split-window-horizontally)
 (define-key evil-normal-state-map "-" 'split-window-vertically)
 
+; evil-number package config
+(require 'evil-numbers)
+(global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
+(global-set-key (kbd "C--") 'evil-numbers/dec-at-pt)
+
 ;; evil-config - esc/crtl-[ triggers emacs quit function
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.

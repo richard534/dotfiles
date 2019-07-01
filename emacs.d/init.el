@@ -1,6 +1,10 @@
 ;; install MELPA
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
+;; Set package archives
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                     ("marmalade" . "http://marmalade-repo.org/packages/")
+                     ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 ;; exec-path-from-shell package config
@@ -104,6 +108,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; overwrite default emacs startup message
 (defun display-startup-echo-area-message ()
   (message nil))
+; number of lines to scroll when reach top/bottom of window
+(setq scroll-step 1)
 
 ;; remember cursor position of files when reopening them
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -124,10 +130,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 anzu-cons-mode-line-p nil)
 
 ; set default font
-(set-default-font "Source Code Pro 16")
-; set default font for emacs --daemon / emacsclient
-(setq default-frame-alist '((font . "Source Code Pro 16")
-			    (vertical-scroll-bars . nil)))
+(set-default-font "Source Code Pro 14")
 (require 'all-the-icons)
 ; run m-x all-the-icons-install-fonts
 
@@ -157,9 +160,8 @@ anzu-cons-mode-line-p nil)
 (doom-modeline-mode 1)
 ; set doom-modeline height
 (setq doom-modeline-height 1)
-(set-face-attribute 'mode-line nil  :height 125)
-; set doom-modeline width
-(setq doom-modeline-bar-width 2)
+(set-face-attribute 'mode-line nil :height 50 :font "Source Code Pro 10" )
+(set-face-attribute 'mode-line-inactive nil :height 50 :font "Source Code Pro 10")
 
 ;; Appearance
 (add-hook 'after-init-hook #'fancy-battery-mode)
@@ -224,7 +226,8 @@ anzu-cons-mode-line-p nil)
 (setq ring-bell-function 'ignore)
 
 ; mit-scheme (sicp) setup
-(setq scheme-program-name "/usr/local/Cellar/mit-scheme/9.2_1/bin/mit-scheme")
+; (setq scheme-program-name "/usr/local/Cellar/mit-scheme/9.2_1/bin/mit-scheme")
+(setq scheme-program-name "/usr/local/bin/scheme")
 (require 'xscheme)
 
 ;; diminish package config

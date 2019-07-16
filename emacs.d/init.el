@@ -27,17 +27,23 @@
 (require 'evil-leader)
 ; set evil leader key to backslash
 (evil-leader/set-leader "\\")
+; bind evil-keys
 (evil-leader/set-key
-  "<SPC>" 'evil-ex-nohighlight)
-; bind key to ripgrep text search inside current project
-(evil-leader/set-key
-  "i" 'helm-projectile-rg)
-; bind key to file search inside current project
-(evil-leader/set-key
-  "t" 'maybe-projectile-find-file)
-; bind key to helm buffers list
-(evil-leader/set-key
-  ";" 'helm-buffers-list)
+  "<SPC>" 'evil-ex-nohighlight ; ripgrep text search inside current project
+  "i" 'helm-projectile-rg ; file search inside current project
+  "t" 'maybe-projectile-find-file ; file search inside current project
+  ";" 'helm-buffers-list ; helm buffers list
+
+  ; evil-nerd-commenter evil-leader bindings
+  "ci" 'evilnc-comment-or-uncomment-lines
+  "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "cc" 'evilnc-copy-and-comment-lines
+  "cp" 'evilnc-comment-or-uncomment-paragraphs
+  "cr" 'comment-or-uncomment-region
+  "cv" 'evilnc-toggle-invert-comment-line-by-line
+  "."  'evilnc-copy-and-comment-operator
+)
 
 (require 'evil)
 (evil-mode 1)

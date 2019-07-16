@@ -207,13 +207,12 @@ anzu-cons-mode-line-p nil)
     (ns-raise-emacs)))
 
 ;; emacs backup files config
-; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-; make auto-save backups using copy instead of rename
-(setq backup-by-copying t)
+(setq backup-directory-alist `(("." . "~/.emacs-saves")))
+(setq version-control t     ;; Use version numbers for backups.
+      kept-new-versions 10  ;; Number of newest versions to keep.
+      kept-old-versions 0   ;; Number of oldest versions to keep.
+      delete-old-versions t ;; Don't ask to delete excess backup versions.
+      backup-by-copying t)  ;; Copy all files, don't rename them.
 
 ; bind key to reload emacs config
 (defun reload-init-file ()

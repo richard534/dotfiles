@@ -163,6 +163,9 @@ brew cask install keepassxc
 # keycastr
 brew cask install keycastr
 
+# sublime-merge
+brew cask install sublime-merge
+
 ########################################
 
 # python (pip) packages

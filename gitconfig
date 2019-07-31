@@ -10,7 +10,7 @@
 [alias]
     lga = log --graph --all # graph - shows what and where commits were merged; --all shows history of all branches, not just HEAD branch;
     lg = log --graph # graph - shows what and where commits were merged
-	lg-overview = log --graph --oneline --all --decorate --simplify-by-decoration --pretty='%C(auto)%h %d %s (%Cgreen%ar%Creset)' # very low granularity git log for repo overview
+	lga-overview = log --graph --oneline --all --decorate --simplify-by-decoration --pretty='%C(auto)%h %d %s (%Cgreen%ar%Creset)' # very low granularity git log for repo overview
     co = checkout
     cm = commit
     st = status
@@ -47,3 +47,8 @@
 	tool = vimdiff
 [difftool]
 	prompt = false
+[mergetool "smerge"]
+	cmd = smerge mergetool \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+	trustExitCode = true
+[merge]
+	tool = smerge

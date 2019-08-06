@@ -9,6 +9,9 @@ set clipboard=unnamedplus,unnamed
 " highlight all matches when searching
 set hlsearch
 
+" disable bell sound
+set visualbell
+
 " set leader key
 let mapleader = '\'
 

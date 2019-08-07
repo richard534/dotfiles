@@ -146,6 +146,12 @@ if ! brew ls --versions emacs-plus  > /dev/null; then
     brew install emacs-plus
 fi
 
+
+# terminal-notifier
+if ! brew ls --versions terminal-notifier > /dev/null; then
+    brew install terminal-notifier
+fi
+
 ########################################
 
 # brew casks

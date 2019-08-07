@@ -45,6 +45,7 @@ alias em='emacsclient --no-wait'
 alias emc='emacsclient -c --no-wait'
 alias tree='tree -C'
 alias info='info --vi-keys'
+alias notify='terminal-notifier -title "Terminal" -message "donezo" -subtitle "donedonedone" -sound "default"'
 
 # fzf + ag configuration
 export FZF_DEFAULT_COMMAND='rg --files'

@@ -136,7 +136,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 anzu-cons-mode-line-p nil)
 
 ; set default font
-(set-default-font "Source Code Pro 14")
+(set-default-font "Source Code Pro 16")
 (require 'all-the-icons)
 ; run m-x all-the-icons-install-fonts
 
@@ -166,8 +166,8 @@ anzu-cons-mode-line-p nil)
 (doom-modeline-mode 1)
 ; set doom-modeline height
 (setq doom-modeline-height 1)
-(set-face-attribute 'mode-line nil :height 50 :font "Source Code Pro 10" )
-(set-face-attribute 'mode-line-inactive nil :height 50 :font "Source Code Pro 10")
+(set-face-attribute 'mode-line nil :height 50 :font "Source Code Pro 12" )
+(set-face-attribute 'mode-line-inactive nil :height 50 :font "Source Code Pro 12")
 
 ;; Appearance
 (add-hook 'after-init-hook #'fancy-battery-mode)

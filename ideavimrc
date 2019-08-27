@@ -29,8 +29,9 @@ nmap g[ :action Back<cr>
 nmap g] :action Forward<cr>
 nmap gf :action GotoFile<cr>
 nmap gc :action GotoClass<cr>
-nmap gs :action GotoSymbol<cr>
+nmap gss :action GotoSymbol<cr>
 nmap gt :action TypeHierarchy<cr>
+nmap guu :action GotoSuperMethod<cr>
 
 nmap <leader>f :action FileStructurePopup<cr>
 nmap <leader>d :action Compare.SameVersion<cr>

@@ -156,9 +156,9 @@ anzu-cons-mode-line-p nil)
 ; Enable flashing mode-line on errors
 (doom-themes-visual-bell-config)
 ; Enable custom neotree theme (all-the-icons must be installed!)
-(doom-themes-neotree-config)
+; (doom-themes-neotree-config)
 ; or for treemacs users
-(doom-themes-treemacs-config)
+; (doom-themes-treemacs-config)
 ; Corrects (and improves) org-mode's native fontification.
 (doom-themes-org-config)
 ;; doom-modeline package config
@@ -245,7 +245,7 @@ anzu-cons-mode-line-p nil)
 
 ;; Enable line numbers (when emacs-version compatible)
 (when (version<= "26.0.50" emacs-version )
-  (global-display-line-numbers-mode))
+    (global-display-line-numbers-mode))
 
 ;; Which-key package config
 (require 'which-key)
@@ -307,3 +307,9 @@ anzu-cons-mode-line-p nil)
 (require 'org-download)
 ; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
+
+;; emacs-neotree config
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-window-fixed-size nil)
+(setq neo-theme 'arrow)

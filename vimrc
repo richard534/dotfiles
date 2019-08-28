@@ -246,3 +246,6 @@ augroup json_autocmd
 	autocmd FileType json set foldmethod=syntax
 augroup END
 
+" useful keymap for select all
+map <C-a> <esc>ggVG<CR>
+

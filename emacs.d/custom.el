@@ -10,7 +10,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (terraform-mode neotree evil-nerd-commenter org-download indent-guide evil-numbers company discover-my-major flycheck exec-path-from-shell helm-rg helm-projectile projectile rainbow-delimiters helm fancy-battery doom-modeline which-key magit evil-leader diminish pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (json-mode terraform-mode neotree evil-nerd-commenter org-download indent-guide evil-numbers company discover-my-major flycheck exec-path-from-shell helm-rg helm-projectile projectile rainbow-delimiters helm fancy-battery doom-modeline which-key magit evil-leader diminish pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
  '(projectile-mode t nil (projectile))
  '(tool-bar-mode nil))
 (custom-set-faces

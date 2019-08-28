@@ -1,4 +1,4 @@
-;; install MELPA
+ bind ; install MELPA
 (require 'package)
 
 ;; Set package archives
@@ -61,7 +61,7 @@
 (define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
 (define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
 (define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
-; mapc ursor color to evil vim mode
+; map cursor color to evil vim mode
 (setq evil-emacs-state-cursor '("red" box))
 (setq evil-normal-state-cursor '("green" box))
 (setq evil-visual-state-cursor '("orange" box))
@@ -71,6 +71,11 @@
 ; rebind split window keys
 (define-key evil-normal-state-map "|" 'split-window-horizontally)
 (define-key evil-normal-state-map "-" 'split-window-vertically)
+
+; evil shortcut to select all in file
+(fset 'select-all
+   "ggVG")
+(define-key evil-normal-state-map (kbd "C-a") 'select-all)
 
 ; evil-number package config
 (require 'evil-numbers)
@@ -313,3 +318,7 @@ anzu-cons-mode-line-p nil)
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-window-fixed-size nil)
 (setq neo-theme 'arrow)
+
+;; json-mode/json-reformat package config
+(setq json-reformat:indent-width 2)
+

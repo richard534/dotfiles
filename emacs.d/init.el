@@ -1,4 +1,4 @@
- bind ; install MELPA
+; install MELPA
 (require 'package)
 
 ;; Set package archives
@@ -71,6 +71,11 @@
 ; rebind split window keys
 (define-key evil-normal-state-map "|" 'split-window-horizontally)
 (define-key evil-normal-state-map "-" 'split-window-vertically)
+; rebind move window keys
+(define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
+(define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
+(define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
+(define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
 
 ; evil shortcut to select all in file
 (fset 'select-all
@@ -141,7 +146,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 anzu-cons-mode-line-p nil)
 
 ; set default font
-(set-default-font "Source Code Pro 16")
+(set-default-font "Source Code Pro 14")
 (require 'all-the-icons)
 ; run m-x all-the-icons-install-fonts
 
@@ -248,9 +253,9 @@ anzu-cons-mode-line-p nil)
 (diminish `visual-line-mode)
 (diminish `org-indent-mode)
 
-;; Enable line numbers (when emacs-version compatible)
-(when (version<= "26.0.50" emacs-version )
-    (global-display-line-numbers-mode))
+;; Line numbers config
+(global-display-line-numbers-mode 1)
+(define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
 
 ;; Which-key package config
 (require 'which-key)
@@ -322,3 +327,5 @@ anzu-cons-mode-line-p nil)
 ;; json-mode/json-reformat package config
 (setq json-reformat:indent-width 2)
 
+;; elpy config
+(elpy-enable)

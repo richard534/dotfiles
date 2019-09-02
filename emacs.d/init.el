@@ -77,6 +77,9 @@
 (define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
 (define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
 
+; Make tabs work like they do in vim (tab key inserts spaces/tabs)
+(define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
+
 ; evil shortcut to select all in file
 (fset 'select-all
    "ggVG")
@@ -329,3 +332,6 @@ anzu-cons-mode-line-p nil)
 
 ;; elpy config
 (elpy-enable)
+
+;; hl-todo config
+(setq global-hl-todo-mode 1)

@@ -16,6 +16,15 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+;; Custom fn that opens helm-projectile-ag if currently in a projectile project
+; otherwise opens standard helm-ag
+(defun maybe-helm-projectile-ag ()
+  (interactive)
+  (call-interactively
+    (if (projectile-project-p)
+       #'helm-projectile-ag
+       #'helm-ag)))
+
 ;; configure emacs evil package/s
 ; enable vim-like crtl-u pgUp
 (setq evil-want-C-u-scroll t)
@@ -33,6 +42,7 @@
   "i" 'helm-projectile-ag ; file search inside current project
   "t" 'helm-projectile-find-file ; file search inside current project
   ";" 'helm-buffers-list ; helm buffers list
+  "fs" `helm-imenu ; mnemonic - file-structure
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -80,8 +90,16 @@
 ; Make tabs work like they do in vim (tab key inserts spaces/tabs)
 (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
 
-; Bind gf to find files (mnemonic - find file)
+;; Bind vim-style GoTo commands
+; mnemonic - goto file
 (define-key evil-normal-state-map "gf" `helm-find-files)
+(define-key evil-normal-state-map "gF" `helm-projectile-find-file)
+; mnemonic - goto symbol
+(define-key evil-normal-state-map "gs" `maybe-helm-projectile-ag)
+(define-key evil-normal-state-map "gS" `helm-ag-this-file)
+; goto git hunks
+(define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
+(define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
 
 ; evil shortcut to select all in file
 (fset 'select-all
@@ -170,7 +188,7 @@ anzu-cons-mode-line-p nil)
 ; Enable flashing mode-line on errors
 (doom-themes-visual-bell-config)
 ; Enable custom neotree theme (all-the-icons must be installed!)
-; (doom-themes-neotree-config)
+;; (doom-themes-neotree-config)
 ; or for treemacs users
 ; (doom-themes-treemacs-config)
 ; Corrects (and improves) org-mode's native fontification.
@@ -217,7 +235,7 @@ anzu-cons-mode-line-p nil)
     (ns-raise-emacs)))
 
 ;; emacs backup files config
-(setq backup-directory-alist `(("." . "~/.emacs-saves")))
+(setq backup-directory-alist `(("~/.emacs-saves")))
 (setq version-control t     ;; Use version numbers for backups.
       kept-new-versions 10  ;; Number of newest versions to keep.
       kept-old-versions 0   ;; Number of oldest versions to keep.
@@ -254,6 +272,7 @@ anzu-cons-mode-line-p nil)
 (diminish `elpy-mode)
 (diminish `flymake-mode)
 (diminish `highlight-indentation-mode)
+(diminish `auto-revert-mode)
 
 ;; Line numbers config
 (define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
@@ -328,7 +347,8 @@ anzu-cons-mode-line-p nil)
 ;; elpy config
 (elpy-enable)
 (add-hook `python-mode
-    (define-key evil-normal-state-map "gd" 'elpy-goto-definition))
+          (define-key evil-normal-state-map "gd" 'elpy-goto-definition)
+          (evil-leader/set-key "fc" 'elpy-black-fix-code)) ; mnemonic - format-code
 ; use flycheck insead of fly-make
 (when (load "flycheck" t t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))

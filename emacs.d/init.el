@@ -17,13 +17,23 @@
 (load custom-file 'noerror)
 
 ;; Custom fn that opens helm-projectile-ag if currently in a projectile project
-; otherwise opens standard helm-ag
+; otherwise opens helm-ag
 (defun maybe-helm-projectile-ag ()
   (interactive)
   (call-interactively
     (if (projectile-project-p)
        #'helm-projectile-ag
        #'helm-ag)))
+
+;; Custom fn that opens helm-projectile-find-file if currently in a projectile project
+; otherwise opens helm-find-files
+(defun maybe-helm-projectile-find-file ()
+  (interactive)
+  (call-interactively
+    (if (projectile-project-p)
+       #'helm-projectile-find-file
+       #'helm-find-files)))
+
 
 ;; configure emacs evil package/s
 ; enable vim-like crtl-u pgUp
@@ -92,8 +102,8 @@
 
 ;; Bind vim-style GoTo commands
 ; mnemonic - goto file
-(define-key evil-normal-state-map "gf" `helm-find-files)
-(define-key evil-normal-state-map "gF" `helm-projectile-find-file)
+(define-key evil-normal-state-map "gf" `maybe-helm-projectile-find-file)
+(define-key evil-normal-state-map "gF" `helm-find-files)
 ; mnemonic - goto symbol
 (define-key evil-normal-state-map "gs" `maybe-helm-projectile-ag)
 (define-key evil-normal-state-map "gS" `helm-ag-this-file)
@@ -388,5 +398,10 @@ anzu-cons-mode-line-p nil)
 ;; origami config
 (require 'origami)
 (add-hook 'prog-mode-hook
-      (lambda ()
+    (lambda ()
         (origami-mode)))
+
+;; terraform-mode config
+(add-hook 'terraform-mode
+  (lambda ()
+    (setq evil-shift-width 2)))

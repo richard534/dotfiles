@@ -384,3 +384,9 @@ anzu-cons-mode-line-p nil)
 (global-diff-hl-mode)
 ; set diff-hl to work with unsaved buffers too
 (diff-hl-flydiff-mode t)
+
+;; origami config
+(require 'origami)
+(add-hook 'prog-mode-hook
+      (lambda ()
+        (origami-mode)))

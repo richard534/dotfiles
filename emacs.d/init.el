@@ -30,8 +30,8 @@
 ; bind evil-keys
 (evil-leader/set-key
   "<SPC>" 'evil-ex-nohighlight ; ripgrep text search inside current project
-  "i" 'helm-projectile-rg ; file search inside current project
-  "t" 'maybe-projectile-find-file ; file search inside current project
+  "i" 'helm-projectile-ag ; file search inside current project
+  "t" 'helm-projectile-find-file ; file search inside current project
   ";" 'helm-buffers-list ; helm buffers list
 
   ; evil-nerd-commenter evil-leader bindings
@@ -79,6 +79,9 @@
 
 ; Make tabs work like they do in vim (tab key inserts spaces/tabs)
 (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
+
+; Bind gf to find files (mnemonic - find file)
+(define-key evil-normal-state-map "gf" `helm-find-files)
 
 ; evil shortcut to select all in file
 (fset 'select-all
@@ -155,8 +158,6 @@ anzu-cons-mode-line-p nil)
 
 ;; start emacs-server (for use with emacsclient)
 (server-start)
-;; set line break mode
-(global-visual-line-mode t)
 
 ;; set emacs theme (Doom-themes package config)
 ; Global settings (defaults)
@@ -174,16 +175,6 @@ anzu-cons-mode-line-p nil)
 ; (doom-themes-treemacs-config)
 ; Corrects (and improves) org-mode's native fontification.
 (doom-themes-org-config)
-;; doom-modeline package config
-(require 'doom-modeline)
-(doom-modeline-mode 1)
-; set doom-modeline height
-(setq doom-modeline-height 1)
-(set-face-attribute 'mode-line nil :height 50 :font "Source Code Pro 12" )
-(set-face-attribute 'mode-line-inactive nil :height 50 :font "Source Code Pro 12")
-
-;; Appearance
-(add-hook 'after-init-hook #'fancy-battery-mode)
 
 ;; org-mode config
 (setq org-startup-indented t)
@@ -244,21 +235,30 @@ anzu-cons-mode-line-p nil)
 (setq ring-bell-function 'ignore)
 
 ; mit-scheme (sicp) setup
-; (setq scheme-program-name "/usr/local/Cellar/mit-scheme/9.2_1/bin/mit-scheme")
 (setq scheme-program-name "/usr/local/bin/scheme")
 (require 'xscheme)
 
 ;; diminish package config
 (require 'diminish)
+; TODO sometimes these diminish commands are called before their respective packages are loaded - causing them to fail
 (diminish `anzu-mode)
 (diminish `undo-tree-mode)
 (diminish `eldoc-mode)
 (diminish `visual-line-mode)
 (diminish `org-indent-mode)
+(diminish `flycheck-mode)
+(diminish `indent-guide-mode)
+(diminish `helm-mode)
+(diminish `which-key-mode)
+(diminish `projectile-mode)
+(diminish `elpy-mode)
+(diminish `flymake-mode)
+(diminish `highlight-indentation-mode)
 
 ;; Line numbers config
-(global-display-line-numbers-mode 1)
 (define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
+; Enable line numbers only in modes that inherit prog-mode (programming mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode 1)
 
 ;; Which-key package config
 (require 'which-key)
@@ -282,12 +282,15 @@ anzu-cons-mode-line-p nil)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 ; helm projectile config
 (require 'helm-projectile)
+; Helm-ag config
+(custom-set-variables
+    '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+    '(helm-ag-command-option "--all-text")
+    ; When helm-ag opened - take symbol @ current curror location - use as default search pattern
+    '(helm-ag-insert-at-point 'symbol))
 
 ;; Rainbow-delimiters package config
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-
-;; flycheck package config
-(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; company package config
 (add-hook 'after-init-hook 'global-company-mode)
@@ -303,14 +306,6 @@ anzu-cons-mode-line-p nil)
   (define-key company-active-map (kbd "M-p") nil)
   (define-key company-active-map (kbd "C-n") #'company-select-next)
   (define-key company-active-map (kbd "C-p") #'company-select-previous))
-
-; defun - if inside project - do projectwide file search - otherwise - regular file search
-(defun maybe-projectile-find-file ()
-  (interactive)
-  (call-interactively
-    (if (projectile-project-p)
-       #'helm-projectile-find-file
-       #'helm-find-files)))
 
 ; indent-guide package config
 (require 'indent-guide)
@@ -332,6 +327,40 @@ anzu-cons-mode-line-p nil)
 
 ;; elpy config
 (elpy-enable)
+(add-hook `python-mode
+    (define-key evil-normal-state-map "gd" 'elpy-goto-definition))
+; use flycheck insead of fly-make
+(when (load "flycheck" t t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 ;; hl-todo config
 (setq global-hl-todo-mode 1)
+(global-hl-todo-mode)
+
+;; Tabs/Spaces config
+(setq tab-width 4)
+(setq indent-tabs-mode nil)
+
+;; spaceline config
+(require `spaceline-config)
+(spaceline-emacs-theme)
+; colour spaceline modeline according to vim mode
+(setq spaceline-highlight-face-func `spaceline-highlight-face-evil-state)
+
+;; Word wrapping hooks
+; Text mode
+(add-hook 'prog-mode-hook '(lambda ()
+    (visual-line-mode -1)
+    (setq truncate-lines t
+          word-wrap nil)))
+
+; Programming mode
+(add-hook 'text-mode-hook '(lambda ()
+    (setq truncate-lines nil
+          word-wrap t)))
+
+;; diff-hl config
+(global-diff-hl-mode)
+; set diff-hl to work with unsaved buffers too
+(diff-hl-flydiff-mode t)

@@ -4,12 +4,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
+ '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+ '(helm-ag-command-option "--all-text")
+ '(helm-ag-insert-at-point (quote symbol))
  '(inhibit-startup-echo-area-message "richard")
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (buffer-move hl-todo imenu-list elpy json-mode terraform-mode neotree evil-nerd-commenter org-download indent-guide evil-numbers company discover-my-major flycheck exec-path-from-shell helm-rg helm-projectile projectile rainbow-delimiters helm fancy-battery doom-modeline which-key magit evil-leader diminish pdf-tools highlight-symbol evil-anzu anzu spaceline doom-themes evil)))
+    (diff-hl spaceline helm-ag buffer-move hl-todo imenu-list elpy json-mode terraform-mode neotree evil-nerd-commenter org-download indent-guide evil-numbers company discover-my-major flycheck exec-path-from-shell helm-projectile projectile rainbow-delimiters helm which-key magit evil-leader diminish pdf-tools highlight-symbol evil-anzu anzu doom-themes evil)))
  '(projectile-mode t nil (projectile))
  '(tool-bar-mode nil))
 (custom-set-faces

@@ -89,8 +89,8 @@
 (setq evil-replace-state-cursor '("red" bar))
 (setq evil-operator-state-cursor '("red" hollow))
 ; rebind split window keys
-(define-key evil-normal-state-map "|" 'split-window-horizontally)
-(define-key evil-normal-state-map "-" 'split-window-vertically)
+(define-key evil-normal-state-map (kbd "C-|") 'split-window-horizontally)
+(define-key evil-normal-state-map (kbd "C--") 'split-window-vertically)
 ; rebind move window keys
 (define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
 (define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
@@ -140,6 +140,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 (global-set-key [escape] 'evil-exit-emacs-state)
 
+; evil-magit config
+(require 'evil-magit)
+
 ;; User interface settings
 ; disable gui toolbar
 (tool-bar-mode -1)
@@ -160,6 +163,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (message nil))
 ; number of lines to scroll when reach top/bottom of window
 (setq scroll-step 1)
+; emacs auto-refresh buffers when files changed on disk
+(global-auto-revert-mode t)
 
 ;; remember cursor position of files when reopening them
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -203,6 +208,8 @@ anzu-cons-mode-line-p nil)
 ; (doom-themes-treemacs-config)
 ; Corrects (and improves) org-mode's native fontification.
 (doom-themes-org-config)
+; overload doom-themes "selected region" color
+(set-face-attribute 'region nil :background "#666")
 
 ;; org-mode config
 (setq org-startup-indented t)
@@ -283,6 +290,7 @@ anzu-cons-mode-line-p nil)
 (diminish `flymake-mode)
 (diminish `highlight-indentation-mode)
 (diminish `auto-revert-mode)
+(diminish `abbrev-mode)
 
 ;; Line numbers config
 (define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
@@ -358,7 +366,8 @@ anzu-cons-mode-line-p nil)
 (elpy-enable)
 (add-hook `python-mode
           (define-key evil-normal-state-map "gd" 'elpy-goto-definition)
-          (evil-leader/set-key "fc" 'elpy-black-fix-code)) ; mnemonic - format-code
+          (evil-leader/set-key "fc" 'elpy-black-fix-code) ; mnemonic - format-code
+          (setq python-indent-offset 4))
 ; use flycheck insead of fly-make
 (when (load "flycheck" t t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
@@ -405,3 +414,7 @@ anzu-cons-mode-line-p nil)
 (add-hook 'terraform-mode
   (lambda ()
     (setq evil-shift-width 2)))
+
+;; smooth-scrolling config
+(require 'smooth-scrolling)
+(smooth-scrolling-mode 1)

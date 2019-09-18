@@ -34,7 +34,6 @@
        #'helm-projectile-find-file
        #'helm-find-files)))
 
-
 ;; configure emacs evil package/s
 ; enable vim-like crtl-u pgUp
 (setq evil-want-C-u-scroll t)
@@ -142,6 +141,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ; evil-magit config
 (require 'evil-magit)
+; enable automatic refreshing of magit buffers
+(add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
 ;; User interface settings
 ; disable gui toolbar
@@ -164,7 +165,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; number of lines to scroll when reach top/bottom of window
 (setq scroll-step 1)
 ; emacs auto-refresh buffers when files changed on disk
-(global-auto-revert-mode t)
+(global-auto-revert-mode)
+; auto-complete pairs of brackets/quotes etc.
+(setq electric-pair-preserve-balance nil)
+; Disabled "electric indent mode" - breaks some modes inc. python
+(electric-indent-mode -1)
 
 ;; remember cursor position of files when reopening them
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -368,6 +373,7 @@ anzu-cons-mode-line-p nil)
           (define-key evil-normal-state-map "gd" 'elpy-goto-definition)
           (evil-leader/set-key "fc" 'elpy-black-fix-code) ; mnemonic - format-code
           (setq python-indent-offset 4))
+          ;; (local-set-key (kbd "RET") 'newline-and-indent))
 ; use flycheck insead of fly-make
 (when (load "flycheck" t t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
@@ -378,8 +384,8 @@ anzu-cons-mode-line-p nil)
 (global-hl-todo-mode)
 
 ;; Tabs/Spaces config
-(setq tab-width 4)
-(setq indent-tabs-mode nil)
+;; (setq tab-width 4)
+;; (setq indent-tabs-mode nil)
 
 ;; spaceline config
 (require `spaceline-config)
@@ -403,6 +409,10 @@ anzu-cons-mode-line-p nil)
 (global-diff-hl-mode)
 ; set diff-hl to work with unsaved buffers too
 (diff-hl-flydiff-mode t)
+; set left fringe width - prevent vertical splits hiding diff-hl
+(setq-default left-fringe-width 16)
+; diff-hl magit integration
+(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
 ;; origami config
 (require 'origami)
@@ -415,6 +425,34 @@ anzu-cons-mode-line-p nil)
   (lambda ()
     (setq evil-shift-width 2)))
 
-;; smooth-scrolling config
-(require 'smooth-scrolling)
-(smooth-scrolling-mode 1)
+(defun put-file-path-on-clipboard ()
+  "Put the absolute file path on the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))
+
+(setq make-backup-files nil) ; stop creating backup~ files
+(setq auto-save-default nil) ; stop creating #autosave# files
+
+;; EditorConfig config
+(editorconfig-mode 1)
+
+;; Custom fn to open emacs init file
+(defun find-emacs-init-file ()
+  "Edit the 'emacs-init-file', in another window."
+  (interactive)
+  (find-file user-init-file))
+; bind evil ex-command to open init file
+(evil-ex-define-cmd "init" #'find-emacs-init-file)
+
+;; ediff config
+; only hilight current diff:
+(setq-default ediff-highlight-all-diffs 'nil)
+; turn off whitespace checking:
+(setq ediff-diff-options "-w")

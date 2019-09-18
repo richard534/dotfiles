@@ -461,3 +461,7 @@ anzu-cons-mode-line-p nil)
 (setq-default ediff-highlight-all-diffs 'nil)
 ; turn off whitespace checking:
 (setq ediff-diff-options "-w")
+
+;; forge config
+(with-eval-after-load `magit
+  (require `forge))

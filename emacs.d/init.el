@@ -52,6 +52,8 @@
   "t" 'helm-projectile-find-file ; file search inside current project
   ";" 'helm-buffers-list ; helm buffers list
   "fs" `helm-imenu ; mnemonic - file-structure
+  "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
+  "R" `projectile-replace ; project-wide find/replace
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -109,6 +111,9 @@
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
+; goto todo
+(define-key evil-normal-state-map "gtn" `hl-todo-next)
+(define-key evil-normal-state-map "gtp" `hl-todo-previous)
 
 ; evil shortcut to select all in file
 (fset 'select-all

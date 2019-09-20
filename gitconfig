@@ -23,10 +23,16 @@
 	branchdiff = !sh -c \"git diff `git oldest-ancestor`..\"
 	branchlog = !sh -c \"git log `git oldest-ancestor`..\"
 	roa = !sh -c \"git reset $(git oldest-ancestor)\" # reset to oldest ancestor
+	rob = ! "echo $(git rev-parse --abbrev-ref HEAD) | { read test; git reset origin/$test; }" # reset to latest commit on origin/$current-branch
 	br  = !sh -c \"git for-each-ref --sort=committerdate refs/heads/ refs/remotes/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' \" # custom git branch command
 	prune-local = !sh -c \"git-prune-local\"
 [color]
-	ui = true
+	ui = auto
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    pager = true
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52
@@ -52,3 +58,5 @@
 	trustExitCode = true
 [merge]
 	tool = smerge
+[github]
+	user = ritaylor-r7

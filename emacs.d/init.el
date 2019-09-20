@@ -48,9 +48,6 @@
 ; bind evil-keys
 (evil-leader/set-key
   "<SPC>" 'evil-ex-nohighlight ; ripgrep text search inside current project
-  "i" 'helm-projectile-ag ; file search inside current project
-  "t" 'helm-projectile-find-file ; file search inside current project
-  ";" 'helm-buffers-list ; helm buffers list
   "fs" `helm-imenu ; mnemonic - file-structure
   "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
   "R" `projectile-replace ; project-wide find/replace
@@ -114,6 +111,8 @@
 ; goto todo
 (define-key evil-normal-state-map "gtn" `hl-todo-next)
 (define-key evil-normal-state-map "gtp" `hl-todo-previous)
+; goto emacs-buffer
+(define-key evil-normal-state-map "gb" `helm-buffers-list)
 
 ; evil shortcut to select all in file
 (fset 'select-all
@@ -306,6 +305,8 @@ anzu-cons-mode-line-p nil)
 (define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
 ; Enable line numbers only in modes that inherit prog-mode (programming mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode 1)
+; groovy-mode-hook doesn't seem to inherit prog-mode - defining seperately
+(add-hook 'groovy-mode-hook 'display-line-numbers-mode 1)
 
 ;; Which-key package config
 (require 'which-key)
@@ -455,6 +456,19 @@ anzu-cons-mode-line-p nil)
   (find-file user-init-file))
 ; bind evil ex-command to open init file
 (evil-ex-define-cmd "init" #'find-emacs-init-file)
+(evil-ex-define-cmd "st" 'magit-status)
+
+(defun git-reset-common-ancestor ()
+  "Runs external shell command (using compile) which resets to common git commit ancestor"
+  (interactive)
+  (shell-command "git roa")
+  (magit-refresh))
+
+(defun git-reset-origin-current-branch ()
+  "git reset to origin version of current branch"
+  (interactive)
+  (shell-command "git rob")
+  (magit-refresh))
 
 ;; ediff config
 ; only hilight current diff:
@@ -462,6 +476,13 @@ anzu-cons-mode-line-p nil)
 ; turn off whitespace checking:
 (setq ediff-diff-options "-w")
 
-;; forge config
+;; magit config
+; magit disables git-clean default - this enables it
+(put 'magit-clean 'disabled nil)
+; forge config
 (with-eval-after-load `magit
   (require `forge))
+
+;; ediff config
+; prevent ediff opening seperate emacs window
+ (setq ediff-window-setup-function 'ediff-setup-windows-plain)

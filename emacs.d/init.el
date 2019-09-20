@@ -51,6 +51,7 @@
   "fs" `helm-imenu ; mnemonic - file-structure
   "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
   "R" `projectile-replace ; project-wide find/replace
+  "s" `string-inflection-cycle-auto ; convert string
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -486,3 +487,22 @@ anzu-cons-mode-line-p nil)
 ;; ediff config
 ; prevent ediff opening seperate emacs window
  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;; string-inflection config
+(require 'string-inflection)
+(defun string-inflection-cycle-auto ()
+  "running string format conversion based on major-mode"
+  (interactive)
+  (cond
+   ;; for emacs-lisp mode
+   ((eq major-mode 'emacs-list-mode)
+    (string-inflection-all-cycle))
+   ;; for python
+   ((eq major-mode 'python-mode)
+    (string-inflection-python-style-cycle))
+     ;; for java
+   ((eq major-mode 'java-mode)
+    (string-inflection-java-style-cycle))
+   (t
+   ;; default
+   (string-inflection-ruby-style-cycle))))

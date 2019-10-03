@@ -62,3 +62,5 @@ SECRET_CONF=~/.zshrc_local && test -f $SECRET_CONF && source $SECRET_CONF
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# pyenv config
+eval "$(pyenv init -)"

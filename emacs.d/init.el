@@ -175,6 +175,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq electric-pair-preserve-balance nil)
 ; Disabled "electric indent mode" - breaks some modes inc. python
 (electric-indent-mode -1)
+; pressing tab will product spaces instead of tab chars
+(setq-default indent-tabs-mode nil)
 
 ;; remember cursor position of files when reopening them
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -378,9 +380,14 @@ anzu-cons-mode-line-p nil)
 (elpy-enable)
 (add-hook `python-mode
           (define-key evil-normal-state-map "gd" 'elpy-goto-definition)
-          (evil-leader/set-key "fc" 'elpy-black-fix-code) ; mnemonic - format-code
-          (setq python-indent-offset 4))
-          ;; (local-set-key (kbd "RET") 'newline-and-indent))
+          (evil-leader/set-key "fc" 'elpy-black-fix-code)) ; mnemonic - format-code
+
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
+
 ; use flycheck insead of fly-make
 (when (load "flycheck" t t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
@@ -389,10 +396,6 @@ anzu-cons-mode-line-p nil)
 ;; hl-todo config
 (setq global-hl-todo-mode 1)
 (global-hl-todo-mode)
-
-;; Tabs/Spaces config
-;; (setq tab-width 4)
-;; (setq indent-tabs-mode nil)
 
 ;; spaceline config
 (require `spaceline-config)
@@ -479,7 +482,6 @@ anzu-cons-mode-line-p nil)
 
 ;; magit config
 ; magit disables git-clean default - this enables it
-(put 'magit-clean 'disabled nil)
 ; forge config
 (with-eval-after-load `magit
   (require `forge))
@@ -506,3 +508,37 @@ anzu-cons-mode-line-p nil)
    (t
    ;; default
    (string-inflection-ruby-style-cycle))))
+
+;; Fn to rename current file/buffer
+;; source: https://sites.google.com/site/steveyegge2/my-dot-emacs-file
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil)
+	  (projectile-cache-current-file))))))
+
+;; fn to delete current buffer and file it has open
+;; source: https://emacsredux.com/blog/2013/04/03/delete-file-and-buffer/
+(defun delete-file-and-buffer ()
+  "Kill the current buffer and deletes the file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (when filename
+      (if (vc-backend filename)
+          (vc-delete-file filename)
+        (progn
+          (delete-file filename)
+          (message "Deleted file %s" filename)
+          (kill-buffer))))))
+
+(put 'magit-clean 'disabled nil)

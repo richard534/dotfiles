@@ -44,14 +44,16 @@
 (global-evil-leader-mode)
 (require 'evil-leader)
 ; set evil leader key to backslash
-(evil-leader/set-leader "\\")
+(evil-leader/set-leader "<SPC>")
 ; bind evil-keys
 (evil-leader/set-key
   "<SPC>" 'evil-ex-nohighlight ; ripgrep text search inside current project
   "fs" `helm-imenu ; mnemonic - file-structure
   "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
-  "R" `projectile-replace ; project-wide find/replace
-  "s" `string-inflection-cycle-auto ; convert string
+  "R"  `projectile-replace ; project-wide find/replace
+  "s"  `string-inflection-cycle-auto ; convert string
+  "is" `yas-insert-snippet ; insert snippet
+  "fd" `magit-file-dispatch ; insert snippet
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -104,14 +106,14 @@
 (define-key evil-normal-state-map "gf" `maybe-helm-projectile-find-file)
 (define-key evil-normal-state-map "gF" `helm-find-files)
 ; mnemonic - goto symbol
-(define-key evil-normal-state-map "gs" `maybe-helm-projectile-ag)
-(define-key evil-normal-state-map "gS" `helm-ag-this-file)
+(define-key evil-normal-state-map "gs" `helm-do-ag-this-file)
+(define-key evil-normal-state-map "gS" `maybe-helm-projectile-ag)
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
 ; goto todo
-(define-key evil-normal-state-map "gtn" `hl-todo-next)
-(define-key evil-normal-state-map "gtp" `hl-todo-previous)
+(define-key evil-normal-state-map "gt]" `hl-todo-next)
+(define-key evil-normal-state-map "gt[" `hl-todo-previous)
 ; goto emacs-buffer
 (define-key evil-normal-state-map "gb" `helm-buffers-list)
 
@@ -192,7 +194,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; configure anzu package
 (global-anzu-mode +1)
 (with-eval-after-load 'evil
-  (require 'evil-anzu))
+  (require 'evil-anzu)
+  (global-evil-surround-mode 1))
 (setq anzu-search-threshold 1000
 anzu-cons-mode-line-p nil)
 
@@ -387,6 +390,10 @@ anzu-cons-mode-line-p nil)
       python-shell-prompt-detect-failure-warning nil)
 (add-to-list 'python-shell-completion-native-disabled-interpreters
              "jupyter")
+; prevent elpy from overiding certain keys
+(eval-after-load "elpy"
+  '(cl-dolist (key '("M-<up>" "M-<down>" "M-<left>" "M-<right>"))
+     (define-key elpy-mode-map (kbd key) nil)))
 
 ; use flycheck insead of fly-make
 (when (load "flycheck" t t)
@@ -466,7 +473,7 @@ anzu-cons-mode-line-p nil)
   "Runs external shell command (using compile) which resets to common git commit ancestor"
   (interactive)
   (shell-command "git roa")
-  (magit-refresh))
+  (mmagit-refresh))
 
 (defun git-reset-origin-current-branch ()
   "git reset to origin version of current branch"
@@ -481,6 +488,7 @@ anzu-cons-mode-line-p nil)
 (setq ediff-diff-options "-w")
 
 ;; magit config
+(put 'magit-clean 'disabled nil)
 ; magit disables git-clean default - this enables it
 ; forge config
 (with-eval-after-load `magit
@@ -541,4 +549,6 @@ anzu-cons-mode-line-p nil)
           (message "Deleted file %s" filename)
           (kill-buffer))))))
 
-(put 'magit-clean 'disabled nil)
+;; yasnippet package config
+(require 'yasnippet)
+(yas-global-mode 1)

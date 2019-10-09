@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: defTestScenarioExpected
+# key: tstse
+# group: testing
+# --
+def test_${1:scenario}__${2:expected_behaviour}(self):
+	$0

@@ -20,3 +20,4 @@ emacs.d/ido.last
 emacs.d/.python-environments
 emacs.d/network-security.data
 emacs.d/forge-database.sqlite
+.yas-compiled-snippets.el

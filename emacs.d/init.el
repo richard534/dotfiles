@@ -239,6 +239,12 @@ anzu-cons-mode-line-p nil)
                                             ("*" . "-")
                                             ("1." . "-")
                                             ("1)" . "a)"))))
+; evil-org config
+(require 'evil-org)
+(add-hook 'org-mode-hook 'evil-org-mode)
+(evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+(require 'evil-org-agenda)
+(evil-org-agenda-set-keys)
 
 ; add python to org-mode babel (allows executing python code in org files src blocks)
 (org-babel-do-load-languages
@@ -274,12 +280,10 @@ anzu-cons-mode-line-p nil)
       delete-old-versions t ;; Don't ask to delete excess backup versions.
       backup-by-copying t)  ;; Copy all files, don't rename them.
 
-; bind key to reload emacs config
+; fn to reload emacs config
 (defun reload-init-file ()
   (interactive)
   (load-file "~/.emacs.d/init.el"))
-; bind key to reaload this file
-(global-set-key (kbd "C-c C-r") 'reload-init-file)
 
 ; turn off all alarms (flashing bottom of screen, audible)
 (setq ring-bell-function 'ignore)
@@ -467,6 +471,7 @@ anzu-cons-mode-line-p nil)
   (find-file user-init-file))
 ; bind evil ex-command to open init file
 (evil-ex-define-cmd "init" #'find-emacs-init-file)
+(evil-ex-define-cmd "reload" #'reload-init-file)
 (evil-ex-define-cmd "st" 'magit-status)
 
 (defun git-reset-common-ancestor ()

@@ -16,14 +16,14 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; Custom fn that opens helm-projectile-ag if currently in a projectile project
-; otherwise opens helm-ag
-(defun maybe-helm-projectile-ag ()
+;; Custom fn that opens helm-projectile-rg if currently in a projectile project
+; otherwise opens helm-rg
+(defun maybe-helm-projectile-rg ()
   (interactive)
   (call-interactively
     (if (projectile-project-p)
-       #'helm-projectile-ag
-       #'helm-ag)))
+       #'helm-projectile-rg
+       #'helm-rg)))
 
 ;; Custom fn that opens helm-projectile-find-file if currently in a projectile project
 ; otherwise opens helm-find-files
@@ -106,8 +106,8 @@
 (define-key evil-normal-state-map "gf" `maybe-helm-projectile-find-file)
 (define-key evil-normal-state-map "gF" `helm-find-files)
 ; mnemonic - goto symbol
-(define-key evil-normal-state-map "gs" `helm-do-ag-this-file)
-(define-key evil-normal-state-map "gS" `maybe-helm-projectile-ag)
+(define-key evil-normal-state-map "gs" `helm-projectile-rg)
+(define-key evil-normal-state-map "gS" `maybe-helm-projectile-rg)
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
@@ -318,6 +318,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 ; enable caching projectile results (used with helm-projectile-find-file)
 (setq projectile-enable-caching t)
+; set projectile to just use VCS (e.g .gitignore) files during indexing
+(setq projectile-indexing-method 'alien)
 
 ;; Helm package config
 (require 'helm)
@@ -326,14 +328,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; re-bind keys to helm functions
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
-; helm projectile config
+
+;; helm projectile config
 (require 'helm-projectile)
-; Helm-ag config
-(custom-set-variables
-    '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
-    '(helm-ag-command-option "--all-text")
-    ; When helm-ag opened - take symbol @ current curror location - use as default search pattern
-    '(helm-ag-insert-at-point 'symbol))
 
 ;; Rainbow-delimiters package config
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -489,7 +486,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; ediff config
 ; prevent ediff opening seperate emacs window
- (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;; string-inflection config
 (require 'string-inflection)

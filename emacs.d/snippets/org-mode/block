@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: block
+# key: block
+# --
+#+BEGIN_SRC ${1:type}
+$0
+#+END_SRC

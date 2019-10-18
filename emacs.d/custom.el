@@ -5,10 +5,6 @@
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
  '(elpy-rpc-python-command "python3")
- '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
- '(helm-ag-command-option "--all-text")
- '(helm-ag-insert-at-point (quote symbol))
- '(inhibit-startup-echo-area-message "richard")
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(menu-bar-mode nil)
  '(package-selected-packages

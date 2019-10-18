@@ -16,13 +16,13 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; Custom fn that opens helm-projectile-ag if currently in a projectile project
+;; Custom fn that opens helm--ag if currently in a projectile project
 ; otherwise opens helm-ag
 (defun maybe-helm-projectile-ag ()
   (interactive)
   (call-interactively
     (if (projectile-project-p)
-       #'helm-projectile-ag
+       #'helm-ag-project-root
        #'helm-ag)))
 
 ;; Custom fn that opens helm-projectile-find-file if currently in a projectile project
@@ -326,14 +326,15 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; re-bind keys to helm functions
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+
 ; helm projectile config
 (require 'helm-projectile)
-; Helm-ag config
+
+;; helm-ag config
 (custom-set-variables
-    '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
-    '(helm-ag-command-option "--all-text")
-    ; When helm-ag opened - take symbol @ current curror location - use as default search pattern
-    '(helm-ag-insert-at-point 'symbol))
+ '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+ '(helm-follow-mode-persistent t)
+ '(helm-ag-insert-at-point 'symbol))
 
 ;; Rainbow-delimiters package config
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)

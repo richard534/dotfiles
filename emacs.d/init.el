@@ -151,6 +151,15 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; enable automatic refreshing of magit buffers
 (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
+; package-menu-mode evil keybinds
+(evil-add-hjkl-bindings package-menu-mode-map 'emacs
+  (kbd "/")       'evil-search-forward
+  (kbd "n")       'evil-search-next
+  (kbd "N")       'evil-search-previous
+  (kbd "C-d")     'evil-scroll-down
+  (kbd "C-u")     'evil-scroll-up
+  (kbd "^")       'evil-first-non-blank)
+
 ;; User interface settings
 ; disable gui toolbar
 (tool-bar-mode -1)
@@ -191,18 +200,16 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 
-; configure anzu package
+;; configure anzu package
 (global-anzu-mode +1)
 (with-eval-after-load 'evil
   (require 'evil-anzu)
   (global-evil-surround-mode 1))
 (setq anzu-search-threshold 1000
-anzu-cons-mode-line-p nil)
+    anzu-cons-mode-line-p nil)
 
 ; set default font
 (set-default-font "Source Code Pro 14")
-(require 'all-the-icons)
-; run m-x all-the-icons-install-fonts
 
 ;; start emacs-server (for use with emacsclient)
 (server-start)
@@ -291,25 +298,6 @@ anzu-cons-mode-line-p nil)
 ; mit-scheme (sicp) setup
 (setq scheme-program-name "/usr/local/bin/scheme")
 (require 'xscheme)
-
-;; diminish package config
-(require 'diminish)
-; TODO sometimes these diminish commands are called before their respective packages are loaded - causing them to fail
-(diminish `anzu-mode)
-(diminish `undo-tree-mode)
-(diminish `eldoc-mode)
-(diminish `visual-line-mode)
-(diminish `org-indent-mode)
-(diminish `flycheck-mode)
-(diminish `indent-guide-mode)
-(diminish `helm-mode)
-(diminish `which-key-mode)
-(diminish `projectile-mode)
-(diminish `elpy-mode)
-(diminish `flymake-mode)
-(diminish `highlight-indentation-mode)
-(diminish `auto-revert-mode)
-(diminish `abbrev-mode)
 
 ;; Line numbers config
 (define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
@@ -564,3 +552,27 @@ anzu-cons-mode-line-p nil)
   (princ (with-current-buffer buffer
     (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
   (current-buffer)))
+
+;; paradox config
+(require 'paradox)
+(paradox-enable)
+
+;; Diminish config
+(require 'diminish)
+(with-eval-after-load 'anzu (diminish `anzu-mode))
+(with-eval-after-load 'undo-tree (diminish `undo-tree-mode))
+(with-eval-after-load 'eldoc (diminish `eldoc-mode))
+(with-eval-after-load 'visual-line (diminish `visual-line-mode))
+(with-eval-after-load 'org-indent (diminish `org-indent-mode))
+(with-eval-after-load 'flycheck (diminish `flycheck-mode))
+(with-eval-after-load 'indent-guide (diminish `indent-guide-mode))
+(with-eval-after-load 'helm (diminish `helm-mode))
+(with-eval-after-load 'which-key (diminish `which-key-mode))
+(with-eval-after-load 'projectile (diminish `projectile-mode))
+(with-eval-after-load 'elpy (diminish `elpy-mode))
+(with-eval-after-load 'flymake (diminish `flymake-mode))
+(with-eval-after-load 'highlight-indentation (diminish `highlight-indentation-mode))
+(with-eval-after-load 'auto-revert (diminish `auto-revert-mode))
+(with-eval-after-load 'abbrev (diminish `abbrev-mode))
+(with-eval-after-load 'editorconfig (diminish `editorconfig-mode))
+(with-eval-after-load 'simple (diminish `auto-fill-function))

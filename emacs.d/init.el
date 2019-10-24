@@ -16,14 +16,41 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; Custom fn that opens helm--ag if currently in a projectile project
-; otherwise opens helm-ag
-(defun maybe-helm-projectile-ag ()
+(defun maybe-helm-projectile-ag-default ()
+  "If inside projectile project - run helm-ag inside current project only
+else run default helm-ag
+helm-ag command without inserting symbol/word at point"
   (interactive)
+  (setq helm-ag-insert-at-point nil)
+  (call-interactively
+    (if (projectile-project-p)
+        #'helm-ag-project-root
+        #'helm-ag)))
+
+(defun maybe-helm-projectile-ag-symbol ()
+  "If inside projectile project - run helm-ag inside current project only
+else run default helm-ag
+insert current symbol into helm-ag command"
+  (interactive)
+  (setq helm-ag-insert-at-point 'symbol)
   (call-interactively
     (if (projectile-project-p)
        #'helm-ag-project-root
        #'helm-ag)))
+
+(defun helm-ag-this-file-default ()
+  "run helm-ag-this-file without inserting symbol/word"
+  (interactive)
+  (setq helm-ag-insert-at-point nil)
+  (call-interactively
+    #'helm-ag-this-file))
+
+(defun helm-ag-this-file-symbol ()
+  "run helm-ag-this-file inserting current symbol"
+  (interactive)
+  (setq helm-ag-insert-at-point 'symbol)
+  (call-interactively
+    #'helm-ag-this-file))
 
 ;; Custom fn that opens helm-projectile-find-file if currently in a projectile project
 ; otherwise opens helm-find-files
@@ -104,10 +131,13 @@
 ;; Bind vim-style GoTo commands
 ; mnemonic - goto file
 (define-key evil-normal-state-map "gf" `maybe-helm-projectile-find-file)
-(define-key evil-normal-state-map "gF" `helm-find-files)
-; mnemonic - goto symbol
-(define-key evil-normal-state-map "gs" `helm-projectile-rg)
-(define-key evil-normal-state-map "gS" `maybe-helm-projectile-rg)
+(define-key evil-normal-state-map "Gf" `helm-find-files)
+; mnemonic - goto symbol file (inside current file)
+(define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
+(define-key evil-normal-state-map "Gsf" `helm-ag-this-file-symbol)
+; mnemonic - goto symbol project
+(define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
+(define-key evil-normal-state-map "Gsp" `maybe-helm-projectile-ag-symbol)
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
@@ -246,6 +276,12 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                                             ("*" . "-")
                                             ("1." . "-")
                                             ("1)" . "a)"))))
+; custom org-mode functions
+; hide substrees in selected region
+(defun org-hide-subtrees-in-region (beg end)
+  (interactive "r")
+  (outline-hide-region-body beg end))
+
 ; evil-org config
 (require 'evil-org)
 (add-hook 'org-mode-hook 'evil-org-mode)
@@ -333,10 +369,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (require 'helm-projectile)
 
 ;; helm-ag config
-(custom-set-variables
- '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
- '(helm-follow-mode-persistent t)
- '(helm-ag-insert-at-point 'symbol))
+(setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+(setq helm-follow-mode-persistent t)
 
 ;; Rainbow-delimiters package config
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -489,6 +523,14 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; forge config
 (with-eval-after-load `magit
   (require `forge))
+; fn to invalidate projectile cache on magit checkout
+(defun run-projectile-invalidate-cache (&rest _args)
+  ;; We ignore the args to `magit-checkout'.
+  (projectile-invalidate-cache nil))
+(advice-add 'magit-checkout
+            :after #'run-projectile-invalidate-cache)
+(advice-add 'magit-branch-and-checkout ; This is `b c'.
+            :after #'run-projectile-invalidate-cache)
 
 ;; ediff config
 ; prevent ediff opening seperate emacs window

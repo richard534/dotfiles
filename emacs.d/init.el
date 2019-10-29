@@ -61,7 +61,19 @@ insert current symbol into helm-ag command"
        #'helm-projectile-find-file
        #'helm-find-files)))
 
-;; configure emacs evil package/s
+(defun maybe-helm-projectile-find-file-dwim ()
+  (interactive)
+  (call-interactively
+    (if (projectile-project-p)
+       #'helm-projectile-find-file-dwim
+       #'helm-find-files)))
+
+;; evil-collection pre-requisite config
+; evil-colleciton assumes these two variables are set accordingly before evil imported:
+(setq evil-want-integration t)
+(setq evil-want-keybinding nil)
+
+;; evil config
 ; enable vim-like crtl-u pgUp
 (setq evil-want-C-u-scroll t)
 ; Keep evil search highlights after moving cursor
@@ -95,6 +107,10 @@ insert current symbol into helm-ag command"
 
 (require 'evil)
 (evil-mode 1)
+
+(when (require 'evil-collection nil t)
+  (with-eval-after-load 'neotree (evil-collection-neotree-setup)))
+
 ; :q deletes window - keeps buffer
 (evil-ex-define-cmd "q" 'delete-window)
 ; :quit closes emacs
@@ -116,9 +132,6 @@ insert current symbol into helm-ag command"
 (setq evil-insert-state-cursor '("red" bar))
 (setq evil-replace-state-cursor '("red" bar))
 (setq evil-operator-state-cursor '("red" hollow))
-; rebind split window keys
-(define-key evil-normal-state-map (kbd "C-|") 'split-window-horizontally)
-(define-key evil-normal-state-map (kbd "C--") 'split-window-vertically)
 ; rebind move window keys
 (define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
 (define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
@@ -130,14 +143,16 @@ insert current symbol into helm-ag command"
 
 ;; Bind vim-style GoTo commands
 ; mnemonic - goto file
-(define-key evil-normal-state-map "gf" `maybe-helm-projectile-find-file)
-(define-key evil-normal-state-map "Gf" `helm-find-files)
+(define-key evil-normal-state-map (kbd "gf") nil)
+(define-key evil-normal-state-map "gff" `helm-find-files)
+(define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
+(define-key evil-normal-state-map "gfP" `maybe-helm-projectile-find-file-dwim)
 ; mnemonic - goto symbol file (inside current file)
 (define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
-(define-key evil-normal-state-map "Gsf" `helm-ag-this-file-symbol)
+(define-key evil-normal-state-map "gsF" `helm-ag-this-file-symbol)
 ; mnemonic - goto symbol project
 (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
-(define-key evil-normal-state-map "Gsp" `maybe-helm-projectile-ag-symbol)
+(define-key evil-normal-state-map "gsP" `maybe-helm-projectile-ag-symbol)
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
@@ -471,8 +486,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (lambda ()
     (setq evil-shift-width 2)))
 
-(defun put-file-path-on-clipboard ()
-  "Put the absolute file path on the clipboard"
+(defun copy-abs-file-path-to-clipboard ()
+  "copy the absolute file path of current open file to the clipboard"
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
                       default-directory
@@ -498,6 +513,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (evil-ex-define-cmd "init" #'find-emacs-init-file)
 (evil-ex-define-cmd "reload" #'reload-init-file)
 (evil-ex-define-cmd "st" 'magit-status)
+(evil-ex-define-cmd "vs" (lambda () (interactive)(split-window-horizontally) (other-window 1)))
+(evil-ex-define-cmd "sp" (lambda () (interactive)(split-window-vertically) (other-window 1)))
 
 (defun git-reset-common-ancestor ()
   "Runs external shell command (using compile) which resets to common git commit ancestor"

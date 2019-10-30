@@ -146,15 +146,16 @@ insert current symbol into helm-ag command"
 ;; Bind vim-style GoTo commands
 ; mnemonic - goto file
 (define-key evil-normal-state-map (kbd "gf") nil)
+(define-key evil-normal-state-map (kbd "gF") nil)
 (define-key evil-normal-state-map "gff" `helm-find-files)
 (define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
-(define-key evil-normal-state-map "gfP" `maybe-helm-projectile-find-file-dwim)
+(define-key evil-normal-state-map "gFp" `maybe-helm-projectile-find-file-dwim)
 ; mnemonic - goto symbol file (inside current file)
 (define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
-(define-key evil-normal-state-map "gsF" `helm-ag-this-file-symbol)
+(define-key evil-normal-state-map "gSf" `helm-ag-this-file-symbol)
 ; mnemonic - goto symbol project
 (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
-(define-key evil-normal-state-map "gsP" `maybe-helm-projectile-ag-symbol)
+(define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)

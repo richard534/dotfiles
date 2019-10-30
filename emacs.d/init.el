@@ -92,7 +92,9 @@ insert current symbol into helm-ag command"
   "R"  `projectile-replace ; project-wide find/replace
   "s"  `string-inflection-cycle-auto ; convert string
   "is" `yas-insert-snippet ; insert snippet
-  "fd" `magit-file-dispatch ; insert snippet
+  "fd" `magit-file-dispatch ; file-dispatch (magit command)
+  "[" `winner-undo
+  "]" `winner-redo
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -244,6 +246,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
+
+; winner-mode config 
+(winner-mode 1)
 
 ;; configure anzu package
 (global-anzu-mode +1)

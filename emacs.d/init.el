@@ -95,6 +95,8 @@ insert current symbol into helm-ag command"
   "fd" `magit-file-dispatch ; file-dispatch (magit command)
   "[" `winner-undo
   "]" `winner-redo
+  "fj" `json-pretty-print
+  "fJ" `json-pretty-print-buffer
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -554,6 +556,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
             :after #'run-projectile-invalidate-cache)
 (advice-add 'magit-branch-and-checkout ; This is `b c'.
             :after #'run-projectile-invalidate-cache)
+; enable quiting magit "transient" pop-ups using q
+(with-eval-after-load 'transient
+  (transient-bind-q-to-quit))
+
 
 ;; ediff config
 ; prevent ediff opening seperate emacs window

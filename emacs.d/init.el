@@ -171,6 +171,9 @@ insert current symbol into helm-ag command"
 (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
 (define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
 
+; mnemonic - goto project
+(define-key evil-normal-state-map "gp" `helm-projectile-switch-project)
+
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
@@ -421,11 +424,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; set projectile to just use VCS (e.g .gitignore) files during indexing
 (setq projectile-indexing-method 'alien)
 (setq projectile-mode-line "Projectile")
-;; ;
-;; (add-hook 'find-file-hook
-;;           (lambda ()
-;;             (when (file-remote-p default-directory)
-;;               (setq-local projectile-mode-line "Projectile"))))
 
 ;; Helm package config
 (require 'helm)

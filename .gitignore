@@ -21,4 +21,5 @@ emacs.d/.python-environments
 emacs.d/network-security.data
 emacs.d/forge-database.sqlite
 emacs.d/elpy/
+emacs.d/request/
 .yas-compiled-snippets.el

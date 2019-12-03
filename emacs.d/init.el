@@ -78,13 +78,14 @@ insert current symbol into helm-ag command"
 (setq evil-want-C-u-scroll t)
 ; Keep evil search highlights after moving cursor
 (setq evil-search-module 'evil-search)
+(setq evil-auto-indent nil)
 
 ; configure evil-leader package
 (global-evil-leader-mode)
 (require 'evil-leader)
 ; set evil leader key to backslash
 (evil-leader/set-leader "<SPC>")
-; bind evil-keys
+; bind evil-leader-keys
 (evil-leader/set-key
   "<SPC>" 'evil-ex-nohighlight ; ripgrep text search inside current project
   "fs" `helm-imenu ; mnemonic - file-structure
@@ -97,6 +98,8 @@ insert current symbol into helm-ag command"
   "]" `winner-redo
   "fj" `json-pretty-print
   "fJ" `json-pretty-print-buffer
+  "bx" 'kill-buffer-and-window ; buffer - kill
+  "d" 'ranger
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -108,12 +111,19 @@ insert current symbol into helm-ag command"
   "cv" 'evilnc-toggle-invert-comment-line-by-line
   "."  'evilnc-copy-and-comment-operator
 )
+; add evil-leader commands to evil jump-list
+(evil-add-command-properties #'anzu-query-replace-at-cursor :jump t)
+(evil-add-command-properties #'projectile-replace :jump t)
 
 (require 'evil)
 (evil-mode 1)
 
+; enabling evil-collection keymaps mode-by-mode
 (when (require 'evil-collection nil t)
-  (with-eval-after-load 'neotree (evil-collection-neotree-setup)))
+  (with-eval-after-load 'neotree (evil-collection-neotree-setup))
+  (with-eval-after-load 'term (evil-collection-term-setup))
+  (with-eval-after-load 'restclient (evil-collection-restclient-setup)))
+
 
 ; :q deletes window - keeps buffer
 (evil-ex-define-cmd "q" 'delete-window)
@@ -143,7 +153,7 @@ insert current symbol into helm-ag command"
 (define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
 
 ; Make tabs work like they do in vim (tab key inserts spaces/tabs)
-(define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
+;; (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
 
 ;; Bind vim-style GoTo commands
 ; mnemonic - goto file
@@ -152,18 +162,29 @@ insert current symbol into helm-ag command"
 (define-key evil-normal-state-map "gff" `helm-find-files)
 (define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
 (define-key evil-normal-state-map "gFp" `maybe-helm-projectile-find-file-dwim)
+
 ; mnemonic - goto symbol file (inside current file)
 (define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
 (define-key evil-normal-state-map "gSf" `helm-ag-this-file-symbol)
+
 ; mnemonic - goto symbol project
 (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
 (define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
+
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
+; add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
+(evil-add-command-properties #'diff-hl-next-hunk :jump t)
+(evil-add-command-properties #'diff-hl-previous-hunk :jump t)
+
 ; goto todo
 (define-key evil-normal-state-map "gt]" `hl-todo-next)
 (define-key evil-normal-state-map "gt[" `hl-todo-previous)
+; add goto next/previoud todo to evil jump-list
+(evil-add-command-properties #'hl-todo-next :jump t)
+(evil-add-command-properties #'hl-todo-previous :jump t)
+
 ; goto emacs-buffer
 (define-key evil-normal-state-map "gb" `helm-buffers-list)
 
@@ -236,8 +257,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq electric-pair-preserve-balance nil)
 ; Disabled "electric indent mode" - breaks some modes inc. python
 (electric-indent-mode -1)
-; pressing tab will product spaces instead of tab chars
-(setq-default indent-tabs-mode nil)
+; pressing tab will produce spaces instead of tab chars
+(setq-default
+    indent-tabs-mode nil
+    tab-width 4
+)
 
 ;; remember cursor position of files when reopening them
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -312,10 +336,27 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (require 'evil-org-agenda)
 (evil-org-agenda-set-keys)
 
+;; Custom json babel code-bock type 'json'
+;; Will just return its contents (passthrough) when evaluated
+;;; ob-passthrough.el ---  passthrough evaluator          -*- lexical-binding: t; -*-
+;; this ob evaluates the block as ifself, so it can be used as input
+;; for another block
+(require 'ob)
+(defun org-babel-execute:passthrough (body params)
+  body)
+;; json output is json
+(defalias 'org-babel-execute:json 'org-babel-execute:passthrough)
+(provide 'ob-passthrough)
+;;; ob-passthrough.el ends here
+
+; disable asking for confirmation when executing babel code block for all languages
+(setq org-confirm-babel-evaluate nil)
 ; add python to org-mode babel (allows executing python code in org files src blocks)
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((python . t)))
+ '((python . t)
+   (shell . t)
+   (passthrough . t)))
 
 ; enable auto fill mode on text files, set to wrap lines at certain char limit
 (add-hook 'text-mode-hook 'auto-fill-mode)
@@ -379,6 +420,12 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq projectile-enable-caching t)
 ; set projectile to just use VCS (e.g .gitignore) files during indexing
 (setq projectile-indexing-method 'alien)
+(setq projectile-mode-line "Projectile")
+;; ;
+;; (add-hook 'find-file-hook
+;;           (lambda ()
+;;             (when (file-remote-p default-directory)
+;;               (setq-local projectile-mode-line "Projectile"))))
 
 ;; Helm package config
 (require 'helm)
@@ -392,8 +439,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (require 'helm-projectile)
 
 ;; helm-ag config
-(setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+(setq helm-ag-base-command "ag --nocolor --nogroup --vimgrep --ignore-case")
 (setq helm-follow-mode-persistent t)
+; enable pressing tab key to accept candidate currently selected
+(define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
 
 ;; Rainbow-delimiters package config
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -437,15 +486,24 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
           (define-key evil-normal-state-map "gd" 'elpy-goto-definition)
           (evil-leader/set-key "fc" 'elpy-black-fix-code)) ; mnemonic - format-code
 
-(setq python-shell-interpreter "jupyter"
-      python-shell-interpreter-args "console --simple-prompt"
-      python-shell-prompt-detect-failure-warning nil)
-(add-to-list 'python-shell-completion-native-disabled-interpreters
-             "jupyter")
+(setq elpy-rpc-backend "jedi")
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i")
+
+;; Set comint
+(setq comint-scroll-to-bottom-on-output t)
+
 ; prevent elpy from overiding certain keys
 (eval-after-load "elpy"
   '(cl-dolist (key '("M-<up>" "M-<down>" "M-<left>" "M-<right>"))
      (define-key elpy-mode-map (kbd key) nil)))
+
+; fn to clear elpy shell
+(defun elpy-shell-clear-shell ()
+  "Clear the current shell buffer."
+  (interactive)
+  (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
+    (comint-clear-buffer)))
 
 ; use flycheck insead of fly-make
 (when (load "flycheck" t t)
@@ -600,7 +658,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
           (rename-buffer new-name)
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil)
-	  (projectile-cache-current-file))))))
+	  (projectile-cache-current-file)
+      (projectile-invalidate-cache nil))))))
 
 ;; fn to delete current buffer and file it has open
 ;; source: https://emacsredux.com/blog/2013/04/03/delete-file-and-buffer/
@@ -630,6 +689,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; paradox config
 (require 'paradox)
 (paradox-enable)
+
+;; ranger config
+(setq ranger-show-literal nil)
 
 ;; Diminish config
 (require 'diminish)

@@ -10,7 +10,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ein evil-visualstar ssh-config-mode restclient request graphql-mode dockerfile-mode ejson-mode evil-collection helm-rg helm-swoop paradox impatient-mode htmlize evil-org org-preview-html reveal-in-osx-finder evil-surround yasnippet-snippets helm-dash string-inflection forge editorconfig markdown-mode evil-magit groovy-mode origami ranger diff-hl spaceline buffer-move hl-todo imenu-list elpy json-mode terraform-mode neotree evil-nerd-commenter org-download indent-guide evil-numbers company discover-my-major flycheck exec-path-from-shell helm-projectile projectile rainbow-delimiters helm which-key magit evil-leader diminish pdf-tools highlight-symbol evil-anzu anzu doom-themes evil)))
+    (mmm-mode use-package ein evil-visualstar ssh-config-mode restclient request graphql-mode dockerfile-mode ejson-mode evil-collection helm-rg helm-swoop paradox impatient-mode htmlize evil-org org-preview-html reveal-in-osx-finder evil-surround yasnippet-snippets helm-dash string-inflection forge editorconfig markdown-mode evil-magit groovy-mode origami ranger diff-hl spaceline buffer-move hl-todo imenu-list elpy json-mode terraform-mode neotree evil-nerd-commenter org-download indent-guide evil-numbers company discover-my-major flycheck exec-path-from-shell helm-projectile projectile rainbow-delimiters helm which-key magit evil-leader diminish pdf-tools highlight-symbol evil-anzu anzu doom-themes evil)))
  '(paradox-github-token t)
  '(projectile-mode t nil (projectile))
  '(tool-bar-mode nil))

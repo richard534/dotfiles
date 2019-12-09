@@ -2,6 +2,19 @@
 #+BEGIN_SRC emacs-lisp
 ;;; init.el.org --- my emacs configuration -*- lexical-binding: t; -*-
 #+END_SRC
+** Language and encoding
+Add UTF-8 to the front of the priority list for automatic detection
+#+BEGIN_SRC emacs-lisp
+(prefer-coding-system 'utf-8)
+#+END_SRC
+Set up mulilingual environment to use UTF-8
+#+BEGIN_SRC emacs-lisp
+(set-language-environment "UTF-8")
+#+END_SRC
+Set default value of various coding systems to UTF-8
+#+BEGIN_SRC emacs-lisp
+(set-default-coding-systems 'utf-8)
+#+END_SRC
 ** Emacs UI
 Disable gui toolbar
 #+BEGIN_SRC emacs-lisp
@@ -21,7 +34,18 @@ Prevent the cursor from blinking
 #+END_SRC
 Remove initial scratch message
 #+BEGIN_SRC emacs-lisp
-(setq initial-scratch-message "")
+(setq initial-scratch-message
+      (concat
+       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
+       ";; To create a file, visit it with C-x C-f and enter text in its buffer.\n"
+       ";;\n"
+       ";; __          __  _                            \n"
+       ";; \\ \\        / / | |                           \n"
+       ";;  \\ \\  /\\  / /__| | ___ ___  _ __ ___   ___   \n"
+       ";;   \\ \\/  \\/ / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\  \n"
+       ";;    \\  /\\  /  __/ | (_| (_) | | | | | |  __/_ \n"
+       ";;     \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___(_)\n"))
+
 #+END_SRC
 Disable startup screen
 #+BEGIN_SRC emacs-lisp
@@ -46,7 +70,7 @@ turn off all alarms (flashing bottom of screen, audible)
 #+END_SRC
 set left fringe width - prevent vertical splits hiding diff-hl
 #+BEGIN_SRC emacs-lisp
-(setq-default left-fringe-width 16)
+;; (setq-default left-fringe-width 16)
 #+END_SRC
 Remove icons/text from title bar (transparent title bar)
 #+BEGIN_SRC emacs-lisp
@@ -55,11 +79,41 @@ Remove icons/text from title bar (transparent title bar)
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 #+END_SRC
+** Custom
+#+BEGIN_SRC emacs-lisp
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+#+END_SRC
+** Use-package
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+#+END_SRC
+
+** Theme
+Enable doom theme
+#+BEGIN_SRC emacs-lisp
+; Global settings (defaults)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+; Load the theme (doom-one, doom-molokai, etc)
+(load-theme 'doom-vibrant t)
+; Corrects (and improves) org-mode's native fontification.
+(doom-themes-org-config)
+; overload doom-themes "selected region" color
+(set-face-attribute 'region nil :background "#666")
+#+END_SRC
 ** MacOS specific config
 Make emacs use the $PATH envar inside emacs set to value used by the users shell
 #+BEGIN_SRC emacs-lisp
-(when (memq window-system '(mac ns x))
-  ; sets PATH && MANPATH from your shell
+(use-package exec-path-from-shell
+  :ensure t
+  :init
+  (setq exec-path-from-shell-variables
+        '("PATH"
+          "MANPATH"))
   (exec-path-from-shell-initialize))
 #+END_SRC
 
@@ -80,12 +134,6 @@ Focus on emacs session when opening emacs gui
 
   (when (display-graphic-p)
     (ns-raise-emacs)))
-#+END_SRC
-
-** Custom
-#+BEGIN_SRC emacs-lisp
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file 'noerror)
 #+END_SRC
 ** Evil
 Evil-collection pre-requisite config -
@@ -313,11 +361,11 @@ Bind evil ex-command to open init file
 #+END_SRC
 :quit closes emacs
 #+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "quit" 'save-buffers-kill-emacs) 
+(evil-ex-define-cmd "quit" 'save-buffers-kill-emacs)
 #+END_SRC
 st opens magit status
 #+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "st" 'magit-status)
+; (evil-ex-define-cmd "st" 'magit-status)
 #+END_SRC
 vs vertically splits window
 #+BEGIN_SRC emacs-lisp
@@ -391,20 +439,6 @@ Set default font
 start emacs-server (for use with emacsclient)
 #+BEGIN_SRC emacs-lisp
 (server-start)
-#+END_SRC
-
-** Doom Theme
-#+BEGIN_SRC emacs-lisp
-; Global settings (defaults)
-(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-      doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-; Load the theme (doom-one, doom-molokai, etc)
-(load-theme 'doom-vibrant t)
-; Corrects (and improves) org-mode's native fontification.
-(doom-themes-org-config)
-; overload doom-themes "selected region" color
-(set-face-attribute 'region nil :background "#666")
 #+END_SRC
 ** Org
 #+BEGIN_SRC emacs-lisp
@@ -668,7 +702,6 @@ set diff-hl to work with unsaved buffers too
 #+BEGIN_SRC emacs-lisp
 (editorconfig-mode 1)
 #+END_SRC
-
 ** Ediff
 Only highlight current diff:
 #+BEGIN_SRC emacs-lisp
@@ -683,32 +716,34 @@ Prevent ediff opening seperate emacs window
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 #+END_SRC
 ** Magit
-magit disables git-clean default - this enables it
 #+BEGIN_SRC emacs-lisp
-(put 'magit-clean 'disabled nil)
-#+END_SRC
-invalidate projectile cache on magit checkout
-#+BEGIN_SRC emacs-lisp
-(defun run-projectile-invalidate-cache (&rest _args)
-  ;; Ignore the args to `magit-checkout'.
-  (projectile-invalidate-cache nil))
-(advice-add 'magit-checkout
-            :after #'run-projectile-invalidate-cache)
-(advice-add 'magit-branch-and-checkout ; This is `b c'.
-            :after #'run-projectile-invalidate-cache)
-#+END_SRC
-enable quiting magit "transient" pop-ups using q
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'transient
-  (transient-bind-q-to-quit))
-#+END_SRC
-don't prompt for confirmation when staging all changes
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'magit-no-confirm 'stage-all-changes)
-#+END_SRC
-diff-hl magit integration
-#+BEGIN_SRC emacs-lisp
-(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+(use-package magit
+  :ensure t
+  :config
+  ; st opens magit status
+  (evil-ex-define-cmd "st" 'magit-status)
+
+  ; magit disables git-clean default - this enables it
+  (put 'magit-clean 'disabled nil)
+
+  ; don't prompt for confirmation when staging all changes
+  (add-to-list 'magit-no-confirm 'stage-all-changes)
+
+  ; integrate magit with diff-hl - refresh changes on refresh
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+
+  ; Custom fn to invalidate projectile cache on magit checkout
+  (defun run-projectile-invalidate-cache (&rest _args)
+    ;; Ignore the args to `magit-checkout'.
+    (projectile-invalidate-cache nil))
+  (advice-add 'magit-checkout
+              :after #'run-projectile-invalidate-cache)
+  (advice-add 'magit-branch-and-checkout ; This is `b c'.
+              :after #'run-projectile-invalidate-cache)
+
+  ; enable quiting magit "transient" pop-ups using q
+  (with-eval-after-load 'transient
+    (transient-bind-q-to-quit)))
 #+END_SRC
 ** Forge
 #+BEGIN_SRC emacs-lisp
@@ -936,4 +971,8 @@ enable auto fill mode on text files, set to wrap lines at certain char limit
 #+BEGIN_SRC emacs-lisp
 (add-hook 'text-mode-hook 'auto-fill-mode)
 (setq-default fill-column 120)
+#+END_SRC
+Delete trailing whitespace on save
+#+BEGIN_SRC emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC

@@ -2,14 +2,16 @@
 (require 'package)
 
 ;; Set package archives
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                     ("marmalade" . "http://marmalade-repo.org/packages/")
-                     ("melpa" . "http://melpa.org/packages/")))
+(setq package-archives 
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("marmalade" . "http://marmalade-repo.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")))
 (package-initialize)
 
 ;; exec-path-from-shell package config
 ; ensure environment variables inside Emacs look the same as in the user's shell.
 (when (memq window-system '(mac ns x))
+  ; sets PATH && MANPATH from your shell
   (exec-path-from-shell-initialize))
 
 ;; Custom config
@@ -87,11 +89,11 @@ insert current symbol into helm-ag command"
 (evil-leader/set-leader "<SPC>")
 ; bind evil-leader-keys
 (evil-leader/set-key
-  "<SPC>" 'evil-ex-nohighlight ; ripgrep text search inside current project
+  "<SPC>" 'evil-ex-nohighlight ; clear highlights
   "fs" `helm-imenu ; mnemonic - file-structure
   "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
   "R"  `projectile-replace ; project-wide find/replace
-  "s"  `string-inflection-cycle-auto ; convert string
+  "sc"  `string-inflection-cycle-auto ; convert string
   "is" `yas-insert-snippet ; insert snippet
   "fd" `magit-file-dispatch ; file-dispatch (magit command)
   "[" `winner-undo
@@ -100,6 +102,7 @@ insert current symbol into helm-ag command"
   "fJ" `json-pretty-print-buffer
   "bx" 'kill-buffer-and-window ; buffer - kill
   "d" 'ranger
+  "sl" 'elpy-shell-clear-shell
 
   ; evil-nerd-commenter evil-leader bindings
   "ci" 'evilnc-comment-or-uncomment-lines
@@ -171,8 +174,10 @@ insert current symbol into helm-ag command"
 (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
 (define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
 
-; mnemonic - goto project
-(define-key evil-normal-state-map "gp" `helm-projectile-switch-project)
+; mnemonic - goto projectile
+(define-key evil-normal-state-map "gpl" `helm-projectile-switch-project)
+(define-key evil-normal-state-map "gpb" `helm-projectile-switch-to-buffer)
+(define-key evil-normal-state-map "gpa" `projectile-toggle-between-implementation-and-test)
 
 ; goto git hunks
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
@@ -453,12 +458,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq company-minimum-prefix-length 1)
 ; once at bottom of suggestions - wrap back to top
 (setq company-selection-wrap-around t)
-; rebind company keys
-(with-eval-after-load 'company
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous))
 
 ; indent-guide package config
 (require 'indent-guide)
@@ -507,6 +506,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (when (load "flycheck" t t)
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+; automatically restart inferior python process when python virtual environment changed
+(add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
 
 ;; hl-todo config
 (setq global-hl-todo-mode 1)
@@ -615,7 +617,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ; enable quiting magit "transient" pop-ups using q
 (with-eval-after-load 'transient
   (transient-bind-q-to-quit))
-
+; don't prompt for confirmation when staging all changes
+(add-to-list 'magit-no-confirm 'stage-all-changes)
 
 ;; ediff config
 ; prevent ediff opening seperate emacs window
@@ -690,6 +693,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;; ranger config
 (setq ranger-show-literal nil)
+
+;; evil-visualstart config
+(global-evil-visualstar-mode)
 
 ;; Diminish config
 (require 'diminish)

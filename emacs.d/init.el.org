@@ -1,0 +1,899 @@
+* init.el
+#+BEGIN_SRC emacs-lisp
+;;; init.el.org --- my emacs configuration -*- lexical-binding: t; -*-
+#+END_SRC
+** Emacs UI
+Disable gui toolbar
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+#+END_SRC
+Disable mac menubar
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+#+END_SRC
+Disable scrollbar
+#+BEGIN_SRC emacs-lisp
+(toggle-scroll-bar -1)
+#+END_SRC
+Prevent the cursor from blinking
+#+BEGIN_SRC emacs-lisp
+(blink-cursor-mode 0)
+#+END_SRC
+Remove initial scratch message
+#+BEGIN_SRC emacs-lisp
+(setq initial-scratch-message "")
+#+END_SRC
+Disable startup screen
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-screen t)
+#+END_SRC
+Don't let Emacs hurt your ears
+#+BEGIN_SRC emacs-lisp
+(setq visible-bell t)
+#+END_SRC
+Overwrite default emacs startup message
+#+BEGIN_SRC emacs-lisp
+(defun display-startup-echo-area-message ()
+  (message nil))
+#+END_SRC
+Number of lines to scroll when reach top/bottom of window
+#+BEGIN_SRC emacs-lisp
+(setq scroll-step 1)
+#+END_SRC
+turn off all alarms (flashing bottom of screen, audible)
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+#+END_SRC
+set left fringe width - prevent vertical splits hiding diff-hl
+#+BEGIN_SRC emacs-lisp
+(setq-default left-fringe-width 16)
+#+END_SRC
+** MacOS specific config
+Make emacs use the $PATH set up by the users shell
+#+BEGIN_SRC emacs-lisp
+;;  package config
+; ensure environment variables inside Emacs look the same as in the user's shell.
+(when (memq window-system '(mac ns x))
+  ; sets PATH && MANPATH from your shell
+  (exec-path-from-shell-initialize))
+#+END_SRC
+
+Focus on emacs session when opening emacs gui
+#+BEGIN_SRC emacs-lisp
+(when (featurep 'ns)
+  (defun ns-raise-emacs ()
+    "Raise Emacs."
+    (ns-do-applescript "tell application \"Emacs\" to activate"))
+
+  (defun ns-raise-emacs-with-frame (frame)
+    "Raise Emacs and select the provided frame."
+    (with-selected-frame frame
+      (when (display-graphic-p)
+        (ns-raise-emacs))))
+
+  (add-hook 'after-make-frame-functions 'ns-raise-emacs-with-frame)
+
+  (when (display-graphic-p)
+    (ns-raise-emacs)))
+#+END_SRC
+
+** Custom
+#+BEGIN_SRC emacs-lisp
+;; Custom config
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
+#+END_SRC
+** Evil
+Evil-collection pre-requisite config -
+package assumes these two variables are set accordingly before evil imported:
+#+BEGIN_SRC emacs-lisp
+(setq evil-want-integration t)
+(setq evil-want-keybinding nil)
+#+END_SRC
+
+Enable vim-like crtl-u pgUp
+Must be set before call to (require 'evil)
+#+BEGIN_SRC emacs-lisp
+(setq evil-want-C-u-scroll t)
+#+END_SRC
+Keep evil search highlights after moving cursor
+#+BEGIN_SRC emacs-lisp
+(setq evil-search-module 'evil-search)
+(setq evil-auto-indent nil)
+#+END_SRC
+
+Evil-leader config
+#+BEGIN_SRC emacs-lisp
+; configure evil-leader package
+(global-evil-leader-mode)
+(require 'evil-leader)
+; set evil leader key to backslash
+(evil-leader/set-leader "<SPC>")
+; bind evil-leader-keys
+(evil-leader/set-key
+  "<SPC>" 'evil-ex-nohighlight ; clear highlights
+  "fs" `helm-imenu ; mnemonic - file-structure
+  "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
+  "R"  `projectile-replace ; project-wide find/replace
+  "sc"  `string-inflection-cycle-auto ; convert string
+  "is" `yas-insert-snippet ; insert snippet
+  "fd" `magit-file-dispatch ; file-dispatch (magit command)
+  "[" `winner-undo
+  "]" `winner-redo
+  "fj" `json-pretty-print
+  "fJ" `json-pretty-print-buffer
+  "bx" 'kill-buffer-and-window ; buffer - kill
+  "d" 'ranger
+  "sl" 'elpy-shell-clear-shell
+
+  ; evil-nerd-commenter evil-leader bindings
+  "ci" 'evilnc-comment-or-uncomment-lines
+  "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "cc" 'evilnc-copy-and-comment-lines
+  "cp" 'evilnc-comment-or-uncomment-paragraphs
+  "cr" 'comment-or-uncomment-region
+  "cv" 'evilnc-toggle-invert-comment-line-by-line
+  "."  'evilnc-copy-and-comment-operator
+)
+#+END_SRC
+
+Add evil-leader commands to evil jump-list
+#+BEGIN_SRC emacs-lisp
+(evil-add-command-properties #'anzu-query-replace-at-cursor :jump t)
+(evil-add-command-properties #'projectile-replace :jump t)
+#+END_SRC
+
+Evil config
+#+BEGIN_SRC emacs-lisp
+(require 'evil)
+(evil-mode 1)
+
+; enabling evil-collection keymaps mode-by-mode
+(when (require 'evil-collection nil t)
+  (with-eval-after-load 'neotree (evil-collection-neotree-setup))
+  (with-eval-after-load 'term (evil-collection-term-setup))
+  (with-eval-after-load 'restclient (evil-collection-restclient-setup)))
+
+; rebind keys for moving between windows
+(define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
+(define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
+(define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
+; rebind keys for resizing windows
+(define-key evil-normal-state-map (kbd "M-k") #'evil-window-increase-height)
+(define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
+(define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
+(define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
+; map cursor color to evil vim mode
+(setq evil-emacs-state-cursor '("red" box))
+(setq evil-normal-state-cursor '("green" box))
+(setq evil-visual-state-cursor '("orange" box))
+(setq evil-insert-state-cursor '("red" bar))
+(setq evil-replace-state-cursor '("red" bar))
+(setq evil-operator-state-cursor '("red" hollow))
+; rebind move window keys
+(define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
+(define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
+(define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
+(define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
+
+;; Bind vim-style GoTo commands
+; mnemonic - goto file
+(define-key evil-normal-state-map (kbd "gf") nil)
+(define-key evil-normal-state-map (kbd "gF") nil)
+(define-key evil-normal-state-map "gff" `helm-find-files)
+(define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
+(define-key evil-normal-state-map "gFp" `maybe-helm-projectile-find-file-dwim)
+
+; mnemonic - goto symbol file (inside current file)
+(define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
+(define-key evil-normal-state-map "gSf" `helm-ag-this-file-symbol)
+
+; mnemonic - goto symbol project
+(define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
+(define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
+
+; mnemonic - goto projectile
+(define-key evil-normal-state-map "gpl" `helm-projectile-switch-project)
+(define-key evil-normal-state-map "gpb" `helm-projectile-switch-to-buffer)
+(define-key evil-normal-state-map "gpa" `projectile-toggle-between-implementation-and-test)
+
+; goto git hunks
+(define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
+(define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
+; add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
+(evil-add-command-properties #'diff-hl-next-hunk :jump t)
+(evil-add-command-properties #'diff-hl-previous-hunk :jump t)
+
+; goto todo
+(define-key evil-normal-state-map "gt]" `hl-todo-next)
+(define-key evil-normal-state-map "gt[" `hl-todo-previous)
+; add goto next/previoud todo to evil jump-list
+(evil-add-command-properties #'hl-todo-next :jump t)
+(evil-add-command-properties #'hl-todo-previous :jump t)
+
+; goto emacs-buffer
+(define-key evil-normal-state-map "gb" `helm-buffers-list)
+
+; evil shortcut to select all in file
+(fset 'select-all
+   "ggVG")
+(define-key evil-normal-state-map (kbd "C-a") 'select-all)
+#+END_SRC
+
+Remap emacs-quit function to vim-like crtl-[
+#+BEGIN_SRC emacs-lisp
+;;
+(defun minibuffer-keyboard-quit ()
+  "Abort recursive edit.
+  In Delete Selection mode, if the mark is active, just deactivate it;
+  then it takes a second \\[keyboard-quit] to abort the minibuffer."
+  (interactive)
+  (if (and delete-selection-mode transient-mark-mode mark-active)
+      (setq deactivate-mark  t)
+    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+    (abort-recursive-edit)))
+
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key [escape] 'evil-exit-emacs-state)
+#+END_SRC
+
+Evil-number config
+#+BEGIN_SRC emacs-lisp
+(require 'evil-numbers)
+(global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
+(global-set-key (kbd "C--") 'evil-numbers/dec-at-pt)
+#+END_SRC
+
+Evil-magit config
+#+BEGIN_SRC emacs-lisp
+; evil-magit config
+(require 'evil-magit)
+; enable automatic refreshing of magit buffers
+(add-hook 'after-save-hook 'magit-after-save-refresh-status t)
+
+; package-menu-mode evil keybinds
+(evil-add-hjkl-bindings package-menu-mode-map 'emacs
+  (kbd "/")       'evil-search-forward
+  (kbd "n")       'evil-search-next
+  (kbd "N")       'evil-search-previous
+  (kbd "C-d")     'evil-scroll-down
+  (kbd "C-u")     'evil-scroll-up
+  (kbd "^")       'evil-first-non-blank)
+#+END_SRC
+
+Evil ex-commands
+#+BEGIN_SRC emacs-lisp
+(evil-ex-define-cmd "init" #'find-emacs-init-file) ; bind evil ex-command to open init file
+(evil-ex-define-cmd "reload" #'reload-init-file)
+(evil-ex-define-cmd "q" 'delete-window) ; :q deletes window - keeps buffer
+(evil-ex-define-cmd "quit" 'save-buffers-kill-emacs) ; :quit closes emacs
+(evil-ex-define-cmd "st" 'magit-status)
+(evil-ex-define-cmd "vs" (lambda () (interactive)(split-window-horizontally) (other-window 1)))
+(evil-ex-define-cmd "sp" (lambda () (interactive)(split-window-vertically) (other-window 1)))
+#+END_SRC
+** Evil-org
+#+BEGIN_SRC emacs-lisp
+(require 'evil-org)
+(add-hook 'org-mode-hook 'evil-org-mode)
+(evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+(require 'evil-org-agenda)
+(evil-org-agenda-set-keys)
+#+END_SRC
+** Evil-visualstar
+#+BEGIN_SRC emacs-lisp
+(global-evil-visualstar-mode)
+#+END_SRC
+** Global auto revert mode
+Emacs auto-reloads buffers when files change on disk.
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode)
+#+END_SRC
+
+** Electric
+#+BEGIN_SRC emacs-lisp
+; auto-complete pairs of brackets/quotes etc.
+(setq electric-pair-preserve-balance nil)
+; Disabled "electric indent mode" - breaks some modes inc. python
+(electric-indent-mode -1)
+#+END_SRC
+** Tabs
+#+BEGIN_SRC emacs-lisp
+; pressing tab will produce spaces instead of tab chars
+(setq-default
+    indent-tabs-mode nil
+)
+
+;; remember cursor position of files when reopening them
+(setq save-place-file "~/.emacs.d/saveplace")
+(setq-default save-place t)
+(require 'saveplace)
+
+; remove icons/text from title bar (transparent title bar)
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
+(setq ns-use-proxy-icon nil)
+(setq frame-title-format nil)
+
+; winner-mode config
+(winner-mode 1)
+#+END_SRC
+** Anzu
+#+BEGIN_SRC emacs-lisp
+(global-anzu-mode +1)
+(with-eval-after-load 'evil
+  (require 'evil-anzu)
+  (global-evil-surround-mode 1))
+(setq anzu-search-threshold 1000
+    anzu-cons-mode-line-p nil)
+#+END_SRC
+** Font
+#+BEGIN_SRC emacs-lisp
+; set default font
+(set-default-font "Source Code Pro 14")
+#+END_SRC
+** Emacs Server
+#+BEGIN_SRC emacs-lisp
+;; start emacs-server (for use with emacsclient)
+(server-start)
+#+END_SRC
+
+** Doom Theme
+#+BEGIN_SRC emacs-lisp
+; Global settings (defaults)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+; Load the theme (doom-one, doom-molokai, etc)
+(load-theme 'doom-vibrant t)
+; Corrects (and improves) org-mode's native fontification.
+(doom-themes-org-config)
+; overload doom-themes "selected region" color
+(set-face-attribute 'region nil :background "#666")
+#+END_SRC
+** Org
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-indented t)
+(setq org-indent-mode t)
+(setq org-hide-leading-stars t) ; hide orgmode heading stars
+(setq org-adapt-indentation nil) ; hide orgmode heading indented stars
+(setq org-hide-emphasis-markers t) ; hide bold bullet points etc
+#+END_SRC
+org-mode images config
+#+BEGIN_SRC emacs-lisp
+; org-mode images config
+(setq org-startup-with-inline-images t) ; Show inline images by default
+(setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq org-list-demote-modify-bullet (quote (("+" . "-")
+                                            ("*" . "-")
+                                            ("1." . "-")
+                                            ("1)" . "a)"))))
+#+END_SRC
+
+Custom json babel code-bock type 'json'
+Will just return its contents (passthrough) when evaluated
+#+BEGIN_SRC emacs-lisp
+;;; ob-passthrough.el ---  passthrough evaluator          -*- lexical-binding: t; -*-
+(require 'ob)
+(defun org-babel-execute:passthrough (body params)
+  body)
+;; json output is json
+(defalias 'org-babel-execute:json 'org-babel-execute:passthrough)
+(provide 'ob-passthrough)
+;;; ob-passthrough.el ends here
+#+END_SRC
+
+Disable asking for confirmation when executing babel code block for all languages
+#+BEGIN_SRC emacs-lisp
+(setq org-confirm-babel-evaluate nil)
+#+END_SRC
+
+Load org-babel languages
+#+BEGIN_SRC emacs-lisp
+; add python to org-mode babel (allows executing python code in org files src blocks)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (shell . t)
+   (passthrough . t)))
+#+END_SRC
+
+*** Custom org-mode functions
+Hide substrees in selected region
+#+BEGIN_SRC emacs-lisp
+(defun org-hide-subtrees-in-region (beg end)
+  (interactive "r")
+  (outline-hide-region-body beg end))
+#+END_SRC
+
+** Backup
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist `(("~/.emacs-saves")))
+(setq version-control t     ;; Use version numbers for backups.
+      kept-new-versions 10  ;; Number of newest versions to keep.
+      kept-old-versions 0   ;; Number of oldest versions to keep.
+      delete-old-versions t ;; Don't ask to delete excess backup versions.
+      backup-by-copying t)  ;; Copy all files, don't rename them.
+
+(setq make-backup-files nil) ; stop creating backup~ files
+(setq auto-save-default nil) ; stop creating #autosave# files
+
+#+END_SRC
+
+** Xscheme
+#+BEGIN_SRC emacs-lisp
+; mit-scheme (sicp) setup
+(setq scheme-program-name "/usr/local/bin/scheme")
+(require 'xscheme)
+
+
+#+END_SRC
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+;; Line numbers config
+(define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
+; Enable line numbers only in modes that inherit prog-mode (programming mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode 1)
+; groovy-mode-hook doesn't seem to inherit prog-mode - defining seperately
+(add-hook 'groovy-mode-hook 'display-line-numbers-mode 1)
+#+END_SRC
+
+** Which key
+#+BEGIN_SRC emacs-lisp
+(require 'which-key)
+(which-key-mode)
+#+END_SRC
+
+** Desktop save mode
+#+BEGIN_SRC emacs-lisp
+(desktop-save-mode 1)
+#+END_SRC
+** Projectile
+#+BEGIN_SRC emacs-lisp
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+; enable caching projectile results (used with helm-projectile-find-file)
+(setq projectile-enable-caching t)
+; set projectile to just use VCS (e.g .gitignore) files during indexing
+(setq projectile-indexing-method 'alien)
+(setq projectile-mode-line "Projectile")
+#+END_SRC
+** Helm
+#+BEGIN_SRC emacs-lisp
+(require 'helm)
+; turns on helm completions for most standard emacs completions
+(helm-mode 1)
+; re-bind keys to helm functions
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(setq helm-follow-mode-persistent t)
+; enable pressing tab key to accept candidate currently selected
+(define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
+#+END_SRC
+** Helm-ag
+#+BEGIN_SRC emacs-lisp
+(setq helm-ag-base-command "ag --nocolor --nogroup --vimgrep --ignore-case")
+#+END_SRC
+** Helm-Projectile
+#+BEGIN_SRC emacs-lisp
+(require 'helm-projectile)
+#+END_SRC
+** Rainbow delimiters
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+#+END_SRC
+
+** Company
+#+BEGIN_SRC emacs-lisp
+;; company package config
+(add-hook 'after-init-hook 'global-company-mode)
+; No delay in showing suggestions.
+(setq company-idle-delay 0)
+; Show suggestions after entering one character.
+(setq company-minimum-prefix-length 1)
+; once at bottom of suggestions - wrap back to top
+(setq company-selection-wrap-around t)
+#+END_SRC
+** Indent-guide
+#+BEGIN_SRC emacs-lisp
+(require 'indent-guide)
+(indent-guide-global-mode)
+#+END_SRC
+** Org-download
+#+BEGIN_SRC emacs-lisp
+;; org-download package config
+(require 'org-download)
+; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)
+#+END_SRC
+** Neotree
+#+BEGIN_SRC emacs-lisp
+;; emacs-neotree config
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-window-fixed-size nil)
+(setq neo-theme 'arrow)
+#+END_SRC
+** Json-mode
+#+BEGIN_SRC emacs-lisp
+(setq json-reformat:indent-width 2)
+#+END_SRC
+** Comint mode
+#+BEGIN_SRC emacs-lisp
+(setq comint-scroll-to-bottom-on-output t)
+#+END_SRC
+** Elpy
+#+BEGIN_SRC emacs-lisp
+(elpy-enable)
+(add-hook `python-mode
+          (define-key evil-normal-state-map "gd" 'elpy-goto-definition)
+          (evil-leader/set-key "fc" 'elpy-black-fix-code)) ; mnemonic - format-code
+
+(setq elpy-rpc-backend "jedi")
+#+END_SRC
+Set elpy to use ipython as shell interpreter
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i")
+
+; prevent elpy from overiding certain keys
+(eval-after-load "elpy"
+  '(cl-dolist (key '("M-<up>" "M-<down>" "M-<left>" "M-<right>"))
+     (define-key elpy-mode-map (kbd key) nil)))
+
+#+END_SRC
+Custom fn to clear elpy shell
+#+BEGIN_SRC emacs-lisp
+; fn to clear elpy shell
+(defun elpy-shell-clear-shell ()
+  "Clear the current shell buffer."
+  (interactive)
+  (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
+    (comint-clear-buffer)))
+
+#+END_SRC
+** Flycheck
+#+BEGIN_SRC emacs-lisp
+; use flycheck insead of fly-make
+(when (load "flycheck" t t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+#+END_SRC
+** Pyvenv
+#+BEGIN_SRC emacs-lisp
+; automatically restart inferior python process when python virtual environment changed
+(add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+#+END_SRC
+** Hl-todo
+#+BEGIN_SRC emacs-lisp
+;; hl-todo config
+(setq global-hl-todo-mode 1)
+(global-hl-todo-mode)
+#+END_SRC
+** Spaceline
+#+BEGIN_SRC emacs-lisp
+(require `spaceline-config)
+(spaceline-emacs-theme)
+; colour spaceline modeline according to vim mode
+(setq spaceline-highlight-face-func `spaceline-highlight-face-evil-state)
+#+END_SRC
+** Word wrapping
+Word wrapping mode hooks
+#+BEGIN_SRC emacs-lisp
+; Text mode
+(add-hook 'prog-mode-hook '(lambda ()
+    (visual-line-mode -1)
+    (setq truncate-lines t
+          word-wrap nil)))
+
+; Programming mode
+(add-hook 'text-mode-hook '(lambda ()
+    (setq truncate-lines nil
+          word-wrap t)))
+#+END_SRC
+** Diff-hl
+#+BEGIN_SRC emacs-lisp
+(global-diff-hl-mode)
+#+END_SRC
+set diff-hl to work with unsaved buffers too
+#+BEGIN_SRC emacs-lisp
+(diff-hl-flydiff-mode t)
+#+END_SRC
+** Origami
+#+BEGIN_SRC emacs-lisp
+(require 'origami)
+(add-hook 'prog-mode-hook
+    (lambda ()
+        (origami-mode)))
+#+END_SRC
+** Terraform-mode
+#+BEGIN_SRC emacs-lisp
+;; terraform-mode config
+(add-hook 'terraform-mode
+  (lambda ()
+    (setq evil-shift-width 2)))
+#+END_SRC
+** Editorconfig
+#+BEGIN_SRC emacs-lisp
+(editorconfig-mode 1)
+#+END_SRC
+
+** Ediff
+Only highlight current diff:
+#+BEGIN_SRC emacs-lisp
+(setq-default ediff-highlight-all-diffs 'nil)
+#+END_SRC
+Turn off whitespace checking:
+#+BEGIN_SRC emacs-lisp
+(setq ediff-diff-options "-w")
+#+END_SRC
+Prevent ediff opening seperate emacs window
+#+BEGIN_SRC emacs-lisp
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+END_SRC
+** Magit
+magit disables git-clean default - this enables it
+#+BEGIN_SRC emacs-lisp
+(put 'magit-clean 'disabled nil)
+#+END_SRC
+invalidate projectile cache on magit checkout
+#+BEGIN_SRC emacs-lisp
+(defun run-projectile-invalidate-cache (&rest _args)
+  ;; Ignore the args to `magit-checkout'.
+  (projectile-invalidate-cache nil))
+(advice-add 'magit-checkout
+            :after #'run-projectile-invalidate-cache)
+(advice-add 'magit-branch-and-checkout ; This is `b c'.
+            :after #'run-projectile-invalidate-cache)
+#+END_SRC
+enable quiting magit "transient" pop-ups using q
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'transient
+  (transient-bind-q-to-quit))
+#+END_SRC
+don't prompt for confirmation when staging all changes
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'magit-no-confirm 'stage-all-changes)
+#+END_SRC
+diff-hl magit integration
+#+BEGIN_SRC emacs-lisp
+(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+#+END_SRC
+** Forge
+#+BEGIN_SRC emacs-lisp
+; forge config
+(with-eval-after-load `magit
+  (require `forge))
+#+END_SRC
+** String-inflection
+#+BEGIN_SRC emacs-lisp
+(require 'string-inflection)
+(defun string-inflection-cycle-auto ()
+  "running string format conversion based on major-mode"
+  (interactive)
+  (cond
+   ;; for emacs-lisp mode
+   ((eq major-mode 'emacs-list-mode)
+    (string-inflection-all-cycle))
+   ;; for python
+   ((eq major-mode 'python-mode)
+    (string-inflection-python-style-cycle))
+     ;; for java
+   ((eq major-mode 'java-mode)
+    (string-inflection-java-style-cycle))
+   (t
+   ;; default
+   (string-inflection-ruby-style-cycle))))
+#+END_SRC
+
+** Yasnippet
+#+BEGIN_SRC emacs-lisp
+(require 'yasnippet)
+(yas-global-mode 1)
+#+END_SRC
+
+** Impatient-mode
+*** Custom impatient mode filters 
+markdown rendering
+#+BEGIN_SRC emacs-lisp
+(defun markdown-html (buffer)
+  (princ (with-current-buffer buffer
+    (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
+  (current-buffer)))
+#+END_SRC
+** Paradox
+#+BEGIN_SRC emacs-lisp
+(require 'paradox)
+(paradox-enable)
+#+END_SRC
+** Ranger
+#+BEGIN_SRC emacs-lisp
+(setq ranger-show-literal nil)
+#+END_SRC
+** Diminish
+#+BEGIN_SRC emacs-lisp
+(require 'diminish)
+(with-eval-after-load 'anzu (diminish `anzu-mode))
+(with-eval-after-load 'undo-tree (diminish `undo-tree-mode))
+(with-eval-after-load 'eldoc (diminish `eldoc-mode))
+(with-eval-after-load 'visual-line (diminish `visual-line-mode))
+(with-eval-after-load 'org-indent (diminish `org-indent-mode))
+(with-eval-after-load 'flycheck (diminish `flycheck-mode))
+(with-eval-after-load 'indent-guide (diminish `indent-guide-mode))
+(with-eval-after-load 'helm (diminish `helm-mode))
+(with-eval-after-load 'which-key (diminish `which-key-mode))
+(with-eval-after-load 'projectile (diminish `projectile-mode))
+(with-eval-after-load 'elpy (diminish `elpy-mode))
+(with-eval-after-load 'flymake (diminish `flymake-mode))
+(with-eval-after-load 'highlight-indentation (diminish `highlight-indentation-mode))
+(with-eval-after-load 'auto-revert (diminish `auto-revert-mode))
+(with-eval-after-load 'abbrev (diminish `abbrev-mode))
+(with-eval-after-load 'editorconfig (diminish `editorconfig-mode))
+(with-eval-after-load 'simple (diminish `auto-fill-function))
+#+END_SRC
+
+** Misc Custom functions
+#+BEGIN_SRC emacs-lisp
+(defun maybe-helm-projectile-ag-default ()
+  "If inside projectile project - run helm-ag inside current project only
+  else run default helm-ag
+  helm-ag command without inserting symbol/word at point"
+  (interactive)
+  (setq helm-ag-insert-at-point nil)
+  (call-interactively
+    (if (projectile-project-p)
+        #'helm-ag-project-root
+        #'helm-ag)))
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun maybe-helm-projectile-ag-symbol ()
+  "If inside projectile project - run helm-ag inside current project only
+else run default helm-ag
+insert current symbol into helm-ag command"
+  (interactive)
+  (setq helm-ag-insert-at-point 'symbol)
+  (call-interactively
+    (if (projectile-project-p)
+       #'helm-ag-project-root
+       #'helm-ag)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun helm-ag-this-file-default ()
+  "run helm-ag-this-file without inserting symbol/word"
+  (interactive)
+  (setq helm-ag-insert-at-point nil)
+  (call-interactively
+    #'helm-ag-this-file))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun helm-ag-this-file-symbol ()
+  "run helm-ag-this-file inserting current symbol"
+  (interactive)
+  (setq helm-ag-insert-at-point 'symbol)
+  (call-interactively
+    #'helm-ag-this-file))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; Custom fn that opens helm-projectile-find-file if currently in a projectile project
+; otherwise opens helm-find-files
+(defun maybe-helm-projectile-find-file ()
+  (interactive)
+  (call-interactively
+    (if (projectile-project-p)
+       #'helm-projectile-find-file
+       #'helm-find-files)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun maybe-helm-projectile-find-file-dwim ()
+  (interactive)
+  (call-interactively
+    (if (projectile-project-p)
+       #'helm-projectile-find-file-dwim
+       #'helm-find-files)))
+#+END_SRC
+
+Reload emacs config
+#+BEGIN_SRC emacs-lisp
+(defun reload-init-file ()
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
+#+END_SRC
+
+Copy absolute file path to clipboard
+#+BEGIN_SRC emacs-lisp
+(defun copy-abs-file-path-to-clipboard ()
+  "copy the absolute file path of current open file to the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))
+#+END_SRC
+
+Open emacs init file
+#+BEGIN_SRC emacs-lisp
+(defun find-emacs-init-file ()
+  "Edit the 'emacs-init-file', in another window."
+  (interactive)
+  (find-file "~/.emacs.d/init.el.org"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun git-reset-common-ancestor ()
+  "Runs external shell command (using compile) which resets to common git commit ancestor"
+  (interactive)
+  (shell-command "git roa")
+  (mmagit-refresh))
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun git-reset-origin-current-branch ()
+  "git reset to origin version of current branch"
+  (interactive)
+  (shell-command "git rob")
+  (magit-refresh))
+#+END_SRC
+
+Rename current file/buffer
+source: https://sites.google.com/site/steveyegge2/my-dot-emacs-file
+#+BEGIN_SRC emacs-lisp
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil)
+	  (projectile-cache-current-file)
+      (projectile-invalidate-cache nil))))))
+#+END_SRC
+
+Delete current buffer and the file it has open
+source: https://emacsredux.com/blog/2013/04/03/delete-file-and-buffer/
+#+BEGIN_SRC emacs-lisp
+(defun delete-file-and-buffer ()
+  "Kill the current buffer and deletes the file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (when filename
+      (if (vc-backend filename)
+          (vc-delete-file filename)
+        (progn
+          (delete-file filename)
+          (message "Deleted file %s" filename)
+          (kill-buffer))))))
+#+END_SRC
+** Misc
+enable auto fill mode on text files, set to wrap lines at certain char limit
+#+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'auto-fill-mode)
+(setq-default fill-column 120)
+#+END_SRC

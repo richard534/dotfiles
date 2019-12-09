@@ -23,3 +23,5 @@ emacs.d/forge-database.sqlite
 emacs.d/elpy/
 emacs.d/request/
 .yas-compiled-snippets.el
+emacs.d/init.el.html
+emacs.d/init.el.el

@@ -1,4 +1,4 @@
-* init.el
+* Init.el
 #+BEGIN_SRC emacs-lisp
 ;;; init.el.org --- my emacs configuration -*- lexical-binding: t; -*-
 #+END_SRC
@@ -48,11 +48,16 @@ set left fringe width - prevent vertical splits hiding diff-hl
 #+BEGIN_SRC emacs-lisp
 (setq-default left-fringe-width 16)
 #+END_SRC
-** MacOS specific config
-Make emacs use the $PATH set up by the users shell
+Remove icons/text from title bar (transparent title bar)
 #+BEGIN_SRC emacs-lisp
-;;  package config
-; ensure environment variables inside Emacs look the same as in the user's shell.
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
+(setq ns-use-proxy-icon nil)
+(setq frame-title-format nil)
+#+END_SRC
+** MacOS specific config
+Make emacs use the $PATH envar inside emacs set to value used by the users shell
+#+BEGIN_SRC emacs-lisp
 (when (memq window-system '(mac ns x))
   ; sets PATH && MANPATH from your shell
   (exec-path-from-shell-initialize))
@@ -79,7 +84,6 @@ Focus on emacs session when opening emacs gui
 
 ** Custom
 #+BEGIN_SRC emacs-lisp
-;; Custom config
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 #+END_SRC
@@ -104,12 +108,15 @@ Keep evil search highlights after moving cursor
 
 Evil-leader config
 #+BEGIN_SRC emacs-lisp
-; configure evil-leader package
 (global-evil-leader-mode)
 (require 'evil-leader)
-; set evil leader key to backslash
+#+END_SRC
+Set evil leader key to backslash
+#+BEGIN_SRC emacs-lisp
 (evil-leader/set-leader "<SPC>")
-; bind evil-leader-keys
+#+END_SRC
+Bind evil-leader-keys
+#+BEGIN_SRC emacs-lisp
 (evil-leader/set-key
   "<SPC>" 'evil-ex-nohighlight ; clear highlights
   "fs" `helm-imenu ; mnemonic - file-structure
@@ -149,74 +156,95 @@ Evil config
 (require 'evil)
 (evil-mode 1)
 
-; enabling evil-collection keymaps mode-by-mode
+#+END_SRC
+Enabling evil-collection keymaps mode-by-mode
+#+BEGIN_SRC emacs-lisp
 (when (require 'evil-collection nil t)
   (with-eval-after-load 'neotree (evil-collection-neotree-setup))
   (with-eval-after-load 'term (evil-collection-term-setup))
   (with-eval-after-load 'restclient (evil-collection-restclient-setup)))
 
-; rebind keys for moving between windows
+#+END_SRC
+Rebind keys for moving between windows
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
 (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
 (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
 (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
-; rebind keys for resizing windows
+#+END_SRC
+Rebind keys for resizing windows
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map (kbd "M-k") #'evil-window-increase-height)
 (define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
 (define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
 (define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
-; map cursor color to evil vim mode
+#+END_SRC
+Map cursor color to evil vim mode
+#+BEGIN_SRC emacs-lisp
 (setq evil-emacs-state-cursor '("red" box))
 (setq evil-normal-state-cursor '("green" box))
 (setq evil-visual-state-cursor '("orange" box))
 (setq evil-insert-state-cursor '("red" bar))
 (setq evil-replace-state-cursor '("red" bar))
 (setq evil-operator-state-cursor '("red" hollow))
-; rebind move window keys
+#+END_SRC
+Rebind move window keys
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
 (define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
 (define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
 (define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
 
-;; Bind vim-style GoTo commands
-; mnemonic - goto file
+#+END_SRC
+Bind vim-style GoTo commands
+Mnemonic - goto file
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map (kbd "gf") nil)
 (define-key evil-normal-state-map (kbd "gF") nil)
 (define-key evil-normal-state-map "gff" `helm-find-files)
 (define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
 (define-key evil-normal-state-map "gFp" `maybe-helm-projectile-find-file-dwim)
-
-; mnemonic - goto symbol file (inside current file)
+#+END_SRC
+Mnemonic - goto symbol file (inside current file)
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
 (define-key evil-normal-state-map "gSf" `helm-ag-this-file-symbol)
-
-; mnemonic - goto symbol project
+#+END_SRC
+Mnemonic - goto symbol project
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
 (define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
-
-; mnemonic - goto projectile
+#+END_SRC
+Mnemonic - goto projectile
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map "gpl" `helm-projectile-switch-project)
 (define-key evil-normal-state-map "gpb" `helm-projectile-switch-to-buffer)
 (define-key evil-normal-state-map "gpa" `projectile-toggle-between-implementation-and-test)
-
-; goto git hunks
+#+END_SRC
+Goto git hunks
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
 (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
-; add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
+; Add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
 (evil-add-command-properties #'diff-hl-next-hunk :jump t)
 (evil-add-command-properties #'diff-hl-previous-hunk :jump t)
-
-; goto todo
+#+END_SRC
+Goto todo
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map "gt]" `hl-todo-next)
 (define-key evil-normal-state-map "gt[" `hl-todo-previous)
-; add goto next/previoud todo to evil jump-list
+#+END_SRC
+Add goto next/previoud todo to evil jump-list
+#+BEGIN_SRC emacs-lisp
 (evil-add-command-properties #'hl-todo-next :jump t)
 (evil-add-command-properties #'hl-todo-previous :jump t)
-
-; goto emacs-buffer
+#+END_SRC
+Goto emacs-buffer
+#+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map "gb" `helm-buffers-list)
-
-; evil shortcut to select all in file
+#+END_SRC
+Evil shortcut to select all in file
+#+BEGIN_SRC emacs-lisp
 (fset 'select-all
    "ggVG")
 (define-key evil-normal-state-map (kbd "C-a") 'select-all)
@@ -224,7 +252,6 @@ Evil config
 
 Remap emacs-quit function to vim-like crtl-[
 #+BEGIN_SRC emacs-lisp
-;;
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.
   In Delete Selection mode, if the mark is active, just deactivate it;
@@ -254,12 +281,15 @@ Evil-number config
 
 Evil-magit config
 #+BEGIN_SRC emacs-lisp
-; evil-magit config
 (require 'evil-magit)
-; enable automatic refreshing of magit buffers
+#+END_SRC
+Enable automatic refreshing of magit buffers
+#+BEGIN_SRC emacs-lisp
 (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
-; package-menu-mode evil keybinds
+#+END_SRC
+Package-menu-mode evil keybinds
+#+BEGIN_SRC emacs-lisp
 (evil-add-hjkl-bindings package-menu-mode-map 'emacs
   (kbd "/")       'evil-search-forward
   (kbd "n")       'evil-search-next
@@ -270,13 +300,31 @@ Evil-magit config
 #+END_SRC
 
 Evil ex-commands
+Bind evil ex-command to open init file
 #+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "init" #'find-emacs-init-file) ; bind evil ex-command to open init file
+(evil-ex-define-cmd "init" #'find-emacs-init-file)
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
 (evil-ex-define-cmd "reload" #'reload-init-file)
-(evil-ex-define-cmd "q" 'delete-window) ; :q deletes window - keeps buffer
-(evil-ex-define-cmd "quit" 'save-buffers-kill-emacs) ; :quit closes emacs
+#+END_SRC
+:q deletes window - keeps buffer
+#+BEGIN_SRC emacs-lisp
+(evil-ex-define-cmd "q" 'delete-window)
+#+END_SRC
+:quit closes emacs
+#+BEGIN_SRC emacs-lisp
+(evil-ex-define-cmd "quit" 'save-buffers-kill-emacs) 
+#+END_SRC
+st opens magit status
+#+BEGIN_SRC emacs-lisp
 (evil-ex-define-cmd "st" 'magit-status)
+#+END_SRC
+vs vertically splits window
+#+BEGIN_SRC emacs-lisp
 (evil-ex-define-cmd "vs" (lambda () (interactive)(split-window-horizontally) (other-window 1)))
+#+END_SRC
+sp horizontally splits window
+#+BEGIN_SRC emacs-lisp
 (evil-ex-define-cmd "sp" (lambda () (interactive)(split-window-vertically) (other-window 1)))
 #+END_SRC
 ** Evil-org
@@ -298,31 +346,31 @@ Emacs auto-reloads buffers when files change on disk.
 #+END_SRC
 
 ** Electric
+Auto-complete pairs of brackets/quotes etc.
 #+BEGIN_SRC emacs-lisp
-; auto-complete pairs of brackets/quotes etc.
 (setq electric-pair-preserve-balance nil)
-; Disabled "electric indent mode" - breaks some modes inc. python
+#+END_SRC
+Disabled "electric indent mode" - breaks some modes inc. python
+#+BEGIN_SRC emacs-lisp
 (electric-indent-mode -1)
 #+END_SRC
 ** Tabs
+Pressing tab will produce spaces instead of tab chars
 #+BEGIN_SRC emacs-lisp
-; pressing tab will produce spaces instead of tab chars
 (setq-default
     indent-tabs-mode nil
 )
-
-;; remember cursor position of files when reopening them
+#+END_SRC
+** Saveplace
+Remember cursor position of files when reopening them
+#+BEGIN_SRC emacs-lisp
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq-default save-place t)
 (require 'saveplace)
-
-; remove icons/text from title bar (transparent title bar)
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
-(setq ns-use-proxy-icon nil)
-(setq frame-title-format nil)
-
-; winner-mode config
+#+END_SRC
+** Winner-mode
+enable winner mode
+#+BEGIN_SRC emacs-lisp
 (winner-mode 1)
 #+END_SRC
 ** Anzu
@@ -335,13 +383,13 @@ Emacs auto-reloads buffers when files change on disk.
     anzu-cons-mode-line-p nil)
 #+END_SRC
 ** Font
+Set default font
 #+BEGIN_SRC emacs-lisp
-; set default font
 (set-default-font "Source Code Pro 14")
 #+END_SRC
 ** Emacs Server
+start emacs-server (for use with emacsclient)
 #+BEGIN_SRC emacs-lisp
-;; start emacs-server (for use with emacsclient)
 (server-start)
 #+END_SRC
 
@@ -368,7 +416,6 @@ Emacs auto-reloads buffers when files change on disk.
 #+END_SRC
 org-mode images config
 #+BEGIN_SRC emacs-lisp
-; org-mode images config
 (setq org-startup-with-inline-images t) ; Show inline images by default
 (setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
 #+END_SRC
@@ -440,7 +487,6 @@ Hide substrees in selected region
 #+END_SRC
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
-;; Line numbers config
 (define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
 ; Enable line numbers only in modes that inherit prog-mode (programming mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode 1)
@@ -495,7 +541,6 @@ Hide substrees in selected region
 
 ** Company
 #+BEGIN_SRC emacs-lisp
-;; company package config
 (add-hook 'after-init-hook 'global-company-mode)
 ; No delay in showing suggestions.
 (setq company-idle-delay 0)
@@ -511,14 +556,12 @@ Hide substrees in selected region
 #+END_SRC
 ** Org-download
 #+BEGIN_SRC emacs-lisp
-;; org-download package config
 (require 'org-download)
 ; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+END_SRC
 ** Neotree
 #+BEGIN_SRC emacs-lisp
-;; emacs-neotree config
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 (setq neo-window-fixed-size nil)
@@ -576,7 +619,6 @@ Custom fn to clear elpy shell
 #+END_SRC
 ** Hl-todo
 #+BEGIN_SRC emacs-lisp
-;; hl-todo config
 (setq global-hl-todo-mode 1)
 (global-hl-todo-mode)
 #+END_SRC
@@ -618,7 +660,6 @@ set diff-hl to work with unsaved buffers too
 #+END_SRC
 ** Terraform-mode
 #+BEGIN_SRC emacs-lisp
-;; terraform-mode config
 (add-hook 'terraform-mode
   (lambda ()
     (setq evil-shift-width 2)))
@@ -671,7 +712,6 @@ diff-hl magit integration
 #+END_SRC
 ** Forge
 #+BEGIN_SRC emacs-lisp
-; forge config
 (with-eval-after-load `magit
   (require `forge))
 #+END_SRC
@@ -703,7 +743,7 @@ diff-hl magit integration
 #+END_SRC
 
 ** Impatient-mode
-*** Custom impatient mode filters 
+*** Custom impatient mode filters
 markdown rendering
 #+BEGIN_SRC emacs-lisp
 (defun markdown-html (buffer)

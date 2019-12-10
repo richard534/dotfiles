@@ -32,7 +32,7 @@ Prevent the cursor from blinking
 #+BEGIN_SRC emacs-lisp
 (blink-cursor-mode 0)
 #+END_SRC
-Remove initial scratch message
+Initial scratch message
 #+BEGIN_SRC emacs-lisp
 (setq initial-scratch-message
       (concat
@@ -90,7 +90,6 @@ Remove icons/text from title bar (transparent title bar)
   (package-refresh-contents)
   (package-install 'use-package))
 #+END_SRC
-
 ** Theme
 Enable doom theme
 #+BEGIN_SRC emacs-lisp
@@ -105,8 +104,9 @@ Enable doom theme
 ; overload doom-themes "selected region" color
 (set-face-attribute 'region nil :background "#666")
 #+END_SRC
-** MacOS specific config
-Make emacs use the $PATH envar inside emacs set to value used by the users shell
+** Exec-path-from-shell
+Copies specified environment variables from the users shell to the emacs environment
+Necessary when using MacOS
 #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
   :ensure t
@@ -136,244 +136,182 @@ Focus on emacs session when opening emacs gui
     (ns-raise-emacs)))
 #+END_SRC
 ** Evil
-Evil-collection pre-requisite config -
-package assumes these two variables are set accordingly before evil imported:
 #+BEGIN_SRC emacs-lisp
-(setq evil-want-integration t)
-(setq evil-want-keybinding nil)
-#+END_SRC
+(use-package evil
+  :ensure t ;; install the evil package if not installed
+  :after evil-leader
+  :init ;; configure evil before loading it
+  ; disable evil auto indent
+  (setq evil-auto-indent nil)
 
-Enable vim-like crtl-u pgUp
-Must be set before call to (require 'evil)
-#+BEGIN_SRC emacs-lisp
-(setq evil-want-C-u-scroll t)
-#+END_SRC
-Keep evil search highlights after moving cursor
-#+BEGIN_SRC emacs-lisp
-(setq evil-search-module 'evil-search)
-(setq evil-auto-indent nil)
-#+END_SRC
+  :config ;; configure evil after loading it
+  (evil-mode 1)
 
-Evil-leader config
-#+BEGIN_SRC emacs-lisp
-(global-evil-leader-mode)
-(require 'evil-leader)
-#+END_SRC
-Set evil leader key to backslash
-#+BEGIN_SRC emacs-lisp
-(evil-leader/set-leader "<SPC>")
-#+END_SRC
-Bind evil-leader-keys
-#+BEGIN_SRC emacs-lisp
-(evil-leader/set-key
-  "<SPC>" 'evil-ex-nohighlight ; clear highlights
-  "fs" `helm-imenu ; mnemonic - file-structure
-  "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
-  "R"  `projectile-replace ; project-wide find/replace
-  "sc"  `string-inflection-cycle-auto ; convert string
-  "is" `yas-insert-snippet ; insert snippet
-  "fd" `magit-file-dispatch ; file-dispatch (magit command)
-  "[" `winner-undo
-  "]" `winner-redo
-  "fj" `json-pretty-print
-  "fJ" `json-pretty-print-buffer
-  "bx" 'kill-buffer-and-window ; buffer - kill
-  "d" 'ranger
-  "sl" 'elpy-shell-clear-shell
+  ; set evil search implementation to internal evil-search (instead of isearch)
+  (setq evil-search-module 'evil-search)
 
-  ; evil-nerd-commenter evil-leader bindings
-  "ci" 'evilnc-comment-or-uncomment-lines
-  "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
-  "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
-  "cc" 'evilnc-copy-and-comment-lines
-  "cp" 'evilnc-comment-or-uncomment-paragraphs
-  "cr" 'comment-or-uncomment-region
-  "cv" 'evilnc-toggle-invert-comment-line-by-line
-  "."  'evilnc-copy-and-comment-operator
+  ; Rebind keys for vim-like crtl-u pgUp
+  (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+  (define-key evil-motion-state-map (kbd "C-u") 'evil-scroll-up) ; Motion state is an Evil-specific thing, intended for modes where you don't edit text. E.g help buffers
+
+  ; Rebind keys for moving between windows
+  (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
+  (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
+  (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
+  (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
+
+  ; Rebind keys for resizing windows
+  (define-key evil-normal-state-map (kbd "M-k") #'evil-window-increase-height)
+  (define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
+  (define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
+  (define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
+
+  ; Rebind move window keys
+  (define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
+  (define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
+  (define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
+  (define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
+
+  ;; Bind vim-style GoTo commands
+  ; Mnemonic - goto file
+  (define-key evil-normal-state-map (kbd "gf") nil)
+  (define-key evil-normal-state-map (kbd "gF") nil)
+  (define-key evil-normal-state-map "gff" `helm-find-files)
+  (define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
+  (define-key evil-normal-state-map "gFp" `maybe-helm-projectile-find-file-dwim)
+  ; Mnemonic - goto symbol file (inside current file)
+  (define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
+  (define-key evil-normal-state-map "gSf" `helm-ag-this-file-symbol)
+  ; Mnemonic - goto symbol project
+  (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
+  (define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
+  ; Mnemonic - goto projectile
+  (define-key evil-normal-state-map "gpl" `helm-projectile-switch-project)
+  (define-key evil-normal-state-map "gpb" `helm-projectile-switch-to-buffer)
+  (define-key evil-normal-state-map "gpa" `projectile-toggle-between-implementation-and-test)
+  ; Goto git hunks
+  (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
+  (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
+  ; Add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
+  (evil-add-command-properties #'diff-hl-next-hunk :jump t)
+  (evil-add-command-properties #'diff-hl-previous-hunk :jump t)
+  ; Goto todo
+  (define-key evil-normal-state-map "gt]" `hl-todo-next)
+  (define-key evil-normal-state-map "gt[" `hl-todo-previous)
+  ; Add goto next/previoud todo to evil jump-list
+  (evil-add-command-properties #'hl-todo-next :jump t)
+  (evil-add-command-properties #'hl-todo-previous :jump t)
+  ; Goto emacs-buffer
+  (define-key evil-normal-state-map "gb" `helm-buffers-list)
+
+  ; configure evil cursor
+  (setq evil-emacs-state-cursor '("red" box))
+  (setq evil-normal-state-cursor '("green" box))
+  (setq evil-visual-state-cursor '("orange" box))
+  (setq evil-insert-state-cursor '("red" bar))
+  (setq evil-replace-state-cursor '("red" bar))
+  (setq evil-operator-state-cursor '("red" hollow))
+
+  ;; Select all keybind
+  (fset 'select-all
+     "ggVG")
+  (define-key evil-normal-state-map (kbd "C-a") 'select-all)
+
+  ;; Bind evil ex-commands
+  ; Bind evil ex-command to open init file
+  (evil-ex-define-cmd "init" #'find-emacs-init-file)
+  (evil-ex-define-cmd "reload" #'reload-init-file)
+  ; :q deletes window - keeps buffer
+  (evil-ex-define-cmd "q" 'delete-window)
+  ; :quit closes emacs
+  (evil-ex-define-cmd "quit" 'save-buffers-kill-emacs)
+  ; vs vertically splits window
+  (evil-ex-define-cmd "vs" (lambda () (interactive)(split-window-horizontally) (other-window 1)))
+  ; sp horizontally splits window
+  (evil-ex-define-cmd "sp" (lambda () (interactive)(split-window-vertically) (other-window 1)))
+
+  ;; Add commands to evil jump-list
+  (evil-add-command-properties #'anzu-query-replace-at-cursor :jump t)
+  (evil-add-command-properties #'projectile-replace :jump t)
 )
 #+END_SRC
+** Evil-escape
+#+BEGIN_SRC emacs-lisp
+(use-package evil-escape
+  :ensure t
+  :diminish evil-escape-mode
+  :init
+  (setq-default evil-escape-key-sequence "fd") ; this is the default
+  (setq-default evil-escape-delay 0.2)
+  :config
+  (evil-escape-mode t))
+#+END_SRC
+** Evil-search-highlight-persist
+This package will make evil "slach search" highlights persist until another search is performed
+#+BEGIN_SRC emacs-lisp
+(use-package evil-search-highlight-persist
+  :ensure t
+  :after evil
+  :config
+  (global-evil-search-highlight-persist t))
+#+END_SRC
+** Evil-leader
+#+BEGIN_SRC emacs-lisp
+(use-package evil-leader
+  :ensure t
+  :config
+  (global-evil-leader-mode)
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    "<SPC>" 'evil-search-highlight-persist-remove-all ; clear highlights
+    "fs" `helm-imenu ; mnemonic - file-structure
+    "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
+    "R"  `projectile-replace ; project-wide find/replace
+    "sc"  `string-inflection-cycle-auto ; convert string
+    "is" `yas-insert-snippet ; insert snippet
+    "fd" `magit-file-dispatch ; file-dispatch (magit command)
+    "[" `winner-undo
+    "]" `winner-redo
+    "fj" `json-pretty-print
+    "fJ" `json-pretty-print-buffer
+    "bx" 'kill-buffer-and-window ; buffer - kill
+    "d" 'ranger
+    "sl" 'elpy-shell-clear-shell
 
-Add evil-leader commands to evil jump-list
-#+BEGIN_SRC emacs-lisp
-(evil-add-command-properties #'anzu-query-replace-at-cursor :jump t)
-(evil-add-command-properties #'projectile-replace :jump t)
+    ; evil-nerd-commenter evil-leader bindings
+    "ci" 'evilnc-comment-or-uncomment-lines
+    "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+    "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
+    "cc" 'evilnc-copy-and-comment-lines
+    "cp" 'evilnc-comment-or-uncomment-paragraphs
+    "cr" 'comment-or-uncomment-region
+    "cv" 'evilnc-toggle-invert-comment-line-by-line
+    "."  'evilnc-copy-and-comment-operator
+  ))
 #+END_SRC
-
-Evil config
+** Evil-magit
 #+BEGIN_SRC emacs-lisp
-(require 'evil)
-(evil-mode 1)
-
+(require 'evil-magit)
 #+END_SRC
-Enabling evil-collection keymaps mode-by-mode
+** Package
 #+BEGIN_SRC emacs-lisp
-(when (require 'evil-collection nil t)
-  (with-eval-after-load 'neotree (evil-collection-neotree-setup))
-  (with-eval-after-load 'term (evil-collection-term-setup))
-  (with-eval-after-load 'restclient (evil-collection-restclient-setup)))
-
+(use-package package
+  :config
+  ; Evilify keybinds
+  (evil-add-hjkl-bindings package-menu-mode-map 'emacs
+    (kbd "/")       'evil-search-forward
+    (kbd "n")       'evil-search-next
+    (kbd "N")       'evil-search-previous
+    (kbd "C-d")     'evil-scroll-down
+    (kbd "C-u")     'evil-scroll-up
+    (kbd "^")       'evil-first-non-blank))
 #+END_SRC
-Rebind keys for moving between windows
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
-(define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
-(define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
-(define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
-#+END_SRC
-Rebind keys for resizing windows
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map (kbd "M-k") #'evil-window-increase-height)
-(define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
-(define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
-(define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
-#+END_SRC
-Map cursor color to evil vim mode
-#+BEGIN_SRC emacs-lisp
-(setq evil-emacs-state-cursor '("red" box))
-(setq evil-normal-state-cursor '("green" box))
-(setq evil-visual-state-cursor '("orange" box))
-(setq evil-insert-state-cursor '("red" bar))
-(setq evil-replace-state-cursor '("red" bar))
-(setq evil-operator-state-cursor '("red" hollow))
-#+END_SRC
-Rebind move window keys
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
-(define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
-(define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
-(define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
-
-#+END_SRC
-Bind vim-style GoTo commands
-Mnemonic - goto file
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map (kbd "gf") nil)
-(define-key evil-normal-state-map (kbd "gF") nil)
-(define-key evil-normal-state-map "gff" `helm-find-files)
-(define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
-(define-key evil-normal-state-map "gFp" `maybe-helm-projectile-find-file-dwim)
-#+END_SRC
-Mnemonic - goto symbol file (inside current file)
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
-(define-key evil-normal-state-map "gSf" `helm-ag-this-file-symbol)
-#+END_SRC
-Mnemonic - goto symbol project
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
-(define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
-#+END_SRC
-Mnemonic - goto projectile
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map "gpl" `helm-projectile-switch-project)
-(define-key evil-normal-state-map "gpb" `helm-projectile-switch-to-buffer)
-(define-key evil-normal-state-map "gpa" `projectile-toggle-between-implementation-and-test)
-#+END_SRC
-Goto git hunks
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
-(define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
-; Add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
-(evil-add-command-properties #'diff-hl-next-hunk :jump t)
-(evil-add-command-properties #'diff-hl-previous-hunk :jump t)
-#+END_SRC
-Goto todo
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map "gt]" `hl-todo-next)
-(define-key evil-normal-state-map "gt[" `hl-todo-previous)
-#+END_SRC
-Add goto next/previoud todo to evil jump-list
-#+BEGIN_SRC emacs-lisp
-(evil-add-command-properties #'hl-todo-next :jump t)
-(evil-add-command-properties #'hl-todo-previous :jump t)
-#+END_SRC
-Goto emacs-buffer
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map "gb" `helm-buffers-list)
-#+END_SRC
-Evil shortcut to select all in file
-#+BEGIN_SRC emacs-lisp
-(fset 'select-all
-   "ggVG")
-(define-key evil-normal-state-map (kbd "C-a") 'select-all)
-#+END_SRC
-
-Remap emacs-quit function to vim-like crtl-[
-#+BEGIN_SRC emacs-lisp
-(defun minibuffer-keyboard-quit ()
-  "Abort recursive edit.
-  In Delete Selection mode, if the mark is active, just deactivate it;
-  then it takes a second \\[keyboard-quit] to abort the minibuffer."
-  (interactive)
-  (if (and delete-selection-mode transient-mark-mode mark-active)
-      (setq deactivate-mark  t)
-    (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
-    (abort-recursive-edit)))
-
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-(global-set-key [escape] 'evil-exit-emacs-state)
-#+END_SRC
-
+** Evil-number
 Evil-number config
 #+BEGIN_SRC emacs-lisp
 (require 'evil-numbers)
 (global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
 (global-set-key (kbd "C--") 'evil-numbers/dec-at-pt)
-#+END_SRC
-
-Evil-magit config
-#+BEGIN_SRC emacs-lisp
-(require 'evil-magit)
-#+END_SRC
-Enable automatic refreshing of magit buffers
-#+BEGIN_SRC emacs-lisp
-(add-hook 'after-save-hook 'magit-after-save-refresh-status t)
-
-#+END_SRC
-Package-menu-mode evil keybinds
-#+BEGIN_SRC emacs-lisp
-(evil-add-hjkl-bindings package-menu-mode-map 'emacs
-  (kbd "/")       'evil-search-forward
-  (kbd "n")       'evil-search-next
-  (kbd "N")       'evil-search-previous
-  (kbd "C-d")     'evil-scroll-down
-  (kbd "C-u")     'evil-scroll-up
-  (kbd "^")       'evil-first-non-blank)
-#+END_SRC
-
-Evil ex-commands
-Bind evil ex-command to open init file
-#+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "init" #'find-emacs-init-file)
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "reload" #'reload-init-file)
-#+END_SRC
-:q deletes window - keeps buffer
-#+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "q" 'delete-window)
-#+END_SRC
-:quit closes emacs
-#+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "quit" 'save-buffers-kill-emacs)
-#+END_SRC
-st opens magit status
-#+BEGIN_SRC emacs-lisp
-; (evil-ex-define-cmd "st" 'magit-status)
-#+END_SRC
-vs vertically splits window
-#+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "vs" (lambda () (interactive)(split-window-horizontally) (other-window 1)))
-#+END_SRC
-sp horizontally splits window
-#+BEGIN_SRC emacs-lisp
-(evil-ex-define-cmd "sp" (lambda () (interactive)(split-window-vertically) (other-window 1)))
 #+END_SRC
 ** Evil-org
 #+BEGIN_SRC emacs-lisp
@@ -392,7 +330,6 @@ Emacs auto-reloads buffers when files change on disk.
 #+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode)
 #+END_SRC
-
 ** Electric
 Auto-complete pairs of brackets/quotes etc.
 #+BEGIN_SRC emacs-lisp
@@ -405,9 +342,7 @@ Disabled "electric indent mode" - breaks some modes inc. python
 ** Tabs
 Pressing tab will produce spaces instead of tab chars
 #+BEGIN_SRC emacs-lisp
-(setq-default
-    indent-tabs-mode nil
-)
+(setq-default indent-tabs-mode nil)
 #+END_SRC
 ** Saveplace
 Remember cursor position of files when reopening them
@@ -596,10 +531,13 @@ Hide substrees in selected region
 #+END_SRC
 ** Neotree
 #+BEGIN_SRC emacs-lisp
-(require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
-(setq neo-window-fixed-size nil)
-(setq neo-theme 'arrow)
+(use-package neotree
+  :ensure t
+  :bind ("<f8>" . 'neotree-toggle)
+  :config
+  (setq neo-window-fixed-size nil)
+  (setq neo-theme 'arrow))
+  ;; (with-eval-after-load 'neotree (evil-collection-neotree-setup))
 #+END_SRC
 ** Json-mode
 #+BEGIN_SRC emacs-lisp
@@ -743,12 +681,16 @@ Prevent ediff opening seperate emacs window
 
   ; enable quiting magit "transient" pop-ups using q
   (with-eval-after-load 'transient
-    (transient-bind-q-to-quit)))
+    (transient-bind-q-to-quit))
+
+  ; Enable automatic refreshing of magit buffers
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
 #+END_SRC
 ** Forge
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load `magit
-  (require `forge))
+(use-package forge
+  :ensure t
+  :after magit)
 #+END_SRC
 ** String-inflection
 #+BEGIN_SRC emacs-lisp
@@ -815,8 +757,8 @@ markdown rendering
 (with-eval-after-load 'abbrev (diminish `abbrev-mode))
 (with-eval-after-load 'editorconfig (diminish `editorconfig-mode))
 (with-eval-after-load 'simple (diminish `auto-fill-function))
+(with-eval-after-load 'evil-org (diminish `evil-org-mode))
 #+END_SRC
-
 ** Misc Custom functions
 #+BEGIN_SRC emacs-lisp
 (defun maybe-helm-projectile-ag-default ()

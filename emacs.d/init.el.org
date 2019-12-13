@@ -370,6 +370,12 @@ Set default font
 #+BEGIN_SRC emacs-lisp
 (set-default-font "Source Code Pro 14")
 #+END_SRC
+** Emojify
+#+BEGIN_SRC emacs-lisp
+(use-package emojify
+  ; When using :hook omit the "-hook" suffix. This would normally look like "after-init-hook"
+  :hook (after-init . global-emojify-mode))
+#+END_SRC
 ** Emacs Server
 start emacs-server (for use with emacsclient)
 #+BEGIN_SRC emacs-lisp

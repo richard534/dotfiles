@@ -200,6 +200,12 @@ Focus on emacs session when opening emacs gui
   ; set evil search implementation to internal evil-search (instead of isearch)
   (setq evil-search-module 'evil-search)
 
+  ;; Unbind evil keys (for use elsewhere)
+  (define-key evil-normal-state-map (kbd "C-n") nil)
+  (define-key evil-insert-state-map (kbd "C-n") nil)
+  (define-key evil-normal-state-map (kbd "C-p") nil)
+  (define-key evil-insert-state-map (kbd "C-p") nil)
+
   ; Rebind keys for vim-like crtl-u pgUp
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
   (define-key evil-motion-state-map (kbd "C-u") 'evil-scroll-up) ; Motion state is an Evil-specific thing, intended for modes where you don't edit text. E.g help buffers
@@ -588,8 +594,10 @@ Prevent ediff opening seperate emacs window
 (use-package company
   :ensure t
   :bind (:map company-active-map
-          ("C-n" . company-select-next)
-          ("C-p" . company-select-previous))
+          ("M-n" . nil)
+          ("M-p" . nil)
+          ("C-n" . company-select-next-or-abort)
+          ("C-p" . company-select-previous-or-abort))
   :hook (after-init . global-company-mode)
   :init
   (setq company-idle-delay 0) ; No delay in showing suggestions.
@@ -626,46 +634,41 @@ Prevent ediff opening seperate emacs window
   :init
   (setq json-reformat:indent-width 2))
 #+END_SRC
-** Elpy
-#+BEGIN_SRC emacs-lisp
-(elpy-enable)
-(add-hook `python-mode
-          (define-key evil-normal-state-map "gd" 'elpy-goto-definition)
-          (evil-leader/set-key "fc" 'elpy-black-fix-code)) ; mnemonic - format-code
-
-(setq elpy-rpc-backend "jedi")
-#+END_SRC
-Set elpy to use ipython as shell interpreter
-#+BEGIN_SRC emacs-lisp
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i")
-
-; prevent elpy from overiding certain keys
-(eval-after-load "elpy"
-  '(cl-dolist (key '("M-<up>" "M-<down>" "M-<left>" "M-<right>"))
-     (define-key elpy-mode-map (kbd key) nil)))
-
-#+END_SRC
-Custom fn to clear elpy shell
-#+BEGIN_SRC emacs-lisp
-; fn to clear elpy shell
-(defun elpy-shell-clear-shell ()
-  "Clear the current shell buffer."
-  (interactive)
-  (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
-    (comint-clear-buffer)))
-
-#+END_SRC
 ** Flycheck
 #+BEGIN_SRC emacs-lisp
-(use-package flycheck
+  (use-package flycheck
+    :ensure t
+    :diminish flycheck-mode
+    :init (global-flycheck-mode)) ; flycheck only run if it finds a linter for the buffer language - enabling mode globally is OK
+#+END_SRC
+** Elpy
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
   :ensure t
-  :diminish flycheck-mode
+  :after (evil python flycheck)
+  :bind (:map evil-normal-state-map
+         ("gd" . 'elpy-goto-definition))
+  :defer t
+  :init
+  ; Defer loading elpy until python-mode loaded
+  (advice-add 'python-mode :before 'elpy-enable)
+
   :config
-  ; TODO move this to elpy config
-  (when (load "flycheck" t t)
-    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    (add-hook 'elpy-mode-hook 'flycheck-mode)))
+  ; Set elpy backend
+  (setq elpy-rpc-backend "jedi")
+   ; Set elpy to use ipython as shell interpreter
+  (setq python-shell-interpreter "ipython"
+    python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i")
+   ; Config elpy to use flycheck instead of flymake
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    ; Bind evil-leader key to format code. mnemonic - format-code
+  (evil-leader/set-key "fc" 'elpy-black-fix-code)
+   ; custon fn to clear elpy shell
+  (defun elpy-shell-clear-shell ()
+    "Clear the current shell buffer."
+    (interactive)
+    (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
+      (comint-clear-buffer))))
 #+END_SRC
 ** Pyvenv
 #+BEGIN_SRC emacs-lisp

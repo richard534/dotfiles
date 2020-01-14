@@ -251,12 +251,6 @@ Focus on emacs session when opening emacs gui
   ; Add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
   (evil-add-command-properties #'diff-hl-next-hunk :jump t)
   (evil-add-command-properties #'diff-hl-previous-hunk :jump t)
-  ; Goto todo
-  (define-key evil-normal-state-map "gt]" `hl-todo-next)
-  (define-key evil-normal-state-map "gt[" `hl-todo-previous)
-  ; Add goto next/previoud todo to evil jump-list
-  (evil-add-command-properties #'hl-todo-next :jump t)
-  (evil-add-command-properties #'hl-todo-previous :jump t)
   ; Goto emacs-buffer
   (define-key evil-normal-state-map "gb" `helm-buffers-list)
 
@@ -456,7 +450,9 @@ start emacs-server (for use with emacsclient)
 (setq org-hide-leading-stars t) ; hide orgmode heading stars
 (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
+(setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
 #+END_SRC
+
 org-mode images config
 #+BEGIN_SRC emacs-lisp
 (setq org-startup-with-inline-images t) ; Show inline images by default
@@ -593,6 +589,7 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
+  :diminish company-mode
   :bind (:map company-active-map
           ("M-n" . nil)
           ("M-p" . nil)
@@ -677,8 +674,17 @@ Prevent ediff opening seperate emacs window
 #+END_SRC
 ** Hl-todo
 #+BEGIN_SRC emacs-lisp
-(setq global-hl-todo-mode 1)
-(global-hl-todo-mode)
+  (use-package hl-todo
+    :ensure t
+    ; Bind hl-todo commands to evil keymap. Mnemonic - "goto todo"
+    :bind (:map evil-normal-state-map
+                ("gt]" . hl-todo-next)
+                ("gt[" . hl-todo-previous))
+    :init
+    ; Add hl-todo next-prev commands to evil jump-list
+    (evil-add-command-properties #'hl-todo-next :jump t)
+    (evil-add-command-properties #'hl-todo-previous :jump t)
+    (global-hl-todo-mode))
 #+END_SRC
 ** Spaceline
 #+BEGIN_SRC emacs-lisp
@@ -784,7 +790,6 @@ set diff-hl to work with unsaved buffers too
 (require 'yasnippet)
 (yas-global-mode 1)
 #+END_SRC
-
 ** Impatient mode
 *** Custom impatient mode filters
 markdown rendering

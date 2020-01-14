@@ -26,3 +26,5 @@ emacs.d/request/
 emacs.d/init.el.html
 emacs.d/init.el.el
 emacs.d/emojis/
+emacs.d/places
+emacs.d/saveplace

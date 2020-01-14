@@ -114,6 +114,7 @@ Necessary when using MacOS
   (setq exec-path-from-shell-variables
         '("PATH"
           "MANPATH"))
+  (setq exec-path-from-shell-check-startup-files nil) ; Hide warning message about environment variables
   (exec-path-from-shell-initialize))
 #+END_SRC
 
@@ -232,8 +233,7 @@ Focus on emacs session when opening emacs gui
 
   ;; Add commands to evil jump-list
   (evil-add-command-properties #'anzu-query-replace-at-cursor :jump t)
-  (evil-add-command-properties #'projectile-replace :jump t)
-)
+  (evil-add-command-properties #'projectile-replace :jump t))
 #+END_SRC
 ** Evil-escape
 #+BEGIN_SRC emacs-lisp
@@ -241,7 +241,7 @@ Focus on emacs session when opening emacs gui
   :ensure t
   :diminish evil-escape-mode
   :init
-  (setq-default evil-escape-key-sequence "jj")
+  (setq-default evil-escape-key-sequence "jk")
   (setq-default evil-escape-delay 0.2)
   :config
   (evil-escape-mode t))
@@ -291,7 +291,56 @@ This package will make evil "slach search" highlights persist until another sear
 #+END_SRC
 ** Evil-magit
 #+BEGIN_SRC emacs-lisp
-(require 'evil-magit)
+(use-package evil-magit)
+#+END_SRC
+** Evil-surround
+#+BEGIN_SRC emacs-lisp
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+#+END_SRC
+** Evil-number
+#+BEGIN_SRC emacs-lisp
+(use-package evil-numbers
+  :ensure t
+  :init
+  (global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
+  (global-set-key (kbd "C--") 'evil-numbers/dec-at-pt))
+#+END_SRC
+** Evil-org
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-org
+    :ensure t
+    :diminish evil-org-mode
+    :after org
+    :hook (org-mode . evil-org-mode)
+    ; config is used to execute code after a package is loaded
+    :config
+    (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
+#+END_SRC
+** Evil-visualstar
+#+BEGIN_SRC emacs-lisp
+(use-package evil-visualstar
+  :ensure t
+  :after evil
+  :init
+  (global-evil-visualstar-mode))
+#+END_SRC
+** Evil-anzu
+#+BEGIN_SRC emacs-lisp
+(use-package evil-anzu
+  :ensure t
+  :after evil)
+#+END_SRC
+** Anzu
+#+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :ensure t
+  :init
+  (global-anzu-mode +1)
+  (setq anzu-search-threshold 1000
+    anzu-cons-mode-line-p nil))
 #+END_SRC
 ** Package
 #+BEGIN_SRC emacs-lisp
@@ -305,25 +354,6 @@ This package will make evil "slach search" highlights persist until another sear
     (kbd "C-d")     'evil-scroll-down
     (kbd "C-u")     'evil-scroll-up
     (kbd "^")       'evil-first-non-blank))
-#+END_SRC
-** Evil-number
-Evil-number config
-#+BEGIN_SRC emacs-lisp
-(require 'evil-numbers)
-(global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
-(global-set-key (kbd "C--") 'evil-numbers/dec-at-pt)
-#+END_SRC
-** Evil-org
-#+BEGIN_SRC emacs-lisp
-(require 'evil-org)
-(add-hook 'org-mode-hook 'evil-org-mode)
-(evil-org-set-key-theme '(navigation insert textobjects additional calendar))
-(require 'evil-org-agenda)
-(evil-org-agenda-set-keys)
-#+END_SRC
-** Evil-visualstar
-#+BEGIN_SRC emacs-lisp
-(global-evil-visualstar-mode)
 #+END_SRC
 ** Global auto revert mode
 Emacs auto-reloads buffers when files change on disk.
@@ -347,23 +377,12 @@ Pressing tab will produce spaces instead of tab chars
 ** Saveplace
 Remember cursor position of files when reopening them
 #+BEGIN_SRC emacs-lisp
-(setq save-place-file "~/.emacs.d/saveplace")
-(setq-default save-place t)
-(require 'saveplace)
+(save-place-mode 1)
 #+END_SRC
 ** Winner-mode
 enable winner mode
 #+BEGIN_SRC emacs-lisp
 (winner-mode 1)
-#+END_SRC
-** Anzu
-#+BEGIN_SRC emacs-lisp
-(global-anzu-mode +1)
-(with-eval-after-load 'evil
-  (require 'evil-anzu)
-  (global-evil-surround-mode 1))
-(setq anzu-search-threshold 1000
-    anzu-cons-mode-line-p nil)
 #+END_SRC
 ** Font
 Set default font
@@ -529,8 +548,10 @@ Hide substrees in selected region
 #+END_SRC
 ** Indent-guide
 #+BEGIN_SRC emacs-lisp
-(require 'indent-guide)
-(indent-guide-global-mode)
+(use-package indent-guide
+  :ensure t
+  :init
+  (indent-guide-global-mode))
 #+END_SRC
 ** Org-download
 #+BEGIN_SRC emacs-lisp
@@ -693,7 +714,10 @@ Prevent ediff opening seperate emacs window
     (transient-bind-q-to-quit))
 
   ; Enable automatic refreshing of magit buffers
-  (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
+
+  (with-eval-after-load "magit-diff"
+    (define-key magit-hunk-section-map (kbd "<return>") 'magit-diff-visit-file-other-window)))
 #+END_SRC
 ** Forge
 #+BEGIN_SRC emacs-lisp
@@ -766,7 +790,6 @@ markdown rendering
 (with-eval-after-load 'abbrev (diminish `abbrev-mode))
 (with-eval-after-load 'editorconfig (diminish `editorconfig-mode))
 (with-eval-after-load 'simple (diminish `auto-fill-function))
-(with-eval-after-load 'evil-org (diminish `evil-org-mode))
 #+END_SRC
 ** Misc Custom functions
 #+BEGIN_SRC emacs-lisp

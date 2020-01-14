@@ -241,7 +241,7 @@ Focus on emacs session when opening emacs gui
   :ensure t
   :diminish evil-escape-mode
   :init
-  (setq-default evil-escape-key-sequence "fd") ; this is the default
+  (setq-default evil-escape-key-sequence "jj")
   (setq-default evil-escape-delay 0.2)
   :config
   (evil-escape-mode t))
@@ -513,16 +513,19 @@ Hide substrees in selected region
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 #+END_SRC
-
 ** Company
 #+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook 'global-company-mode)
-; No delay in showing suggestions.
-(setq company-idle-delay 0)
-; Show suggestions after entering one character.
-(setq company-minimum-prefix-length 1)
-; once at bottom of suggestions - wrap back to top
-(setq company-selection-wrap-around t)
+(use-package company
+  :ensure t
+  :bind (:map company-active-map
+          ("C-n" . company-select-next)
+          ("C-p" . company-select-previous))
+  :hook (after-init . global-company-mode)
+  :init
+  (setq company-idle-delay 0) ; No delay in showing suggestions.
+  (setq company-minimum-prefix-length 1) ; Show suggestions after entering one character.
+  (setq company-selection-wrap-around t) ; once at bottom of suggestions - wrap back to top
+)
 #+END_SRC
 ** Indent-guide
 #+BEGIN_SRC emacs-lisp

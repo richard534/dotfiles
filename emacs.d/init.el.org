@@ -2,6 +2,12 @@
 #+BEGIN_SRC emacs-lisp
 ;;; init.el.org --- my emacs configuration -*- lexical-binding: t; -*-
 #+END_SRC
+** Use-package
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+#+END_SRC
 ** Language and encoding
 Add UTF-8 to the front of the priority list for automatic detection
 #+BEGIN_SRC emacs-lisp
@@ -79,17 +85,6 @@ Remove icons/text from title bar (transparent title bar)
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 #+END_SRC
-** Custom
-#+BEGIN_SRC emacs-lisp
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file 'noerror)
-#+END_SRC
-** Use-package
-#+BEGIN_SRC emacs-lisp
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-#+END_SRC
 ** Theme
 Enable doom theme
 #+BEGIN_SRC emacs-lisp
@@ -103,6 +98,60 @@ Enable doom theme
 (doom-themes-org-config)
 ; overload doom-themes "selected region" color
 (set-face-attribute 'region nil :background "#666")
+#+END_SRC
+** Font
+Set default font
+#+BEGIN_SRC emacs-lisp
+(set-default-font "Source Code Pro 14")
+#+END_SRC
+** Tabs
+Pressing tab will produce spaces instead of tab chars
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+#+END_SRC
+** Word wrapping
+Word wrapping mode hooks
+#+BEGIN_SRC emacs-lisp
+; Text mode
+(add-hook 'prog-mode-hook '(lambda ()
+    (visual-line-mode -1)
+    (setq truncate-lines t
+          word-wrap nil)))
+
+; Programming mode
+(add-hook 'text-mode-hook '(lambda ()
+    (setq truncate-lines nil
+          word-wrap t)))
+#+END_SRC
+** Misc Text Editor Settings
+enable auto fill mode on text files
+#+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'auto-fill-mode)
+#+END_SRC
+Set lines to wrap at certain char limit
+#+BEGIN_SRC emacs-lisp
+(setq-default fill-column 120)
+#+END_SRC
+Delete trailing whitespace on save
+#+BEGIN_SRC emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+** Backup
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist `(("~/.emacs-saves")))
+(setq version-control t     ;; Use version numbers for backups.
+      kept-new-versions 10  ;; Number of newest versions to keep.
+      kept-old-versions 0   ;; Number of oldest versions to keep.
+      delete-old-versions t ;; Don't ask to delete excess backup versions.
+      backup-by-copying t)  ;; Copy all files, don't rename them.
+
+(setq make-backup-files nil) ; stop creating backup~ files
+(setq auto-save-default nil) ; stop creating #autosave# files
+#+END_SRC
+** Custom
+#+BEGIN_SRC emacs-lisp
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
 #+END_SRC
 ** Exec-path-from-shell
 Copies specified environment variables from the users shell to the emacs environment
@@ -337,10 +386,19 @@ This package will make evil "slach search" highlights persist until another sear
 #+BEGIN_SRC emacs-lisp
 (use-package anzu
   :ensure t
+  :diminish anzu-mode
   :init
   (global-anzu-mode +1)
   (setq anzu-search-threshold 1000
     anzu-cons-mode-line-p nil))
+#+END_SRC
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+(define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
+; Enable line numbers only in modes that inherit prog-mode (programming mode)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode 1)
+; groovy-mode-hook doesn't seem to inherit prog-mode - defining seperately
+(add-hook 'groovy-mode-hook 'display-line-numbers-mode 1)
 #+END_SRC
 ** Package
 #+BEGIN_SRC emacs-lisp
@@ -355,11 +413,6 @@ This package will make evil "slach search" highlights persist until another sear
     (kbd "C-u")     'evil-scroll-up
     (kbd "^")       'evil-first-non-blank))
 #+END_SRC
-** Global auto revert mode
-Emacs auto-reloads buffers when files change on disk.
-#+BEGIN_SRC emacs-lisp
-(global-auto-revert-mode)
-#+END_SRC
 ** Electric
 Auto-complete pairs of brackets/quotes etc.
 #+BEGIN_SRC emacs-lisp
@@ -369,31 +422,20 @@ Disabled "electric indent mode" - breaks some modes inc. python
 #+BEGIN_SRC emacs-lisp
 (electric-indent-mode -1)
 #+END_SRC
-** Tabs
-Pressing tab will produce spaces instead of tab chars
+** Auto revert
+Emacs auto-reloads buffers when files change on disk.
 #+BEGIN_SRC emacs-lisp
-(setq-default indent-tabs-mode nil)
+(global-auto-revert-mode)
 #+END_SRC
 ** Saveplace
 Remember cursor position of files when reopening them
 #+BEGIN_SRC emacs-lisp
 (save-place-mode 1)
 #+END_SRC
-** Winner-mode
+** Winner
 enable winner mode
 #+BEGIN_SRC emacs-lisp
 (winner-mode 1)
-#+END_SRC
-** Font
-Set default font
-#+BEGIN_SRC emacs-lisp
-(set-default-font "Source Code Pro 14")
-#+END_SRC
-** Emojify
-#+BEGIN_SRC emacs-lisp
-(use-package emojify
-  ; When using :hook omit the "-hook" suffix. This would normally look like "after-init-hook"
-  :hook (after-init . global-emojify-mode))
 #+END_SRC
 ** Emacs Server
 start emacs-server (for use with emacsclient)
@@ -404,6 +446,7 @@ start emacs-server (for use with emacsclient)
 #+BEGIN_SRC emacs-lisp
 (setq org-startup-indented t)
 (setq org-indent-mode t)
+(with-eval-after-load 'org-indent (diminish `org-indent-mode))
 (setq org-hide-leading-stars t) ; hide orgmode heading stars
 (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
@@ -456,69 +499,74 @@ Hide substrees in selected region
   (interactive "r")
   (outline-hide-region-body beg end))
 #+END_SRC
-
-** Backup
+** Comint
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist `(("~/.emacs-saves")))
-(setq version-control t     ;; Use version numbers for backups.
-      kept-new-versions 10  ;; Number of newest versions to keep.
-      kept-old-versions 0   ;; Number of oldest versions to keep.
-      delete-old-versions t ;; Don't ask to delete excess backup versions.
-      backup-by-copying t)  ;; Copy all files, don't rename them.
-
-(setq make-backup-files nil) ; stop creating backup~ files
-(setq auto-save-default nil) ; stop creating #autosave# files
-
+(setq comint-scroll-to-bottom-on-output t)
 #+END_SRC
-
 ** Xscheme
 #+BEGIN_SRC emacs-lisp
 ; mit-scheme (sicp) setup
 (setq scheme-program-name "/usr/local/bin/scheme")
 (require 'xscheme)
-
-
 #+END_SRC
-** Line numbers
-#+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
-; Enable line numbers only in modes that inherit prog-mode (programming mode)
-(add-hook 'prog-mode-hook 'display-line-numbers-mode 1)
-; groovy-mode-hook doesn't seem to inherit prog-mode - defining seperately
-(add-hook 'groovy-mode-hook 'display-line-numbers-mode 1)
-#+END_SRC
-
-** Which key
-#+BEGIN_SRC emacs-lisp
-(require 'which-key)
-(which-key-mode)
-#+END_SRC
-
-** Desktop save mode
+** Emacs Desktop
 #+BEGIN_SRC emacs-lisp
 (desktop-save-mode 1)
 #+END_SRC
+** Ediff
+Only highlight current diff:
+#+BEGIN_SRC emacs-lisp
+(setq-default ediff-highlight-all-diffs 'nil)
+#+END_SRC
+Turn off whitespace checking:
+#+BEGIN_SRC emacs-lisp
+(setq ediff-diff-options "-w")
+#+END_SRC
+Prevent ediff opening seperate emacs window
+#+BEGIN_SRC emacs-lisp
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+END_SRC
+** Emojify
+#+BEGIN_SRC emacs-lisp
+(use-package emojify
+  ; When using :hook omit the "-hook" suffix. This would normally look like "after-init-hook"
+  :hook (after-init . global-emojify-mode))
+#+END_SRC
+** Which key
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :diminish which-key-mode
+  :init
+  (which-key-mode))
+#+END_SRC
 ** Projectile
 #+BEGIN_SRC emacs-lisp
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-; enable caching projectile results (used with helm-projectile-find-file)
-(setq projectile-enable-caching t)
-; set projectile to just use VCS (e.g .gitignore) files during indexing
-(setq projectile-indexing-method 'alien)
-(setq projectile-mode-line "Projectile")
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :init
+  (projectile-mode +1)
+  ; enable caching projectile results (used with helm-projectile-find-file)
+  (setq projectile-enable-caching t)
+  ; set projectile to just use VCS (e.g .gitignore) files during indexing
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-mode-line "Projectile"))
 #+END_SRC
 ** Helm
 #+BEGIN_SRC emacs-lisp
-(require 'helm)
-; turns on helm completions for most standard emacs completions
-(helm-mode 1)
-; re-bind keys to helm functions
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(setq helm-follow-mode-persistent t)
-; enable pressing tab key to accept candidate currently selected
-(define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
+(use-package helm
+  :ensure t
+  :diminish helm-mode
+  :init
+  ; turns on helm completions for most standard emacs completions
+  (helm-mode 1)
+  ; re-bind keys to helm functions
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (setq helm-follow-mode-persistent t)
+  ; enable pressing tab key to accept candidate currently selected
+  (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action))
 #+END_SRC
 ** Helm-ag
 #+BEGIN_SRC emacs-lisp
@@ -526,11 +574,14 @@ Hide substrees in selected region
 #+END_SRC
 ** Helm-Projectile
 #+BEGIN_SRC emacs-lisp
-(require 'helm-projectile)
+(use-package helm-projectile
+  :ensure t)
 #+END_SRC
 ** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp
@@ -543,13 +594,13 @@ Hide substrees in selected region
   :init
   (setq company-idle-delay 0) ; No delay in showing suggestions.
   (setq company-minimum-prefix-length 1) ; Show suggestions after entering one character.
-  (setq company-selection-wrap-around t) ; once at bottom of suggestions - wrap back to top
-)
+  (setq company-selection-wrap-around t)) ; once at bottom of suggestions - wrap back to top
 #+END_SRC
 ** Indent-guide
 #+BEGIN_SRC emacs-lisp
 (use-package indent-guide
   :ensure t
+  :diminish indent-guide-mode
   :init
   (indent-guide-global-mode))
 #+END_SRC
@@ -567,15 +618,13 @@ Hide substrees in selected region
   :config
   (setq neo-window-fixed-size nil)
   (setq neo-theme 'arrow))
-  ;; (with-eval-after-load 'neotree (evil-collection-neotree-setup))
 #+END_SRC
 ** Json-mode
 #+BEGIN_SRC emacs-lisp
-(setq json-reformat:indent-width 2)
-#+END_SRC
-** Comint mode
-#+BEGIN_SRC emacs-lisp
-(setq comint-scroll-to-bottom-on-output t)
+(use-package json-mode
+  :ensure t
+  :init
+  (setq json-reformat:indent-width 2))
 #+END_SRC
 ** Elpy
 #+BEGIN_SRC emacs-lisp
@@ -609,10 +658,14 @@ Custom fn to clear elpy shell
 #+END_SRC
 ** Flycheck
 #+BEGIN_SRC emacs-lisp
-; use flycheck insead of fly-make
-(when (load "flycheck" t t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
+(use-package flycheck
+  :ensure t
+  :diminish flycheck-mode
+  :config
+  ; TODO move this to elpy config
+  (when (load "flycheck" t t)
+    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    (add-hook 'elpy-mode-hook 'flycheck-mode)))
 #+END_SRC
 ** Pyvenv
 #+BEGIN_SRC emacs-lisp
@@ -631,20 +684,6 @@ Custom fn to clear elpy shell
 ; colour spaceline modeline according to vim mode
 (setq spaceline-highlight-face-func `spaceline-highlight-face-evil-state)
 #+END_SRC
-** Word wrapping
-Word wrapping mode hooks
-#+BEGIN_SRC emacs-lisp
-; Text mode
-(add-hook 'prog-mode-hook '(lambda ()
-    (visual-line-mode -1)
-    (setq truncate-lines t
-          word-wrap nil)))
-
-; Programming mode
-(add-hook 'text-mode-hook '(lambda ()
-    (setq truncate-lines nil
-          word-wrap t)))
-#+END_SRC
 ** Diff-hl
 #+BEGIN_SRC emacs-lisp
 (global-diff-hl-mode)
@@ -660,7 +699,7 @@ set diff-hl to work with unsaved buffers too
     (lambda ()
         (origami-mode)))
 #+END_SRC
-** Terraform-mode
+** Terraform
 #+BEGIN_SRC emacs-lisp
 (add-hook 'terraform-mode
   (lambda ()
@@ -668,20 +707,11 @@ set diff-hl to work with unsaved buffers too
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
-(editorconfig-mode 1)
-#+END_SRC
-** Ediff
-Only highlight current diff:
-#+BEGIN_SRC emacs-lisp
-(setq-default ediff-highlight-all-diffs 'nil)
-#+END_SRC
-Turn off whitespace checking:
-#+BEGIN_SRC emacs-lisp
-(setq ediff-diff-options "-w")
-#+END_SRC
-Prevent ediff opening seperate emacs window
-#+BEGIN_SRC emacs-lisp
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(use-package editorconfig
+  :ensure t
+  :diminish editorconfig-mode
+  :config
+  (editorconfig-mode 1))
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -752,7 +782,7 @@ Prevent ediff opening seperate emacs window
 (yas-global-mode 1)
 #+END_SRC
 
-** Impatient-mode
+** Impatient mode
 *** Custom impatient mode filters
 markdown rendering
 #+BEGIN_SRC emacs-lisp
@@ -773,25 +803,17 @@ markdown rendering
 ** Diminish
 #+BEGIN_SRC emacs-lisp
 (require 'diminish)
-(with-eval-after-load 'anzu (diminish `anzu-mode))
 (with-eval-after-load 'undo-tree (diminish `undo-tree-mode))
 (with-eval-after-load 'eldoc (diminish `eldoc-mode))
 (with-eval-after-load 'visual-line (diminish `visual-line-mode))
-(with-eval-after-load 'org-indent (diminish `org-indent-mode))
-(with-eval-after-load 'flycheck (diminish `flycheck-mode))
-(with-eval-after-load 'indent-guide (diminish `indent-guide-mode))
-(with-eval-after-load 'helm (diminish `helm-mode))
-(with-eval-after-load 'which-key (diminish `which-key-mode))
-(with-eval-after-load 'projectile (diminish `projectile-mode))
 (with-eval-after-load 'elpy (diminish `elpy-mode))
 (with-eval-after-load 'flymake (diminish `flymake-mode))
 (with-eval-after-load 'highlight-indentation (diminish `highlight-indentation-mode))
 (with-eval-after-load 'auto-revert (diminish `auto-revert-mode))
 (with-eval-after-load 'abbrev (diminish `abbrev-mode))
-(with-eval-after-load 'editorconfig (diminish `editorconfig-mode))
 (with-eval-after-load 'simple (diminish `auto-fill-function))
 #+END_SRC
-** Misc Custom functions
+** Custom functions
 #+BEGIN_SRC emacs-lisp
 (defun maybe-helm-projectile-ag-default ()
   "If inside projectile project - run helm-ag inside current project only
@@ -939,14 +961,4 @@ source: https://emacsredux.com/blog/2013/04/03/delete-file-and-buffer/
           (delete-file filename)
           (message "Deleted file %s" filename)
           (kill-buffer))))))
-#+END_SRC
-** Misc
-enable auto fill mode on text files, set to wrap lines at certain char limit
-#+BEGIN_SRC emacs-lisp
-(add-hook 'text-mode-hook 'auto-fill-mode)
-(setq-default fill-column 120)
-#+END_SRC
-Delete trailing whitespace on save
-#+BEGIN_SRC emacs-lisp
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC

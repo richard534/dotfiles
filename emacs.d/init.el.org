@@ -153,14 +153,6 @@ Delete trailing whitespace on save
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 #+END_SRC
-** Help-mode
-Bind evil window navigation keys to help-mode
-#+BEGIN_SRC emacs-lisp
-(define-key help-mode-map (kbd "C-h") #'evil-window-left)
-(define-key help-mode-map (kbd "C-j") #'evil-window-down)
-(define-key help-mode-map (kbd "C-k") #'evil-window-up)
-(define-key help-mode-map (kbd "C-l") #'evil-window-right)
-#+END_SRC
 ** Exec-path-from-shell
 Copies specified environment variables from the users shell to the emacs environment
 Necessary when using MacOS
@@ -400,6 +392,14 @@ This package will make evil "slach search" highlights persist until another sear
   (setq anzu-search-threshold 1000
     anzu-cons-mode-line-p nil))
 #+END_SRC
+** Help-mode
+Bind evil window navigation keys to help-mode
+#+BEGIN_SRC emacs-lisp
+(define-key help-mode-map (kbd "C-h") #'evil-window-left)
+(define-key help-mode-map (kbd "C-j") #'evil-window-down)
+(define-key help-mode-map (kbd "C-k") #'evil-window-up)
+(define-key help-mode-map (kbd "C-l") #'evil-window-right)
+#+END_SRC
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
 (define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
@@ -513,6 +513,11 @@ Hide substrees in selected region
   (interactive "r")
   (outline-hide-region-body beg end))
 #+END_SRC
+** Org-download
+#+BEGIN_SRC emacs-lisp
+(use-package org-download
+  :ensure t)
+#+END_SRC
 ** Comint
 #+BEGIN_SRC emacs-lisp
 (setq comint-scroll-to-bottom-on-output t)
@@ -621,12 +626,6 @@ Prevent ediff opening seperate emacs window
   :init
   (indent-guide-global-mode))
 #+END_SRC
-** Org-download
-#+BEGIN_SRC emacs-lisp
-(require 'org-download)
-; Drag-and-drop to `dired`
-(add-hook 'dired-mode-hook 'org-download-enable)
-#+END_SRC
 ** Neotree
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
@@ -645,10 +644,10 @@ Prevent ediff opening seperate emacs window
 #+END_SRC
 ** Flycheck
 #+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :diminish flycheck-mode
-    :init (global-flycheck-mode)) ; flycheck only run if it finds a linter for the buffer language - enabling mode globally is OK
+(use-package flycheck
+  :ensure t
+  :diminish flycheck-mode
+  :init (global-flycheck-mode)) ; flycheck only run if it finds a linter for the buffer language - enabling mode globally is OK
 #+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp
@@ -656,7 +655,7 @@ Prevent ediff opening seperate emacs window
   :ensure t
   :bind (:map inferior-python-mode-map
     ("C-h" . 'evil-window-left)
-    ("C-j" .'evil-window-down)
+    ("C-j" . 'evil-window-down)
     ("C-k" . 'evil-window-up)
     ("C-l" . 'evil-window-right)))
 #+END_SRC
@@ -665,6 +664,7 @@ Prevent ediff opening seperate emacs window
 (use-package elpy
   :ensure t
   :after (evil python flycheck)
+  :diminish elpy-mode
   :bind (:map evil-normal-state-map
          ("gd" . 'elpy-goto-definition))
   :defer t
@@ -696,24 +696,26 @@ Prevent ediff opening seperate emacs window
 #+END_SRC
 ** Hl-todo
 #+BEGIN_SRC emacs-lisp
-  (use-package hl-todo
-    :ensure t
-    ; Bind hl-todo commands to evil keymap. Mnemonic - "goto todo"
-    :bind (:map evil-normal-state-map
-                ("gt]" . hl-todo-next)
-                ("gt[" . hl-todo-previous))
-    :init
-    ; Add hl-todo next-prev commands to evil jump-list
-    (evil-add-command-properties #'hl-todo-next :jump t)
-    (evil-add-command-properties #'hl-todo-previous :jump t)
-    (global-hl-todo-mode))
+(use-package hl-todo
+  :ensure t
+  ; Bind hl-todo commands to evil keymap. Mnemonic - "goto todo"
+  :bind (:map evil-normal-state-map
+              ("gt]" . hl-todo-next)
+              ("gt[" . hl-todo-previous))
+  :init
+  ; Add hl-todo next-prev commands to evil jump-list
+  (evil-add-command-properties #'hl-todo-next :jump t)
+  (evil-add-command-properties #'hl-todo-previous :jump t)
+  (global-hl-todo-mode))
 #+END_SRC
 ** Spaceline
 #+BEGIN_SRC emacs-lisp
-(require `spaceline-config)
-(spaceline-emacs-theme)
-; colour spaceline modeline according to vim mode
-(setq spaceline-highlight-face-func `spaceline-highlight-face-evil-state)
+(use-package spaceline
+  :ensure t
+  :init
+  (setq spaceline-highlight-face-func `spaceline-highlight-face-evil-state)
+  :config
+  (spaceline-emacs-theme))
 #+END_SRC
 ** Diff-hl
 #+BEGIN_SRC emacs-lisp
@@ -788,25 +790,26 @@ set diff-hl to work with unsaved buffers too
 #+END_SRC
 ** String-inflection
 #+BEGIN_SRC emacs-lisp
-(require 'string-inflection)
-(defun string-inflection-cycle-auto ()
-  "running string format conversion based on major-mode"
-  (interactive)
-  (cond
-   ;; for emacs-lisp mode
-   ((eq major-mode 'emacs-list-mode)
-    (string-inflection-all-cycle))
-   ;; for python
-   ((eq major-mode 'python-mode)
-    (string-inflection-python-style-cycle))
-     ;; for java
-   ((eq major-mode 'java-mode)
-    (string-inflection-java-style-cycle))
-   (t
-   ;; default
-   (string-inflection-ruby-style-cycle))))
+(use-package string-inflection
+  :ensure t
+  :config
+  (defun string-inflection-cycle-auto ()
+    "running string format conversion based on major-mode"
+    (interactive)
+    (cond
+     ;; for emacs-lisp mode
+     ((eq major-mode 'emacs-list-mode)
+      (string-inflection-all-cycle))
+     ;; for python
+     ((eq major-mode 'python-mode)
+      (string-inflection-python-style-cycle))
+       ;; for java
+     ((eq major-mode 'java-mode)
+      (string-inflection-java-style-cycle))
+     (t
+     ;; default
+     (string-inflection-ruby-style-cycle)))))
 #+END_SRC
-
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
@@ -816,6 +819,10 @@ set diff-hl to work with unsaved buffers too
   (yas-global-mode 1))
 #+END_SRC
 ** Impatient mode
+#+BEGIN_SRC emacs-lisp
+(use-package impatient-mode
+  :ensure t)
+#+END_SRC
 *** Custom impatient mode filters
 markdown rendering
 #+BEGIN_SRC emacs-lisp
@@ -831,19 +838,19 @@ markdown rendering
 #+END_SRC
 ** Ranger
 #+BEGIN_SRC emacs-lisp
-(setq ranger-show-literal nil)
+(use-package ranger
+  :ensure t
+  :init
+  (setq ranger-show-literal nil))
+#+END_SRC
+** Undo-tree
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :diminish undo-tree-mode)
 #+END_SRC
 ** Diminish
 #+BEGIN_SRC emacs-lisp
 (require 'diminish)
-(with-eval-after-load 'undo-tree (diminish `undo-tree-mode))
-(with-eval-after-load 'eldoc (diminish `eldoc-mode))
-(with-eval-after-load 'visual-line (diminish `visual-line-mode))
-(with-eval-after-load 'elpy (diminish `elpy-mode))
-(with-eval-after-load 'flymake (diminish `flymake-mode))
-(with-eval-after-load 'highlight-indentation (diminish `highlight-indentation-mode))
-(with-eval-after-load 'auto-revert (diminish `auto-revert-mode))
-(with-eval-after-load 'abbrev (diminish `abbrev-mode))
 (with-eval-after-load 'simple (diminish `auto-fill-function))
 #+END_SRC
 ** Custom functions

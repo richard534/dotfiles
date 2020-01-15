@@ -421,6 +421,7 @@ This package will make evil "slach search" highlights persist until another sear
     (kbd "C-d")     'evil-scroll-down
     (kbd "C-u")     'evil-scroll-up
     (kbd "gg")      'evil-goto-first-line
+    (kbd "gb")      'helm-buffers-list
     (kbd "G")       'evil-goto-line
     (kbd "^")       'evil-first-non-blank))
 #+END_SRC
@@ -808,8 +809,11 @@ set diff-hl to work with unsaved buffers too
 
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp
-(require 'yasnippet)
-(yas-global-mode 1)
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :config
+  (yas-global-mode 1))
 #+END_SRC
 ** Impatient mode
 *** Custom impatient mode filters
@@ -822,11 +826,8 @@ markdown rendering
 #+END_SRC
 ** Paradox
 #+BEGIN_SRC emacs-lisp
-; TODO
-; - integrate use-package
-; - Bind evil move window keys
-(require 'paradox)
-(paradox-enable)
+(use-package paradox
+   :ensure t)
 #+END_SRC
 ** Ranger
 #+BEGIN_SRC emacs-lisp

@@ -1018,3 +1018,16 @@ source: https://emacsredux.com/blog/2013/04/03/delete-file-and-buffer/
           (message "Deleted file %s" filename)
           (kill-buffer))))))
 #+END_SRC
+
+Disable all minor modes in current buffer
+#+BEGIN_SRC emacs-lisp
+(defun disable-all-minor-modes ()
+  (interactive)
+  (mapc
+   (lambda (mode-symbol)
+     (when (functionp mode-symbol)
+       ;; some symbols are functions which aren't normal mode functions
+       (ignore-errors
+         (funcall mode-symbol -1))))
+     minor-mode-list))
+#+END_SRC

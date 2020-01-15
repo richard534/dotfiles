@@ -780,6 +780,11 @@ set diff-hl to work with unsaved buffers too
   (with-eval-after-load "magit-diff"
     (define-key magit-hunk-section-map (kbd "<return>") 'magit-diff-visit-file-other-window)))
 #+END_SRC
+** Git Timemachine
+#+BEGIN_SRC emacs-lisp
+(use-package git-timemachine
+  :ensure t)
+#+END_SRC
 ** Forge
 #+BEGIN_SRC emacs-lisp
 (use-package forge

@@ -727,16 +727,14 @@ set diff-hl to work with unsaved buffers too
 #+END_SRC
 ** Origami
 #+BEGIN_SRC emacs-lisp
-(require 'origami)
-(add-hook 'prog-mode-hook
-    (lambda ()
-        (origami-mode)))
+(use-package origami
+  :ensure t
+  :hook (prog-mode . origami-mode))
 #+END_SRC
 ** Terraform
 #+BEGIN_SRC emacs-lisp
-(add-hook 'terraform-mode
-  (lambda ()
-    (setq evil-shift-width 2)))
+(use-package terraform-mode
+  :ensure t)
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp

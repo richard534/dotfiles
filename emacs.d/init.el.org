@@ -153,6 +153,14 @@ Delete trailing whitespace on save
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 #+END_SRC
+** Help-mode
+Bind evil window navigation keys to help-mode
+#+BEGIN_SRC emacs-lisp
+(define-key help-mode-map (kbd "C-h") #'evil-window-left)
+(define-key help-mode-map (kbd "C-j") #'evil-window-down)
+(define-key help-mode-map (kbd "C-k") #'evil-window-up)
+(define-key help-mode-map (kbd "C-l") #'evil-window-right)
+#+END_SRC
 ** Exec-path-from-shell
 Copies specified environment variables from the users shell to the emacs environment
 Necessary when using MacOS
@@ -641,6 +649,16 @@ Prevent ediff opening seperate emacs window
     :diminish flycheck-mode
     :init (global-flycheck-mode)) ; flycheck only run if it finds a linter for the buffer language - enabling mode globally is OK
 #+END_SRC
+** Python
+#+BEGIN_SRC emacs-lisp
+(use-package python
+  :ensure t
+  :bind (:map inferior-python-mode-map
+    ("C-h" . 'evil-window-left)
+    ("C-j" .'evil-window-down)
+    ("C-k" . 'evil-window-up)
+    ("C-l" . 'evil-window-right)))
+#+END_SRC
 ** Elpy
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
@@ -804,6 +822,9 @@ markdown rendering
 #+END_SRC
 ** Paradox
 #+BEGIN_SRC emacs-lisp
+; TODO
+; - integrate use-package
+; - Bind evil move window keys
 (require 'paradox)
 (paradox-enable)
 #+END_SRC

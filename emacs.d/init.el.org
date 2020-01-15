@@ -189,8 +189,11 @@ Focus on emacs session when opening emacs gui
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t ;; install the evil package if not installed
-  :after evil-leader
   :init ;; configure evil before loading it
+  ; variables required by evil-collection
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+
   ; disable evil auto indent
   (setq evil-auto-indent nil)
 
@@ -283,6 +286,12 @@ Focus on emacs session when opening emacs gui
   ;; Add commands to evil jump-list
   (evil-add-command-properties #'anzu-query-replace-at-cursor :jump t)
   (evil-add-command-properties #'projectile-replace :jump t))
+#+END_SRC
+** Evil-collection
+#+BEGIN_SRC emacs-lisp
+(use-package evil-collection
+  :after (evil)
+  :ensure t)
 #+END_SRC
 ** Evil-escape
 #+BEGIN_SRC emacs-lisp
@@ -783,7 +792,10 @@ set diff-hl to work with unsaved buffers too
 ** Git Timemachine
 #+BEGIN_SRC emacs-lisp
 (use-package git-timemachine
-  :ensure t)
+  :ensure t
+  :after evil-collection
+  :config
+  (evil-collection-git-timemachine-setup))
 #+END_SRC
 ** Forge
 #+BEGIN_SRC emacs-lisp

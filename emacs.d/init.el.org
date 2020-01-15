@@ -558,6 +558,7 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (use-package emojify
   ; When using :hook omit the "-hook" suffix. This would normally look like "after-init-hook"
+  :ensure t
   :hook (after-init . global-emojify-mode))
 #+END_SRC
 ** Which key

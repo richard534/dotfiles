@@ -450,6 +450,11 @@ Disabled "electric indent mode" - breaks some modes inc. python
   :config
   (evil-collection-dired-setup))
 #+END_SRC
+** Eldoc
+#+BEGIN_SRC emacs-lisp
+(use-package eldoc
+  :diminish eldoc-mode)
+#+END_SRC
 ** Auto revert
 Emacs auto-reloads buffers when files change on disk.
 #+BEGIN_SRC emacs-lisp

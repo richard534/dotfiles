@@ -640,8 +640,10 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
   :ensure t
+  :after evil-collection
   :bind ("<f8>" . 'neotree-toggle)
   :config
+  (evil-collection-neotree-setup) ; Bind evil-collection neotree keys
   (setq neo-window-fixed-size nil)
   (setq neo-theme 'arrow))
 #+END_SRC

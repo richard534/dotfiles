@@ -470,6 +470,11 @@ enable winner mode
 #+BEGIN_SRC emacs-lisp
 (winner-mode 1)
 #+END_SRC
+** Abbrev
+#+BEGIN_SRC emacs-lisp
+(use-package abbrev
+  :diminish abbrev-mode)
+#+END_SRC
 ** Emacs Server
 start emacs-server (for use with emacsclient)
 #+BEGIN_SRC emacs-lisp
@@ -571,7 +576,9 @@ Prevent ediff opening seperate emacs window
 (use-package emojify
   ; When using :hook omit the "-hook" suffix. This would normally look like "after-init-hook"
   :ensure t
-  :hook (after-init . global-emojify-mode))
+  :hook (after-init . global-emojify-mode)
+  :config
+  (evil-leader/set-key "ie" 'emojify-insert-emoji))
 #+END_SRC
 ** Which key
 #+BEGIN_SRC emacs-lisp
@@ -644,6 +651,7 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-indent-guides
   :ensure t
+  :diminish highlight-indent-guides-mode
   :hook (prog-mode . highlight-indent-guides-mode)
   :init
   (setq highlight-indent-guides-method 'character)

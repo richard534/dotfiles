@@ -820,7 +820,9 @@ set diff-hl to work with unsaved buffers too
   :ensure t
   :after evil-collection
   :config
-  (evil-collection-git-timemachine-setup))
+  (evil-collection-git-timemachine-setup)
+  ; Bind evil leader keys
+  (evil-leader/set-key "gt" 'git-timemachine))
 #+END_SRC
 ** Forge
 #+BEGIN_SRC emacs-lisp

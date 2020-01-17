@@ -640,13 +640,14 @@ Prevent ediff opening seperate emacs window
   (setq company-minimum-prefix-length 1) ; Show suggestions after entering one character.
   (setq company-selection-wrap-around t)) ; once at bottom of suggestions - wrap back to top
 #+END_SRC
-** Indent-guide
+** Highlight-Indent-Guides
 #+BEGIN_SRC emacs-lisp
-(use-package indent-guide
+(use-package highlight-indent-guides
   :ensure t
-  :diminish indent-guide-mode
+  :hook (prog-mode . highlight-indent-guides-mode)
   :init
-  (indent-guide-global-mode))
+  (setq highlight-indent-guides-method 'character)
+  (setq highlight-indent-guides-responsive 'top))
 #+END_SRC
 ** Neotree
 #+BEGIN_SRC emacs-lisp
@@ -695,7 +696,6 @@ Prevent ediff opening seperate emacs window
   :init
   ; Defer loading elpy until python-mode loaded
   (advice-add 'python-mode :before 'elpy-enable)
-
   :config
   ; Set elpy backend
   (setq elpy-rpc-backend "jedi")
@@ -704,7 +704,9 @@ Prevent ediff opening seperate emacs window
     python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i")
    ; Config elpy to use flycheck instead of flymake
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    ; Bind evil-leader key to format code. mnemonic - format-code
+  ; Disable "highlight-indentation" elpy module
+  (setq elpy-modules (delete 'elpy-module-highlight-indentation elpy-modules))
+  ; Bind evil-leader key to format code. mnemonic - format-code
   (evil-leader/set-key "fc" 'elpy-black-fix-code)
    ; custon fn to clear elpy shell
   (defun elpy-shell-clear-shell ()

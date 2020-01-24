@@ -136,6 +136,10 @@ Delete trailing whitespace on save
 #+BEGIN_SRC emacs-lisp
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
+Insert newline at the end of all files - if not already present
+#+BEGIN_SRC emacs-lisp
+(setq-default require-final-newline t)
+#+END_SRC
 ** Backup
 #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist `(("~/.emacs-saves")))
@@ -336,7 +340,12 @@ This package will make evil "slach search" highlights persist until another sear
     "d" 'ranger
     "sl" 'elpy-shell-clear-shell
 
-    ; evil-nerd-commenter evil-leader bindings
+    ;; Buffers
+    "bd" 'kill-this-buffer
+    "bn" 'next-buffer
+    "bp" 'previous-buffer
+
+    ;; evil-nerd-commenter evil-leader bindings
     "ci" 'evilnc-comment-or-uncomment-lines
     "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
     "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
@@ -368,14 +377,16 @@ This package will make evil "slach search" highlights persist until another sear
 #+END_SRC
 ** Evil-org
 #+BEGIN_SRC emacs-lisp
-  (use-package evil-org
-    :ensure t
-    :diminish evil-org-mode
-    :after org
-    :hook (org-mode . evil-org-mode)
-    ; config is used to execute code after a package is loaded
-    :config
-    (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
+(use-package evil-org
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+            (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 #+END_SRC
 ** Evil-visualstar
 #+BEGIN_SRC emacs-lisp
@@ -556,7 +567,14 @@ Hide substrees in selected region
     (if edit-indirect--overlay
       (edit-indirect-commit)
       (apply old-fun args)))
-  (advice-add #'evil-save-and-close :around #'my-evil-save-and-close))
+  (advice-add #'evil-save-and-close :around #'my-evil-save-and-close)
+
+  ; When in edit-indirect buffer, override q to abort edit-indirect buffer
+  (defun my_delete-window (old-fun &rest args)
+    (if edit-indirect--overlay
+      (edit-indirect-abort)
+      (apply old-fun args)))
+  (advice-add #'delete-window :around #'my_delete-window))
 #+END_SRC
 ** Comint
 #+BEGIN_SRC emacs-lisp

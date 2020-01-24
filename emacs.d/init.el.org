@@ -337,7 +337,7 @@ This package will make evil "slach search" highlights persist until another sear
     "fj" `json-pretty-print
     "fJ" `json-pretty-print-buffer
     "bx" 'kill-buffer-and-window ; buffer - kill
-    "d" 'ranger
+    "d" 'deer
     "sl" 'elpy-shell-clear-shell
 
     ;; Buffers
@@ -922,6 +922,11 @@ markdown rendering
 #+BEGIN_SRC emacs-lisp
 (use-package ranger
   :ensure t
+  :bind (:map ranger-mode-map
+    ("C-h" . 'evil-window-left)
+    ("C-j" . 'evil-window-down)
+    ("C-k" . 'evil-window-up)
+    ("C-l" . 'evil-window-right))
   :init
   (setq ranger-show-literal nil))
 #+END_SRC

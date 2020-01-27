@@ -387,7 +387,8 @@ This package will make evil "slach search" highlights persist until another sear
             (lambda ()
             (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+  (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point))
 #+END_SRC
 ** Evil-visualstar
 #+BEGIN_SRC emacs-lisp

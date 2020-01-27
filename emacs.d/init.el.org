@@ -344,6 +344,7 @@ This package will make evil "slach search" highlights persist until another sear
     "bd" 'kill-this-buffer
     "bn" 'next-buffer
     "bp" 'previous-buffer
+    "bR" 'revert-buffer-no-confirm
 
     ;; evil-nerd-commenter evil-leader bindings
     "ci" 'evilnc-comment-or-uncomment-lines
@@ -926,7 +927,8 @@ markdown rendering
     ("C-h" . 'evil-window-left)
     ("C-j" . 'evil-window-down)
     ("C-k" . 'evil-window-up)
-    ("C-l" . 'evil-window-right))
+    ("C-l" . 'evil-window-right)
+    ("+" . 'dired-create-directory))
   :init
   (setq ranger-show-literal nil))
 #+END_SRC
@@ -940,7 +942,7 @@ markdown rendering
 (require 'diminish)
 (with-eval-after-load 'simple (diminish `auto-fill-function))
 #+END_SRC
-** Custom functions
+** Misc functions
 #+BEGIN_SRC emacs-lisp
 (defun maybe-helm-projectile-ag-default ()
   "If inside projectile project - run helm-ag inside current project only
@@ -1101,4 +1103,13 @@ Disable all minor modes in current buffer
        (ignore-errors
          (funcall mode-symbol -1))))
      minor-mode-list))
+#+END_SRC
+
+Fn to revert current buffer w/o prompting for confirmation
+#+BEGIN_SRC emacs-lisp
+;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
+(defun revert-buffer-no-confirm ()
+    "Revert buffer without confirmation."
+    (interactive)
+    (revert-buffer :ignore-auto :noconfirm))
 #+END_SRC

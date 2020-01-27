@@ -647,6 +647,7 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (use-package helm
   :ensure t
+  :after evil-collection
   :diminish helm-mode
   :init
   ; turns on helm completions for most standard emacs completions
@@ -656,7 +657,8 @@ Prevent ediff opening seperate emacs window
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (setq helm-follow-mode-persistent t)
   ; enable pressing tab key to accept candidate currently selected
-  (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action))
+  (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
+  (evil-collection-helm-setup))
 #+END_SRC
 ** Helm-ag
 #+BEGIN_SRC emacs-lisp
@@ -666,6 +668,13 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (use-package helm-projectile
   :ensure t)
+#+END_SRC
+** Helm-Descbinds
+#+BEGIN_SRC emacs-lisp
+(use-package helm-descbinds
+  :ensure t
+  :config
+  (helm-descbinds-mode))
 #+END_SRC
 ** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp

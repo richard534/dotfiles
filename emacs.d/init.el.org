@@ -641,7 +641,8 @@ Prevent ediff opening seperate emacs window
   (setq projectile-enable-caching t)
   ; set projectile to just use VCS (e.g .gitignore) files during indexing
   (setq projectile-indexing-method 'alien)
-  (setq projectile-mode-line "Projectile"))
+  (setq projectile-mode-line "Projectile")
+  (evil-leader/set-key "pI" 'projectile-invalidate-cache))
 #+END_SRC
 ** Helm
 #+BEGIN_SRC emacs-lisp
@@ -940,7 +941,8 @@ markdown rendering
     ("C-l" . 'evil-window-right)
     ("+" . 'dired-create-directory))
   :init
-  (setq ranger-show-literal nil))
+  (setq ranger-show-literal nil)
+  (setq ranger-show-hidden t))
 #+END_SRC
 ** Undo-tree
 #+BEGIN_SRC emacs-lisp

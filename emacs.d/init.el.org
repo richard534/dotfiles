@@ -942,7 +942,10 @@ markdown rendering
     ("+" . 'dired-create-directory))
   :init
   (setq ranger-show-literal nil)
-  (setq ranger-show-hidden t))
+  (setq ranger-show-hidden t) ; Show dotfiles
+  (ranger-override-dired-mode t) ; Set ranger as default directory handler
+  (setq ranger-cleanup-on-disable t) ; When ranger session closed - kill ranger buffer
+  (setq ranger-modify-header nil)) ; use default dired header - not custom ranger one
 #+END_SRC
 ** Undo-tree
 #+BEGIN_SRC emacs-lisp

@@ -376,20 +376,6 @@ This package will make evil "slach search" highlights persist until another sear
   (global-set-key (kbd "C-=") 'evil-numbers/inc-at-pt)
   (global-set-key (kbd "C--") 'evil-numbers/dec-at-pt))
 #+END_SRC
-** Evil-org
-#+BEGIN_SRC emacs-lisp
-(use-package evil-org
-  :ensure t
-  :after org
-  :config
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (add-hook 'evil-org-mode-hook
-            (lambda ()
-            (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys)
-  (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point))
-#+END_SRC
 ** Evil-visualstar
 #+BEGIN_SRC emacs-lisp
 (use-package evil-visualstar
@@ -545,6 +531,11 @@ Load org-babel languages
    (passthrough . t)))
 #+END_SRC
 
+Evil-leader org-mode specific bindings
+#+BEGIN_SRC emacs-lisp
+(evil-leader/set-key-for-mode 'org-mode "m'" 'org-edit-special)
+#+END_SRC
+
 *** Custom org-mode functions
 Hide substrees in selected region
 #+BEGIN_SRC emacs-lisp
@@ -557,13 +548,27 @@ Hide substrees in selected region
 (use-package org-download
   :ensure t)
 #+END_SRC
+** Evil-org
+#+BEGIN_SRC emacs-lisp
+(use-package evil-org
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+            (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)
+  (evil-define-key 'normal org-mode-map (kbd "RET") 'org-open-at-point))
+#+END_SRC
 ** Edit-indirect
 #+BEGIN_SRC emacs-lisp
 (use-package edit-indirect
   :ensure t
-  :bind (:map evil-visual-state-map
-         ("C-c '" . 'edit-indirect-region))
   :config
+  (evil-leader/set-key "m'" 'edit-indirect-region)
+
   ; When in edit-indirect buffer, override wq to commit edit-indirect buffer
   (defun my-evil-save-and-close (old-fun &rest args)
     (if edit-indirect--overlay
@@ -605,6 +610,13 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 #+END_SRC
+** Smerge
+#+BEGIN_SRC emacs-lisp
+(use-package smerge-mode
+  :after hydra
+  )
+#+END_SRC
+
 ** Restart Emacs
 #+BEGIN_SRC emacs-lisp
 (use-package restart-emacs
@@ -643,6 +655,53 @@ Prevent ediff opening seperate emacs window
   (setq projectile-indexing-method 'alien)
   (setq projectile-mode-line "Projectile")
   (evil-leader/set-key "pI" 'projectile-invalidate-cache))
+#+END_SRC
+** Hydra
+#+BEGIN_SRC emacs-lisp
+(use-package smerge-mode
+  :ensure t
+  :after hydra
+  ; Automatically open hydra-smerge/body
+  :hook (magit-diff-visit-file . (lambda ()
+                                   (when smerge-mode
+                                     (hydra-smerge/body))))
+  :config
+  (defhydra hydra-smerge
+    (:color pink :hint nil :post (smerge-auto-leave))
+    "
+^Move^       ^Keep^               ^Diff^                 ^Other^
+^^-----------^^-------------------^^---------------------^^-------
+_n_ext       _b_ase               _<_: upper/base        _C_ombine
+_p_rev       _u_pper              _=_: upper/lower       _r_esolve
+^^           _l_ower              _>_: base/lower        _k_ill current
+^^           _a_ll                _R_efine
+^^           _RET_: current       _E_diff
+"
+    ("n" smerge-next)
+    ("p" smerge-prev)
+    ("b" smerge-keep-base)
+    ("u" smerge-keep-upper)
+    ("l" smerge-keep-lower)
+    ("a" smerge-keep-all)
+    ("RET" smerge-keep-current)
+    ("\C-m" smerge-keep-current)
+    ("<" smerge-diff-base-upper)
+    ("=" smerge-diff-upper-lower)
+    (">" smerge-diff-base-lower)
+    ("R" smerge-refine)
+    ("E" smerge-ediff)
+    ("C" smerge-combine-with-next)
+    ("r" smerge-resolve)
+    ("k" smerge-kill-current)
+    ("ZZ" (lambda ()
+            (interactive)
+            (save-buffer)
+            (bury-buffer))
+     "Save and bury buffer" :color blue)
+    ("q" nil "cancel" :color blue))
+
+  ; Mode-specifc evil keybinds
+  (evil-define-minor-mode-key 'normal 'smerge-mode " gr" 'hydra-smerge/body))
 #+END_SRC
 ** Helm
 #+BEGIN_SRC emacs-lisp

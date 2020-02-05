@@ -329,7 +329,6 @@ This package will make evil "slach search" highlights persist until another sear
     "fs" `helm-imenu ; mnemonic - file-structure
     "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
     "R"  `projectile-replace ; project-wide find/replace
-    "sc"  `string-inflection-cycle-auto ; convert string
     "is" `yas-insert-snippet ; insert snippet
     "fd" `magit-file-dispatch ; file-dispatch (magit command)
     "[" `winner-undo
@@ -340,13 +339,22 @@ This package will make evil "slach search" highlights persist until another sear
     "d" 'deer
     "sl" 'elpy-shell-clear-shell
 
-    ;; Buffers
+    ;; Text (x)
+    ; Inflection (i)
+    "xii"  `string-inflection-all-cycle
+    "xiu" 'string-inflection-underscore
+    "xiU" 'string-inflection-upcase
+    "xik" 'string-inflection-kebab-case
+    "xic" 'string-inflection-lower-camelcase
+    "xiC" 'string-inflection-camelcas
+
+    ;; Buffers (b)
     "bd" 'kill-this-buffer
     "bn" 'next-buffer
     "bp" 'previous-buffer
     "bR" 'revert-buffer-no-confirm
 
-    ;; evil-nerd-commenter evil-leader bindings
+    ;; evil-nerd-commenter evil-leader bindings (c)
     "ci" 'evilnc-comment-or-uncomment-lines
     "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
     "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
@@ -354,8 +362,7 @@ This package will make evil "slach search" highlights persist until another sear
     "cp" 'evilnc-comment-or-uncomment-paragraphs
     "cr" 'comment-or-uncomment-region
     "cv" 'evilnc-toggle-invert-comment-line-by-line
-    "."  'evilnc-copy-and-comment-operator
-  ))
+    "."  'evilnc-copy-and-comment-operator))
 #+END_SRC
 ** Evil-magit
 #+BEGIN_SRC emacs-lisp
@@ -534,6 +541,8 @@ Load org-babel languages
 Evil-leader org-mode specific bindings
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key-for-mode 'org-mode "m'" 'org-edit-special)
+(evil-leader/set-key-for-mode 'org-mode "mt" 'org-todo)
+(evil-leader/set-key-for-mode 'org-mode "," 'org-ctrl-c-ctrl-c)
 #+END_SRC
 
 *** Custom org-mode functions
@@ -949,24 +958,7 @@ set diff-hl to work with unsaved buffers too
 ** String-inflection
 #+BEGIN_SRC emacs-lisp
 (use-package string-inflection
-  :ensure t
-  :config
-  (defun string-inflection-cycle-auto ()
-    "running string format conversion based on major-mode"
-    (interactive)
-    (cond
-     ;; for emacs-lisp mode
-     ((eq major-mode 'emacs-list-mode)
-      (string-inflection-all-cycle))
-     ;; for python
-     ((eq major-mode 'python-mode)
-      (string-inflection-python-style-cycle))
-       ;; for java
-     ((eq major-mode 'java-mode)
-      (string-inflection-java-style-cycle))
-     (t
-     ;; default
-     (string-inflection-ruby-style-cycle)))))
+  :ensure t)
 #+END_SRC
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp

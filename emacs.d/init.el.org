@@ -718,7 +718,12 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq helm-follow-mode-persistent t)
   ; enable pressing tab key to accept candidate currently selected
   (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
-  (evil-collection-helm-setup))
+
+  ; Bind helm evil-collection keys
+  (evil-collection-helm-setup)
+
+  ; Bind helm evil-leader keys
+  (evil-leader/set-key "wb" 'switch-to-minibuffer-window))
 #+END_SRC
 ** Helm-ag
 #+BEGIN_SRC emacs-lisp
@@ -1186,4 +1191,13 @@ Fn to revert current buffer w/o prompting for confirmation
     "Revert buffer without confirmation."
     (interactive)
     (revert-buffer :ignore-auto :noconfirm))
+#+END_SRC
+
+Switch to minibuffer window
+#+BEGIN_SRC emacs-lisp
+(defun switch-to-minibuffer-window ()
+  "switch to minibuffer window (if active)"
+  (interactive)
+  (when (active-minibuffer-window)
+    (select-window (active-minibuffer-window))))
 #+END_SRC

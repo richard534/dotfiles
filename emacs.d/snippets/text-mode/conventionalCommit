@@ -2,9 +2,6 @@
 # name: conventionalCommit
 # key: cc
 # --
-${1:type (E.g feat, perf, refac, test, docs, ci)}${2:(${3:Scope (<TAB> to insert, C-d to skip)})}: ${4:description}
+${1:type (E.g feat, perf, refac, test, docs, ci, bug)}${2:(${3:Scope (<TAB> to insert, C-d to skip)})}: ${4:description}
 
-${5:body}
-
-${6:footer}
 $0

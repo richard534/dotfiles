@@ -495,19 +495,14 @@ start emacs-server (for use with emacsclient)
 (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
 (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
 (setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
+(setq org-cycle-include-plain-lists 'integrate) ; When running org-cycle plain list items will be treated like low-level headlines (will cycle)
+(setq org-M-RET-may-split-line '((item . nil))) ; in the context of a list of items; goto eol before making a new line
 #+END_SRC
 
 org-mode images config
 #+BEGIN_SRC emacs-lisp
 (setq org-startup-with-inline-images t) ; Show inline images by default
 (setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(setq org-list-demote-modify-bullet (quote (("+" . "-")
-                                            ("*" . "-")
-                                            ("1." . "-")
-                                            ("1)" . "a)"))))
 #+END_SRC
 
 Custom json babel code-bock type 'json'
@@ -542,7 +537,7 @@ Evil-leader org-mode specific bindings
 #+BEGIN_SRC emacs-lisp
 (evil-leader/set-key-for-mode 'org-mode "m'" 'org-edit-special)
 (evil-leader/set-key-for-mode 'org-mode "mt" 'org-todo)
-(evil-leader/set-key-for-mode 'org-mode "," 'org-ctrl-c-ctrl-c)
+(evil-leader/set-key-for-mode 'org-mode "m," 'org-ctrl-c-ctrl-c)
 #+END_SRC
 
 *** Custom org-mode functions

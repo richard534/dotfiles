@@ -194,9 +194,12 @@ Focus on emacs session when opening emacs gui
 (use-package evil
   :ensure t ;; install the evil package if not installed
   :init ;; configure evil before loading it
-  ; variables required by evil-collection
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  ;; Variables required by evil-collection
+  (setq evil-want-integration t) ; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
+
+  ; When visual-selecting to end of line ($), select until end of line - not whole line
+  (setq evil-want-visual-char-semi-exclusive t)
 
   ; disable evil auto indent
   (setq evil-auto-indent nil)

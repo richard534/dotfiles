@@ -157,6 +157,13 @@ Insert newline at the end of all files - if not already present
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 #+END_SRC
+** Info
+#+BEGIN_SRC emacs-lisp
+(use-package info
+  :after evil-collection
+  :config
+  (evil-collection-info-setup))
+#+END_SRC
 ** Exec-path-from-shell
 Copies specified environment variables from the users shell to the emacs environment
 Necessary when using MacOS
@@ -261,8 +268,6 @@ Focus on emacs session when opening emacs gui
   ; Add goto git hunks to evil jump-list (allows crtl-o/i navigation between git-hunk commands)
   (evil-add-command-properties #'diff-hl-next-hunk :jump t)
   (evil-add-command-properties #'diff-hl-previous-hunk :jump t)
-  ; Goto emacs-buffer
-  (define-key evil-normal-state-map "gb" `helm-buffers-list)
 
   ; configure evil cursor
   (setq evil-emacs-state-cursor '("red" box))
@@ -356,6 +361,8 @@ This package will make evil "slach search" highlights persist until another sear
     "bn" 'next-buffer
     "bp" 'previous-buffer
     "bR" 'revert-buffer-no-confirm
+    "bw" 'read-only-mode
+    "bb" 'helm-buffers-list
 
     ;; evil-nerd-commenter evil-leader bindings (c)
     "ci" 'evilnc-comment-or-uncomment-lines
@@ -422,7 +429,8 @@ This package will make evil "slach search" highlights persist until another sear
   (evil-leader/set-key "hdf" 'describe-function)
   (evil-leader/set-key "hdv" 'describe-variable)
   (evil-leader/set-key "hdk" 'describe-key)
-  (evil-leader/set-key "hdp" 'describe-package))
+  (evil-leader/set-key "hdp" 'describe-package)
+  (evil-leader/set-key "hdm" 'describe-mode))
 #+END_SRC
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
@@ -565,6 +573,7 @@ Hide substrees in selected region
 #+BEGIN_SRC emacs-lisp
 (use-package evil-org
   :ensure t
+  :diminish evil-org-mode
   :after org
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
@@ -651,9 +660,12 @@ Prevent ediff opening seperate emacs window
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
+  :after evil
   :diminish which-key-mode
   :init
-  (which-key-mode))
+  (which-key-mode)
+  :config
+  (evil-leader/set-key "hk" 'which-key-show-top-level))
 #+END_SRC
 ** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -736,7 +748,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (evil-collection-helm-setup)
 
   ; Bind helm evil-leader keys
-  (evil-leader/set-key "wb" 'switch-to-minibuffer-window))
+  (evil-leader/set-key "wb" 'switch-to-minibuffer-window)
+  (evil-leader/set-key "hm" 'helm-man-woman))
 #+END_SRC
 ** Helm-ag
 #+BEGIN_SRC emacs-lisp

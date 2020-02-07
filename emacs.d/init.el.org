@@ -245,23 +245,6 @@ Focus on emacs session when opening emacs gui
   (define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
   (define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
 
-  ;; Bind vim-style GoTo commands
-  ; Mnemonic - goto file
-  (define-key evil-normal-state-map (kbd "gf") nil)
-  (define-key evil-normal-state-map (kbd "gF") nil)
-  (define-key evil-normal-state-map "gff" `helm-find-files)
-  (define-key evil-normal-state-map "gfp" `maybe-helm-projectile-find-file)
-  (define-key evil-normal-state-map "gFp" `maybe-helm-projectile-find-file-dwim)
-  ; Mnemonic - goto symbol file (inside current file)
-  (define-key evil-normal-state-map "gsf" `helm-ag-this-file-default)
-  (define-key evil-normal-state-map "gSf" `helm-ag-this-file-symbol)
-  ; Mnemonic - goto symbol project
-  (define-key evil-normal-state-map "gsp" `maybe-helm-projectile-ag-default)
-  (define-key evil-normal-state-map "gSp" `maybe-helm-projectile-ag-symbol)
-  ; Mnemonic - goto projectile
-  (define-key evil-normal-state-map "gpl" `helm-projectile-switch-project)
-  (define-key evil-normal-state-map "gpb" `helm-projectile-switch-to-buffer)
-  (define-key evil-normal-state-map "gpa" `projectile-toggle-between-implementation-and-test)
   ; Goto git hunks
   (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
   (define-key evil-normal-state-map "g[" `diff-hl-previous-hunk)
@@ -334,7 +317,6 @@ This package will make evil "slach search" highlights persist until another sear
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
     "<SPC>" 'evil-search-highlight-persist-remove-all ; clear highlights
-    "fs" `helm-imenu ; mnemonic - file-structure
     "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
     "R"  `projectile-replace ; project-wide find/replace
     "is" `yas-insert-snippet ; insert snippet
@@ -364,7 +346,7 @@ This package will make evil "slach search" highlights persist until another sear
     "bw" 'read-only-mode
     "bb" 'helm-buffers-list
 
-    ;; evil-nerd-commenter evil-leader bindings (c)
+    ;; evil-nerd-commenter (c)
     "ci" 'evilnc-comment-or-uncomment-lines
     "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
     "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
@@ -747,9 +729,24 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ; Bind helm evil-collection keys
   (evil-collection-helm-setup)
 
+  ; Unbind default evil find-file keys
+  (define-key evil-normal-state-map (kbd "gf") nil)
+  (define-key evil-normal-state-map (kbd "gF") nil)
+
   ; Bind helm evil-leader keys
-  (evil-leader/set-key "wb" 'switch-to-minibuffer-window)
-  (evil-leader/set-key "hm" 'helm-man-woman))
+  (evil-leader/set-key
+    "wb" 'switch-to-minibuffer-window
+    "hm" 'helm-man-woman
+    "ff" 'helm-find-files
+
+    ; Searching in current file
+    "ss" 'helm-ag-this-file-default
+    "sS" 'helm-ag-this-file-symbol
+    "si" `helm-imenu ; mnemonic - search imenu
+
+    ; Searching in arbitrary directory
+    "sf" 'helm-ag-default
+    "sF" 'helm-ag-symbol))
 #+END_SRC
 ** Helm-ag
 #+BEGIN_SRC emacs-lisp
@@ -758,7 +755,17 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 ** Helm-Projectile
 #+BEGIN_SRC emacs-lisp
 (use-package helm-projectile
-  :ensure t)
+  :ensure t
+  :init
+  (evil-leader/set-key
+    "pb" 'helm-projectile-switch-to-buffer
+    "pf" 'helm-projectile-find-file
+    "pp" 'helm-projectile-switch-project
+    "sp" 'maybe-helm-projectile-ag-default
+    "sP" 'maybe-helm-projectile-ag-symbol
+    "pD" 'projectile-dired
+    "pd" 'projectile-find-dir
+    "pa" 'projectile-toggle-between-implementation-and-test))
 #+END_SRC
 ** Helm-Descbinds
 #+BEGIN_SRC emacs-lisp
@@ -1077,23 +1084,21 @@ insert current symbol into helm-ag command"
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-;; Custom fn that opens helm-projectile-find-file if currently in a projectile project
-; otherwise opens helm-find-files
-(defun maybe-helm-projectile-find-file ()
+(defun helm-ag-default ()
+  "run helm-ag without inserting symbol/word"
   (interactive)
+  (setq helm-ag-insert-at-point nil)
   (call-interactively
-    (if (projectile-project-p)
-       #'helm-projectile-find-file
-       #'helm-find-files)))
+    #'helm-ag))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(defun maybe-helm-projectile-find-file-dwim ()
+(defun helm-ag-symbol ()
+  "run helm-ag - inserting current symbol"
   (interactive)
+  (setq helm-ag-insert-at-point 'symbol)
   (call-interactively
-    (if (projectile-project-p)
-       #'helm-projectile-find-file-dwim
-       #'helm-find-files)))
+    #'helm-ag))
 #+END_SRC
 
 Reload emacs config

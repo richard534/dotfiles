@@ -410,13 +410,19 @@ This package will make evil "slach search" highlights persist until another sear
   (setq anzu-search-threshold 1000
     anzu-cons-mode-line-p nil))
 #+END_SRC
-** Help-mode
-Bind evil window navigation keys to help-mode
+** Help
 #+BEGIN_SRC emacs-lisp
-(define-key help-mode-map (kbd "C-h") #'evil-window-left)
-(define-key help-mode-map (kbd "C-j") #'evil-window-down)
-(define-key help-mode-map (kbd "C-k") #'evil-window-up)
-(define-key help-mode-map (kbd "C-l") #'evil-window-right)
+(use-package help
+  :init
+  (setq help-window-select t) ; Always select (focus on) the help window when opened
+  :config
+  ;; Help-mode related keybindings
+  (evil-collection-help-setup)
+  (evil-leader/set-key "hdb" 'describe-bindings)
+  (evil-leader/set-key "hdf" 'describe-function)
+  (evil-leader/set-key "hdv" 'describe-variable)
+  (evil-leader/set-key "hdk" 'describe-key)
+  (evil-leader/set-key "hdp" 'describe-package))
 #+END_SRC
 ** Line numbers
 #+BEGIN_SRC emacs-lisp

@@ -40,18 +40,7 @@ Prevent the cursor from blinking
 #+END_SRC
 Initial scratch message
 #+BEGIN_SRC emacs-lisp
-(setq initial-scratch-message
-      (concat
-       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
-       ";; To create a file, visit it with C-x C-f and enter text in its buffer.\n"
-       ";;\n"
-       ";; __          __  _                            \n"
-       ";; \\ \\        / / | |                           \n"
-       ";;  \\ \\  /\\  / /__| | ___ ___  _ __ ___   ___   \n"
-       ";;   \\ \\/  \\/ / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\  \n"
-       ";;    \\  /\\  /  __/ | (_| (_) | | | | | |  __/_ \n"
-       ";;     \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___(_)\n"))
-
+(setq initial-scratch-message "")
 #+END_SRC
 Disable startup screen
 #+BEGIN_SRC emacs-lisp
@@ -326,7 +315,6 @@ This package will make evil "slach search" highlights persist until another sear
     "]" `winner-redo
     "fj" `json-pretty-print
     "fJ" `json-pretty-print-buffer
-    "bx" 'kill-buffer-and-window ; buffer - kill
     "d" 'deer
     "sl" 'elpy-shell-clear-shell
 
@@ -346,6 +334,12 @@ This package will make evil "slach search" highlights persist until another sear
     "bR" 'revert-buffer-no-confirm
     "bw" 'read-only-mode
     "bb" 'helm-buffers-list
+    "bx" 'kill-buffer-and-window ; buffer - kill
+
+    ;; GUI Toggles (t)
+    "tl" 'toggle-truncate-lines
+    "tL" 'visual-line-mode
+    "tn" 'display-line-numbers-mode
 
     ;; evil-nerd-commenter (c)
     "ci" 'evilnc-comment-or-uncomment-lines
@@ -417,7 +411,6 @@ This package will make evil "slach search" highlights persist until another sear
 #+END_SRC
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
-(define-key evil-normal-state-map (kbd "<f2>") 'display-line-numbers-mode)
 ; Enable line numbers only in modes that inherit prog-mode (programming mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode 1)
 ; groovy-mode-hook doesn't seem to inherit prog-mode - defining seperately

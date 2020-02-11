@@ -306,6 +306,7 @@ This package will make evil "slach search" highlights persist until another sear
   :ensure t
   :after evil
   :config
+  (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all) ; clear highlights
   (global-evil-search-highlight-persist t))
 #+END_SRC
 ** Evil-leader
@@ -316,7 +317,7 @@ This package will make evil "slach search" highlights persist until another sear
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    "<SPC>" 'evil-search-highlight-persist-remove-all ; clear highlights
+    "<SPC>" 'helm-M-x
     "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
     "R"  `projectile-replace ; project-wide find/replace
     "is" `yas-insert-snippet ; insert snippet
@@ -739,11 +740,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "hm" 'helm-man-woman
     "ff" 'helm-find-files
 
+    ;; Searching
     ; Searching in current file
     "ss" 'helm-ag-this-file-default
     "sS" 'helm-ag-this-file-symbol
-    "si" `helm-imenu ; mnemonic - search imenu
-
+    "sj" `helm-jump-in-buffer ; mnemonic - search-jump (list all symbols in buffer)
     ; Searching in arbitrary directory
     "sf" 'helm-ag-default
     "sF" 'helm-ag-symbol))
@@ -759,7 +760,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :init
   (evil-leader/set-key
     "pb" 'helm-projectile-switch-to-buffer
-    "pf" 'helm-projectile-find-file
+    "fp" 'helm-projectile-find-file
     "pp" 'helm-projectile-switch-project
     "sp" 'maybe-helm-projectile-ag-default
     "sP" 'maybe-helm-projectile-ag-symbol
@@ -774,6 +775,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :config
   (helm-descbinds-mode))
 #+END_SRC
+** Helm-org
+#+begin_src emacs-lisp
+(use-package helm-org
+  :ensure t)
+#+end_src
 ** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
@@ -1215,3 +1221,15 @@ Switch to minibuffer window
   (when (active-minibuffer-window)
     (select-window (active-minibuffer-window))))
 #+END_SRC
+
+Fn to call imenu/semantic/org-headings depending on mode
+Pinched from spacemacs
+#+begin_src emacs-lisp
+(defun helm-jump-in-buffer ()
+  "Jump in buffer using `imenu' facilities and helm."
+  (interactive)
+  (call-interactively
+   (cond
+    ((eq major-mode 'org-mode) 'helm-org-in-buffer-headings)
+    (t 'helm-semantic-or-imenu))))
+#+end_src

@@ -538,6 +538,7 @@ Evil-leader org-mode specific bindings
 (evil-leader/set-key-for-mode 'org-mode "m'" 'org-edit-special)
 (evil-leader/set-key-for-mode 'org-mode "mt" 'org-todo)
 (evil-leader/set-key-for-mode 'org-mode "m," 'org-ctrl-c-ctrl-c)
+(evil-leader/set-key-for-mode 'org-mode "mee" 'org-export-dispatch)
 #+END_SRC
 
 *** Custom org-mode functions
@@ -552,6 +553,13 @@ Hide substrees in selected region
 (use-package org-download
   :ensure t)
 #+END_SRC
+** Org-reveal
+#+begin_src emacs-lisp
+(use-package ox-reveal
+  :ensure t
+  :init
+  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js"))
+#+end_src
 ** Evil-org
 #+BEGIN_SRC emacs-lisp
 (use-package evil-org

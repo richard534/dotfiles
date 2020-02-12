@@ -532,6 +532,7 @@ Evil-leader org-mode specific bindings
 (evil-leader/set-key-for-mode 'org-mode "mt" 'org-todo)
 (evil-leader/set-key-for-mode 'org-mode "m," 'org-ctrl-c-ctrl-c)
 (evil-leader/set-key-for-mode 'org-mode "mee" 'org-export-dispatch)
+(evil-leader/set-key-for-mode 'org-mode "mit" 'org-toggle-inline-images)
 #+END_SRC
 
 *** Custom org-mode functions
@@ -551,7 +552,10 @@ Hide substrees in selected region
 (use-package ox-reveal
   :ensure t
   :init
-  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js"))
+  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+  (evil-leader/set-key "mert" 'toggle-org-reveal-html-export-on-save)
+  (evil-leader/set-key "merc" 'org-reveal-export-current-subtree)
+  (evil-leader/set-key "merb" 'org-reveal-export-to-html-and-browse))
 #+end_src
 ** Evil-org
 #+BEGIN_SRC emacs-lisp
@@ -1002,7 +1006,10 @@ set diff-hl to work with unsaved buffers too
 ** Impatient mode
 #+BEGIN_SRC emacs-lisp
 (use-package impatient-mode
-  :ensure t)
+  :ensure t
+  :init
+  (evil-leader/set-key "mI" 'impatient-mode)
+  (httpd-start))
 #+END_SRC
 *** Custom impatient mode filters
 markdown rendering
@@ -1233,4 +1240,16 @@ Pinched from spacemacs
    (cond
     ((eq major-mode 'org-mode) 'helm-org-in-buffer-headings)
     (t 'helm-semantic-or-imenu))))
+#+end_src
+
+Fn to toggle auto exporting reveal.js html pages on save
+#+begin_src emacs-lisp
+(defun toggle-org-reveal-html-export-on-save ()
+  (interactive)
+  (if (memq 'org-reveal-export-to-html after-save-hook)
+      (progn
+        (remove-hook 'after-save-hook 'org-reveal-export-to-html t)
+        (message "Disabled org html export on save for current buffer..."))
+    (add-hook 'after-save-hook 'org-reveal-export-to-html nil t)
+    (message "Enabled org html export on save for current buffer...")))
 #+end_src

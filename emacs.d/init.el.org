@@ -626,7 +626,12 @@ Prevent ediff opening seperate emacs window
   :after hydra
   )
 #+END_SRC
-
+** Image
+#+begin_src emacs-lisp
+(use-package image-mode
+  :init
+  (evil-collection-image-setup))
+#+end_src
 ** Restart Emacs
 #+BEGIN_SRC emacs-lisp
 (use-package restart-emacs

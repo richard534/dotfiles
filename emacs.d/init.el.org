@@ -1024,6 +1024,13 @@ markdown rendering
     (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
   (current-buffer)))
 #+END_SRC
+** Restclient
+#+begin_src emacs-lisp
+(use-package restclient
+  :ensure t
+  :init
+  (evil-collection-restclient-setup))
+#+end_src
 ** Paradox
 #+BEGIN_SRC emacs-lisp
 (use-package paradox

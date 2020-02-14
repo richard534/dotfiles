@@ -14,7 +14,10 @@
  '(paradox-github-token t)
  '(projectile-mode t nil (projectile))
  '(recentf-mode t)
- '(safe-local-variable-values (quote ((checkdoc-minor-mode . 1))))
+ '(safe-local-variable-values
+   (quote
+    ((url-max-redirections . 0)
+     (checkdoc-minor-mode . 1))))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

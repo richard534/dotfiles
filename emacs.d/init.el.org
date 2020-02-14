@@ -1031,6 +1031,20 @@ markdown rendering
   :init
   (evil-collection-restclient-setup))
 #+end_src
+** Ob-Restclient
+#+begin_src emacs-lisp
+(use-package ob-restclient
+  :ensure t
+  :after restclient
+  :init
+  ; Add restclient to org-babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((restclient . t)))
+
+  ; Associate files with the .http extension with the major mode "restclient-mode"
+  (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode)))
+#+end_src
 ** Paradox
 #+BEGIN_SRC emacs-lisp
 (use-package paradox

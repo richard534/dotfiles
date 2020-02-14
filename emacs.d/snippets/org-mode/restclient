@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: restclient
+# key: restclient
+# --
+#+BEGIN_SRC restclient :tangle restclient.http
+$0
+#
+#+END_SRC

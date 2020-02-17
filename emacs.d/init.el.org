@@ -1029,7 +1029,15 @@ markdown rendering
 (use-package restclient
   :ensure t
   :init
-  (evil-collection-restclient-setup))
+  (evil-collection-restclient-setup)
+
+  (evil-leader/set-key-for-mode 'restclient-mode
+    "mn" 'restclient-jump-next
+    "mp" 'restclient-jump-prev
+    "ms" 'restclient-http-send-current-stay-in-window
+    "mS" 'restclient-http-send-current
+    "mr" 'restclient-http-send-current-raw
+    "my" 'restclient-copy-curl-command))
 #+end_src
 ** Ob-Restclient
 #+begin_src emacs-lisp

@@ -198,7 +198,7 @@ Focus on emacs session when opening emacs gui
   (setq evil-want-visual-char-semi-exclusive t)
 
   ; disable evil auto indent
-  (setq evil-auto-indent nil)
+  (setq evil-auto-indent t)
 
   :config ;; configure evil after loading it
   (evil-mode 1)
@@ -1000,6 +1000,14 @@ set diff-hl to work with unsaved buffers too
 (use-package string-inflection
   :ensure t)
 #+END_SRC
+** Uuidgen
+#+begin_src emacs-lisp
+(use-package uuidgen
+  :ensure t
+  :init
+  ;; Bind evil-leader keys
+  (evil-leader/set-key "iU4" 'uuidgen))
+#+end_src
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: revealjs-split
+# key: revealjs-split
+# --
+#+REVEAL: split

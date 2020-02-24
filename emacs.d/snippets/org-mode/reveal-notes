@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: reveal-notes
+# key: reveal-notes
+# --
+#+BEGIN_NOTES
+
+#+END_NOTES

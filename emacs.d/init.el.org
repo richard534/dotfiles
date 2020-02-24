@@ -327,6 +327,10 @@ This package will make evil "slach search" highlights persist until another sear
     "xic" 'string-inflection-lower-camelcase
     "xiC" 'string-inflection-camelcas
 
+    ;; File (f)
+    ; rename file and buffer
+    "fR" 'rename-file-and-buffer
+
     ;; Buffers (b)
     "bd" 'kill-this-buffer
     "bn" 'next-buffer
@@ -533,6 +537,8 @@ Evil-leader org-mode specific bindings
 (evil-leader/set-key-for-mode 'org-mode "m," 'org-ctrl-c-ctrl-c)
 (evil-leader/set-key-for-mode 'org-mode "mee" 'org-export-dispatch)
 (evil-leader/set-key-for-mode 'org-mode "mit" 'org-toggle-inline-images)
+(evil-leader/set-key-for-mode 'org-mode "mbm" 'org-babel-mark-block)
+(evil-leader/set-key-for-mode 'org-mode "mbt" 'org-babel-tangle)
 #+END_SRC
 
 *** Custom org-mode functions
@@ -554,6 +560,7 @@ Hide substrees in selected region
   :init
   (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
   (evil-leader/set-key "mert" 'toggle-org-reveal-html-export-on-save)
+  (evil-leader/set-key "merT" 'toggle-org-reveal-current-subtree-html-export-on-save)
   (evil-leader/set-key "merc" 'org-reveal-export-current-subtree)
   (evil-leader/set-key "merb" 'org-reveal-export-to-html-and-browse))
 #+end_src
@@ -993,7 +1000,9 @@ set diff-hl to work with unsaved buffers too
 #+BEGIN_SRC emacs-lisp
 (use-package forge
   :ensure t
-  :after magit)
+  :after magit
+  :init
+  (evil-leader/set-key "gfbr" 'forge-browse-remote))
 #+END_SRC
 ** String-inflection
 #+BEGIN_SRC emacs-lisp
@@ -1294,4 +1303,16 @@ Fn to toggle auto exporting reveal.js html pages on save
         (message "Disabled org html export on save for current buffer..."))
     (add-hook 'after-save-hook 'org-reveal-export-to-html nil t)
     (message "Enabled org html export on save for current buffer...")))
+#+end_src
+
+Fn to toggle auto exporting current org subtree to reveal.js on save
+#+begin_src emacs-lisp
+(defun toggle-org-reveal-current-subtree-html-export-on-save ()
+  (interactive)
+  (if (memq 'org-reveal-export-current-subtree after-save-hook)
+      (progn
+        (remove-hook 'after-save-hook 'org-reveal-export-current-subtree t)
+        (message "Disabled org html export current subtree on save for current buffer..."))
+    (add-hook 'after-save-hook 'org-reveal-export-current-subtree nil t)
+    (message "Enabled org html export current subtree on save for current buffer...")))
 #+end_src

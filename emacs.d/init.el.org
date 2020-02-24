@@ -315,7 +315,6 @@ This package will make evil "slach search" highlights persist until another sear
     "]" `winner-redo
     "fj" `json-pretty-print
     "fJ" `json-pretty-print-buffer
-    "d" 'deer
     "sl" 'elpy-shell-clear-shell
 
     ;; Text (x)
@@ -797,6 +796,15 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package helm-org
   :ensure t)
 #+end_src
+** Dash-at-point
+#+begin_src emacs-lisp
+(use-package dash-at-point
+  :ensure t
+  :init
+  ; Bind evil-leader keys
+  (evil-leader/set-key
+    "dd" 'dash-at-point))
+#+end_src
 ** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
@@ -1090,7 +1098,12 @@ markdown rendering
   (setq ranger-show-hidden t) ; Show dotfiles
   (ranger-override-dired-mode t) ; Set ranger as default directory handler
   (setq ranger-cleanup-on-disable t) ; When ranger session closed - kill ranger buffer
-  (setq ranger-modify-header nil)) ; use default dired header - not custom ranger one
+  (setq ranger-modify-header nil) ; use default dired header - not custom ranger one
+
+  ; Bind evil-leader keys
+  (evil-leader/set-key
+    "ar" 'ranger
+    "ad" 'deer))
 #+END_SRC
 ** Undo-tree
 #+BEGIN_SRC emacs-lisp

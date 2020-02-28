@@ -72,7 +72,9 @@ Remove icons/text from title bar (transparent title bar)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
 (setq ns-use-proxy-icon nil)
-(setq frame-title-format nil)
+(setq frame-title-format
+      `((buffer-file-name "%f" "%b")
+        ,(format " - GNU Emacs %s" emacs-version)))
 #+END_SRC
 ** Theme
 Enable doom theme
@@ -795,6 +797,15 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+begin_src emacs-lisp
 (use-package helm-org
   :ensure t)
+#+end_src
+** Helm-dash
+#+begin_src emacs-lisp
+(use-package helm-dash
+  :ensure t
+  :init
+  (evil-leader/set-key
+    "dh" 'helm-dash-at-point
+    "dH" 'helm-dash))
 #+end_src
 ** Dash-at-point
 #+begin_src emacs-lisp

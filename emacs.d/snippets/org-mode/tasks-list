@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: tasks-list
+# key: tasks-list
+# --
+* Tasks [/]
+- [ ]

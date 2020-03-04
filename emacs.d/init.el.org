@@ -616,18 +616,21 @@ Hide substrees in selected region
 (desktop-save-mode 1)
 #+END_SRC
 ** Ediff
-Only highlight current diff:
-#+BEGIN_SRC emacs-lisp
-(setq-default ediff-highlight-all-diffs 'nil)
-#+END_SRC
-Turn off whitespace checking:
-#+BEGIN_SRC emacs-lisp
-(setq ediff-diff-options "-w")
-#+END_SRC
-Prevent ediff opening seperate emacs window
-#+BEGIN_SRC emacs-lisp
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-#+END_SRC
+#+begin_src emacs-lisp
+(use-package ediff
+  :init
+  ; Only highlight current diff
+  (setq-default ediff-highlight-all-diffs 'nil)
+
+  ; Turn off whitespace checking
+  (setq ediff-diff-options "-w")
+
+  ; Prevent ediff opening seperate emacs window
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+  ; Bind evil-collection ediff keys
+  (evil-collection-ediff-setup))
+#+end_src
 ** Smerge
 #+BEGIN_SRC emacs-lisp
 (use-package smerge-mode

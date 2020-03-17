@@ -841,6 +841,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq company-minimum-prefix-length 1) ; Show suggestions after entering one character.
   (setq company-selection-wrap-around t)) ; once at bottom of suggestions - wrap back to top
 #+END_SRC
+** Company-restclient
+#+begin_src emacs-lisp
+(use-package company-restclient
+  :ensure t
+  :after company
+  :init
+  (add-to-list 'company-backends 'company-restclient))
+#+end_src
 ** Highlight-Indent-Guides
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-indent-guides

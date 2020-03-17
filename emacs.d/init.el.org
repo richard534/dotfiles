@@ -454,6 +454,12 @@ Disabled "electric indent mode" - breaks some modes inc. python
   :config
   (evil-collection-dired-setup))
 #+END_SRC
+** Vc
+#+begin_src emacs-lisp
+(use-package vc
+  :init
+  (setq auto-revert-check-vc-info t))
+#+end_src
 ** Eldoc
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc

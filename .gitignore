@@ -30,3 +30,4 @@ emacs.d/places
 emacs.d/saveplace
 emacs.d/recentf
 emacs.d/bookmarks
+emacs.d/smex-items

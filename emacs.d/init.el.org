@@ -196,6 +196,9 @@ Focus on emacs session when opening emacs gui
   (setq evil-want-integration t) ; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
 
+  ; set evil search implementation to internal evil-search (instead of isearch)
+  (setq evil-search-module 'evil-search)
+
   ; When visual-selecting to end of line ($), select until end of line - not whole line
   (setq evil-want-visual-char-semi-exclusive t)
 
@@ -204,9 +207,6 @@ Focus on emacs session when opening emacs gui
 
   :config ;; configure evil after loading it
   (evil-mode 1)
-
-  ; set evil search implementation to internal evil-search (instead of isearch)
-  (setq evil-search-module 'evil-search)
 
   ;; Unbind evil keys (for use elsewhere)
   (define-key evil-normal-state-map (kbd "C-n") nil)
@@ -290,16 +290,6 @@ Focus on emacs session when opening emacs gui
   :config
   (evil-escape-mode t))
 #+END_SRC
-** Evil-search-highlight-persist
-This package will make evil "slach search" highlights persist until another search is performed
-#+BEGIN_SRC emacs-lisp
-(use-package evil-search-highlight-persist
-  :ensure t
-  :after evil
-  :config
-  (evil-leader/set-key "sc" 'evil-search-highlight-persist-remove-all) ; clear highlights
-  (global-evil-search-highlight-persist t))
-#+END_SRC
 ** Evil-leader
 #+BEGIN_SRC emacs-lisp
 (use-package evil-leader
@@ -308,7 +298,7 @@ This package will make evil "slach search" highlights persist until another sear
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    "<SPC>" 'helm-M-x
+    "<SPC>" 'counsel-M-x
     "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
     "R"  `projectile-replace ; project-wide find/replace
     "is" `yas-insert-snippet ; insert snippet
@@ -338,7 +328,7 @@ This package will make evil "slach search" highlights persist until another sear
     "bp" 'previous-buffer
     "bR" 'revert-buffer-no-confirm
     "bw" 'read-only-mode
-    "bb" 'helm-buffers-list
+    "bb" 'ivy-switch-buffer
     "bx" 'kill-buffer-and-window ; buffer - kill
 
     ;; GUI Toggles (t)
@@ -434,7 +424,7 @@ This package will make evil "slach search" highlights persist until another sear
     (kbd "C-d")     'evil-scroll-down
     (kbd "C-u")     'evil-scroll-up
     (kbd "gg")      'evil-goto-first-line
-    (kbd "gb")      'helm-buffers-list
+    (kbd "gb")      'counsel-switch-buffer
     (kbd "G")       'evil-goto-line
     (kbd "^")       'evil-first-non-blank))
 #+END_SRC
@@ -501,6 +491,11 @@ start emacs-server (for use with emacsclient)
 (setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
 (setq org-cycle-include-plain-lists 'integrate) ; When running org-cycle plain list items will be treated like low-level headlines (will cycle)
 (setq org-M-RET-may-split-line '((item . nil))) ; in the context of a list of items; goto eol before making a new line
+(setq org-confirm-babel-evaluate nil) ; Disable asking for confirmation when executing babel code block for all languages
+
+; Configure org-goto
+(setq org-goto-interface 'outline-path-completion)
+(setq org-outline-path-complete-in-steps nil)
 #+END_SRC
 
 org-mode images config
@@ -520,11 +515,6 @@ Will just return its contents (passthrough) when evaluated
 (defalias 'org-babel-execute:json 'org-babel-execute:passthrough)
 (provide 'ob-passthrough)
 ;;; ob-passthrough.el ends here
-#+END_SRC
-
-Disable asking for confirmation when executing babel code block for all languages
-#+BEGIN_SRC emacs-lisp
-(setq org-confirm-babel-evaluate nil)
 #+END_SRC
 
 Load org-babel languages
@@ -738,83 +728,72 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ; Mode-specifc evil keybinds
   (evil-define-minor-mode-key 'normal 'smerge-mode " gr" 'hydra-smerge/body))
 #+END_SRC
-** Helm
-#+BEGIN_SRC emacs-lisp
-(use-package helm
-  :ensure t
-  :after evil-collection
-  :diminish helm-mode
-  :init
-  ; turns on helm completions for most standard emacs completions
-  (helm-mode 1)
-  ; re-bind keys to helm functions
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (setq helm-follow-mode-persistent t)
-  ; enable pressing tab key to accept candidate currently selected
-  (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
-
-  ; Bind helm evil-collection keys
-  (evil-collection-helm-setup)
-
-  ; Unbind default evil find-file keys
-  (define-key evil-normal-state-map (kbd "gf") nil)
-  (define-key evil-normal-state-map (kbd "gF") nil)
-
-  ; Bind helm evil-leader keys
-  (evil-leader/set-key
-    "wb" 'switch-to-minibuffer-window
-    "hm" 'helm-man-woman
-    "ff" 'helm-find-files
-
-    ;; Searching
-    ; Searching in current file
-    "ss" 'helm-ag-this-file-default
-    "sS" 'helm-ag-this-file-symbol
-    "sj" `helm-jump-in-buffer ; mnemonic - search-jump (list all symbols in buffer)
-    ; Searching in arbitrary directory
-    "sf" 'helm-ag-default
-    "sF" 'helm-ag-symbol))
-#+END_SRC
-** Helm-ag
-#+BEGIN_SRC emacs-lisp
-(setq helm-ag-base-command "ag --nocolor --nogroup --vimgrep --ignore-case")
-#+END_SRC
-** Helm-Projectile
-#+BEGIN_SRC emacs-lisp
-(use-package helm-projectile
-  :ensure t
-  :init
-  (evil-leader/set-key
-    "pb" 'helm-projectile-switch-to-buffer
-    "fp" 'helm-projectile-find-file
-    "pp" 'helm-projectile-switch-project
-    "sp" 'maybe-helm-projectile-ag-default
-    "sP" 'maybe-helm-projectile-ag-symbol
-    "pD" 'projectile-dired
-    "pd" 'projectile-find-dir
-    "pa" 'projectile-toggle-between-implementation-and-test))
-#+END_SRC
-** Helm-Descbinds
-#+BEGIN_SRC emacs-lisp
-(use-package helm-descbinds
-  :ensure t
-  :config
-  (helm-descbinds-mode))
-#+END_SRC
-** Helm-org
+** Ivy
 #+begin_src emacs-lisp
-(use-package helm-org
+(use-package ivy
+  :ensure t
+  :diminish ivy-mode
+  :init
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (evil-collection-ivy-setup))
+#+end_src
+** Ivy-Hydra
+#+begin_src emacs-lisp
+(use-package ivy-hydra
   :ensure t)
 #+end_src
-** Helm-dash
+** Counsel
 #+begin_src emacs-lisp
-(use-package helm-dash
+(use-package counsel
+  :ensure t
+  :diminish counsel-mode
+  :init
+  (counsel-mode 1)
+
+  (setq counsel-switch-buffer-preview-virtual-buffers nil)
+
+  ; Bind counsel evil-leader keys
+  (evil-leader/set-key
+    ;; Finding files
+    "ff" 'counsel-find-file ; Current dir file search
+    "fF" 'counsel-fzf ; Recursive file search
+
+    ;;; Searching
+    "sc" 'evil-ex-nohighlight ; clear highlights
+    ;; Current file
+    "sj" `counsel-jump-in-buffer ; mnemonic - search-jump (list all symbols in buffer)
+    "ss" 'swiper
+    "sS" 'swiper-region-or-symbol
+    ;; Arbitrary directory
+    "sf" 'counsel-rg
+    "sF" 'counsel-rg-region-or-symbol
+    ;; Open buffers
+    "sb" 'swiper-all
+    "sB" 'swiper-all-region-or-symbol
+
+    ;; Misc
+    "wb" 'switch-to-minibuffer-window
+    "hm" 'woman))
+#+end_src
+** Counsel-projectile
+#+begin_src emacs-lisp
+(use-package counsel-projectile
   :ensure t
   :init
   (evil-leader/set-key
-    "dh" 'helm-dash-at-point
-    "dH" 'helm-dash))
+    "pb" 'counsel-projectile-switch-to-buffer
+    "fp" 'counsel-projectile-find-file
+    "pp" 'counsel-projectile-switch-project
+    "sp" 'counsel-projectile-rg
+    "pD" 'projectile-dired
+    "pa" 'projectile-toggle-between-implementation-and-test))
+#+end_src
+** Smex
+#+begin_src emacs-lisp
+(use-package smex
+  :ensure t)
 #+end_src
 ** Dash-at-point
 #+begin_src emacs-lisp
@@ -1066,8 +1045,7 @@ set diff-hl to work with unsaved buffers too
 (use-package impatient-mode
   :ensure t
   :init
-  (evil-leader/set-key "mI" 'impatient-mode)
-  (httpd-start))
+  (evil-leader/set-key "mI" 'impatient-mode))
 #+END_SRC
 *** Custom impatient mode filters
 markdown rendering
@@ -1144,69 +1122,6 @@ markdown rendering
 (with-eval-after-load 'simple (diminish `auto-fill-function))
 #+END_SRC
 ** Misc functions
-#+BEGIN_SRC emacs-lisp
-(defun maybe-helm-projectile-ag-default ()
-  "If inside projectile project - run helm-ag inside current project only
-  else run default helm-ag
-  helm-ag command without inserting symbol/word at point"
-  (interactive)
-  (setq helm-ag-insert-at-point nil)
-  (call-interactively
-    (if (projectile-project-p)
-        #'helm-ag-project-root
-        #'helm-ag)))
-
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun maybe-helm-projectile-ag-symbol ()
-  "If inside projectile project - run helm-ag inside current project only
-else run default helm-ag
-insert current symbol into helm-ag command"
-  (interactive)
-  (setq helm-ag-insert-at-point 'symbol)
-  (call-interactively
-    (if (projectile-project-p)
-       #'helm-ag-project-root
-       #'helm-ag)))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun helm-ag-this-file-default ()
-  "run helm-ag-this-file without inserting symbol/word"
-  (interactive)
-  (setq helm-ag-insert-at-point nil)
-  (call-interactively
-    #'helm-ag-this-file))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun helm-ag-this-file-symbol ()
-  "run helm-ag-this-file inserting current symbol"
-  (interactive)
-  (setq helm-ag-insert-at-point 'symbol)
-  (call-interactively
-    #'helm-ag-this-file))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun helm-ag-default ()
-  "run helm-ag without inserting symbol/word"
-  (interactive)
-  (setq helm-ag-insert-at-point nil)
-  (call-interactively
-    #'helm-ag))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun helm-ag-symbol ()
-  "run helm-ag - inserting current symbol"
-  (interactive)
-  (setq helm-ag-insert-at-point 'symbol)
-  (call-interactively
-    #'helm-ag))
-#+END_SRC
-
 Reload emacs config
 #+BEGIN_SRC emacs-lisp
 (defun reload-init-file ()
@@ -1322,16 +1237,16 @@ Switch to minibuffer window
     (select-window (active-minibuffer-window))))
 #+END_SRC
 
-Fn to call imenu/semantic/org-headings depending on mode
+Fn to call imenu/semantic/org-goto depending on mode
 Pinched from spacemacs
 #+begin_src emacs-lisp
-(defun helm-jump-in-buffer ()
-  "Jump in buffer using `imenu' facilities and helm."
+(defun counsel-jump-in-buffer ()
+  "Jump in buffer using imenu or semantic or org-goto"
   (interactive)
   (call-interactively
    (cond
-    ((eq major-mode 'org-mode) 'helm-org-in-buffer-headings)
-    (t 'helm-semantic-or-imenu))))
+    ((eq major-mode 'org-mode) 'counsel-org-goto)
+    (t 'counsel-semantic-or-imenu))))
 #+end_src
 
 Fn to toggle auto exporting reveal.js html pages on save
@@ -1356,4 +1271,46 @@ Fn to toggle auto exporting current org subtree to reveal.js on save
         (message "Disabled org html export current subtree on save for current buffer..."))
     (add-hook 'after-save-hook 'org-reveal-export-current-subtree nil t)
     (message "Enabled org html export current subtree on save for current buffer...")))
+#+end_src
+
+Run swiper with currently selected region or symbol
+#+begin_src emacs-lisp
+(defun swiper-region-or-symbol ()
+  "Run `swiper' with the selected region or the symbol
+  around point as the initial input."
+  (interactive)
+  (let ((input (if (region-active-p)
+                   (buffer-substring-no-properties
+                    (region-beginning) (region-end))
+                 (thing-at-point 'symbol t))))
+    (evil-magit-maybe-deactivate-mark)
+    (swiper input)))
+#+end_src
+
+Run swiper-all with currently selected region or symbol
+#+begin_src emacs-lisp
+(defun swiper-all-region-or-symbol ()
+  "Run `swiper-all' with the selected region or the symbol
+  around point as the initial input."
+  (interactive)
+  (let ((input (if (region-active-p)
+                   (buffer-substring-no-properties
+                    (region-beginning) (region-end))
+                 (thing-at-point 'symbol t))))
+    (evil-magit-maybe-deactivate-mark)
+    (swiper-all input)))
+#+end_src
+
+Run counsel-rg with currently selected region or symbol
+#+begin_src emacs-lisp
+(defun counsel-rg-region-or-symbol ()
+  "Run `counsel-rg' with the selected region or the symbol
+  around point as the initial input."
+  (interactive)
+  (let ((input (if (region-active-p)
+                   (buffer-substring-no-properties
+                    (region-beginning) (region-end))
+                 (thing-at-point 'symbol t))))
+    (evil-magit-maybe-deactivate-mark)
+    (counsel-rg input)))
 #+end_src

@@ -539,6 +539,13 @@ Evil-leader org-mode specific bindings
 (evil-leader/set-key-for-mode 'org-mode "mbt" 'org-babel-tangle)
 #+END_SRC
 
+Add buffer-local before-save-hook that will update org-mode checkboxes
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+  (lambda ()
+    (add-hook 'before-save-hook 'org-update-checkbox-count nil 'make-it-local)))
+#+end_src
+
 *** Custom org-mode functions
 Hide substrees in selected region
 #+BEGIN_SRC emacs-lisp

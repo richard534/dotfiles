@@ -318,6 +318,12 @@ Focus on emacs session when opening emacs gui
     "xic" 'string-inflection-lower-camelcase
     "xiC" 'string-inflection-camelcas
 
+    ;; Region narrowing (n)
+    "nr" 'narrow-to-region
+    "np" 'narrow-to-page
+    "nf" 'narrow-to-defun
+    "nw" 'widen
+
     ;; File (f)
     ; rename file and buffer
     "fR" 'rename-file-and-buffer
@@ -530,13 +536,17 @@ Load org-babel languages
 
 Evil-leader org-mode specific bindings
 #+BEGIN_SRC emacs-lisp
-(evil-leader/set-key-for-mode 'org-mode "m'" 'org-edit-special)
-(evil-leader/set-key-for-mode 'org-mode "mt" 'org-todo)
-(evil-leader/set-key-for-mode 'org-mode "m," 'org-ctrl-c-ctrl-c)
-(evil-leader/set-key-for-mode 'org-mode "mee" 'org-export-dispatch)
-(evil-leader/set-key-for-mode 'org-mode "mit" 'org-toggle-inline-images)
-(evil-leader/set-key-for-mode 'org-mode "mbm" 'org-babel-mark-block)
-(evil-leader/set-key-for-mode 'org-mode "mbt" 'org-babel-tangle)
+(evil-leader/set-key-for-mode
+    'org-mode
+        "m'" 'org-edit-special
+        "mt" 'org-todo
+        "m," 'org-ctrl-c-ctrl-c
+        "mee" 'org-export-dispatch
+        "mit" 'org-toggle-inline-images
+        "mbm" 'org-babel-mark-block
+        "mbt" 'org-babel-tangle
+        "mn" 'org-narrow-to-subtree
+        "mN" 'widen)
 #+END_SRC
 
 Add buffer-local before-save-hook that will update org-mode checkboxes

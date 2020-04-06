@@ -826,6 +826,20 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "pD" 'projectile-dired
     "pa" 'projectile-toggle-between-implementation-and-test))
 #+end_src
+** Iedit
+#+begin_src emacs-lisp
+(use-package iedit
+  :ensure t
+  :init
+  (evil-leader/set-key
+    "se" 'evil-iedit-state/iedit-mode))
+#+end_src
+** Evil-iedit-state
+#+begin_src emacs-lisp
+(use-package evil-iedit-state
+  :ensure t
+  :after (iedit evil))
+#+end_src
 ** Smex
 #+begin_src emacs-lisp
 (use-package smex

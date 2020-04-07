@@ -834,6 +834,17 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (evil-leader/set-key
     "se" 'evil-iedit-state/iedit-mode))
 #+end_src
+** Expand-region
+#+begin_src emacs-lisp
+(use-package expand-region
+  :ensure t
+  :init
+  (evil-leader/set-key
+    "v" 'er/expand-region)
+
+  (setq expand-region-contract-fast-key "V"
+        expand-region-reset-fast-key "r"))
+#+end_src
 ** Evil-iedit-state
 #+begin_src emacs-lisp
 (use-package evil-iedit-state

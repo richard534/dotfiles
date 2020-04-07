@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+# name: glg-fn
+# key: glg-fn
+# --
+def ${1:fn_name}(${2:args}):
+    \"\"\"${3:summary_of_fn}
+
+    ${4:longer_fn_info}
+
+    Args:
+        ${5:arg_x}
+
+    Returns:
+        ${6:returns}
+
+    Raises:
+        ${7:raises}
+    \"\"\"
+
+    $0

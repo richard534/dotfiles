@@ -1030,6 +1030,10 @@ set diff-hl to work with unsaved buffers too
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :ensure t
+  :init
+  (evil-leader/set-key
+    "gs" 'magit-status
+    "gm" 'magit-dispatch)
   :config
   ; st opens magit status
   (evil-ex-define-cmd "st" 'magit-status)

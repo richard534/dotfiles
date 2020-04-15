@@ -98,8 +98,12 @@ Set default font
 ** Tabs
 Pressing tab will produce spaces instead of tab chars
 #+BEGIN_SRC emacs-lisp
-(setq-default indent-tabs-mode nil)
+(setq indent-tabs-mode nil)
 #+END_SRC
+make TAB insert tabulation/spaces instead of indenting
+#+begin_src emacs-lisp
+(setq tab-always-indent nil)
+#+end_src
 ** Word wrapping
 Word wrapping mode hooks
 #+BEGIN_SRC emacs-lisp
@@ -115,10 +119,6 @@ Word wrapping mode hooks
           word-wrap t)))
 #+END_SRC
 ** Misc Text Editor Settings
-enable auto fill mode on text files
-#+BEGIN_SRC emacs-lisp
-(add-hook 'text-mode-hook 'auto-fill-mode)
-#+END_SRC
 Set lines to wrap at certain char limit
 #+BEGIN_SRC emacs-lisp
 (setq-default fill-column 120)
@@ -203,7 +203,7 @@ Focus on emacs session when opening emacs gui
   (setq evil-want-visual-char-semi-exclusive t)
 
   ; disable evil auto indent
-  (setq evil-auto-indent t)
+  (setq evil-auto-indent nil)
 
   :config ;; configure evil after loading it
   (evil-mode 1)

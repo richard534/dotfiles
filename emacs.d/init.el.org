@@ -667,6 +667,14 @@ Hide substrees in selected region
   ; define evil ex command :restart to restarts emacs
   (evil-ex-define-cmd "restart" 'restart-emacs))
 #+END_SRC
+** Scratch
+#+begin_src emacs-lisp
+(use-package scratch
+  :ensure t
+  :init
+  (evil-leader/set-key
+    "bs" 'scratch))
+#+end_src
 ** Emojify
 #+BEGIN_SRC emacs-lisp
 (use-package emojify

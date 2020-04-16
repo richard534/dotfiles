@@ -334,7 +334,7 @@ Focus on emacs session when opening emacs gui
     "bp" 'previous-buffer
     "bR" 'revert-buffer-no-confirm
     "bw" 'read-only-mode
-    "bb" 'ivy-switch-buffer
+    "bb" 'counsel-switch-buffer
     "bx" 'kill-buffer-and-window ; buffer - kill
 
     ;; GUI Toggles (t)
@@ -758,10 +758,21 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :diminish ivy-mode
   :init
   (ivy-mode 1)
+
+  ; Bind keys
+  (define-key ivy-minibuffer-map (kbd "C-c e") 'counsel-edit)
+  (define-key ivy-minibuffer-map (kbd "C-c o") 'ivy-occur)
+
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
   (evil-set-initial-state 'ivy-occur-grep-mode 'normal) ; Enable evil mode when entering an ivy-occur-grep-mode buffer
   (evil-collection-ivy-setup))
+
+(defun counsel-edit ()
+  "Edit the current search results in a buffer using wgrep. Stolen from spacemacs"
+  (interactive)
+  (run-with-idle-timer 0 nil 'ivy-wgrep-change-to-wgrep-mode)
+  (ivy-occur))
 #+end_src
 ** Ivy-Hydra
 #+begin_src emacs-lisp
@@ -946,12 +957,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :ensure t
   :after (evil python flycheck)
   :diminish elpy-mode
-  :bind (:map evil-normal-state-map
-         ("gd" . 'elpy-goto-definition))
   :defer t
   :init
   ; Defer loading elpy until python-mode loaded
   (advice-add 'python-mode :before 'elpy-enable)
+
+  (evil-leader/set-key-for-mode 'python-mode
+    "gd" 'elpy-goto-assignment
+    "msb" 'elpy-shell-send-buffer)
   :config
   ; Set elpy backend
   (setq elpy-rpc-backend "jedi")

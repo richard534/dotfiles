@@ -330,6 +330,8 @@ Focus on emacs session when opening emacs gui
     "fR" 'rename-file-and-buffer
     "fS" 'evil-write-all
     "fs" 'save-buffer
+    "fy" 'copy-file-name-to-clipboard
+    "fY" 'show-and-copy-buffer-file-abs-path
 
     ;; Buffers (b)
     "bd" 'kill-this-buffer
@@ -1209,21 +1211,6 @@ Reload emacs config
   (load-file "~/.emacs.d/init.el"))
 #+END_SRC
 
-Copy absolute file path to clipboard
-#+BEGIN_SRC emacs-lisp
-(defun copy-abs-file-path-to-clipboard ()
-  "copy the absolute file path of current open file to the clipboard"
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
-      (message filename))))
-#+END_SRC
-
 Open emacs init file
 #+BEGIN_SRC emacs-lisp
 (defun find-emacs-init-file ()
@@ -1418,4 +1405,29 @@ Wrapper fn over counsel-projectile-rg - sets initial input of the command to nil
   (interactive)
   (setq counsel-projectile-rg-initial-input nil)
   (counsel-projectile-rg))
+#+end_src
+
+Show and copy current file absolute path in the minibuffer - stolen from spacemacs
+#+begin_src emacs-lisp
+(defun show-and-copy-buffer-file-abs-path ()
+  "Show and copy the full path to the current file in the minibuffer."
+  (interactive)
+  ;; list-buffers-directory is the variable set in dired buffers
+  (let ((file-name (or (buffer-file-name) list-buffers-directory)))
+    (if file-name
+        (message (kill-new file-name))
+      (error "Buffer not visiting a file"))))
+#+end_src
+
+Copy name of current file to clipboard
+#+begin_src emacs-lisp
+(defun copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-name))))
+    (when filename
+      (kill-new filename))
+    (message filename)))
 #+end_src

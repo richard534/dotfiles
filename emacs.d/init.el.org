@@ -213,6 +213,7 @@ Focus on emacs session when opening emacs gui
   (define-key evil-insert-state-map (kbd "C-n") nil)
   (define-key evil-normal-state-map (kbd "C-p") nil)
   (define-key evil-insert-state-map (kbd "C-p") nil)
+  (define-key evil-motion-state-map (kbd "gd") nil)
 
   ; Rebind keys for vim-like crtl-u pgUp
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
@@ -327,6 +328,8 @@ Focus on emacs session when opening emacs gui
     ;; File (f)
     ; rename file and buffer
     "fR" 'rename-file-and-buffer
+    "fS" 'evil-write-all
+    "fs" 'save-buffer
 
     ;; Buffers (b)
     "bd" 'kill-this-buffer
@@ -451,6 +454,13 @@ Disabled "electric indent mode" - breaks some modes inc. python
   :config
   (evil-collection-dired-setup))
 #+END_SRC
+** Wdired
+#+begin_src emacs-lisp
+(use-package wdired
+  :init
+  (setq wdired-use-interactive-rename t)
+  (evil-collection-wdired-setup))
+#+end_src
 ** Vc
 #+begin_src emacs-lisp
 (use-package vc
@@ -488,55 +498,29 @@ start emacs-server (for use with emacsclient)
 (server-start)
 #+END_SRC
 ** Org
-#+BEGIN_SRC emacs-lisp
-(setq org-startup-indented t)
-(setq org-indent-mode t)
-(with-eval-after-load 'org-indent (diminish `org-indent-mode))
-(setq org-hide-leading-stars t) ; hide orgmode heading stars
-(setq org-adapt-indentation nil) ; hide orgmode heading indented stars
-(setq org-hide-emphasis-markers t) ; hide bold bullet points etc
-(setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
-(setq org-cycle-include-plain-lists 'integrate) ; When running org-cycle plain list items will be treated like low-level headlines (will cycle)
-(setq org-M-RET-may-split-line '((item . nil))) ; in the context of a list of items; goto eol before making a new line
-(setq org-confirm-babel-evaluate nil) ; Disable asking for confirmation when executing babel code block for all languages
+#+begin_src emacs-lisp
+(use-package org
+  :diminish org-mode
+  :init
+  (setq org-startup-indented t)
+  (setq org-hide-leading-stars t) ; hide orgmode heading stars
+  (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
+  (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
+  (setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
+  (setq org-cycle-include-plain-lists 'integrate) ; When running org-cycle plain list items will be treated like low-level headlines (will cycle)
+  (setq org-M-RET-may-split-line '((item . nil))) ; in the context of a list of items; goto eol before making a new line
+  (setq org-confirm-babel-evaluate nil) ; Disable asking for confirmation when executing babel code block for all languages
 
-; Configure org-goto
-(setq org-goto-interface 'outline-path-completion)
-(setq org-outline-path-complete-in-steps nil)
-#+END_SRC
+  ; org-goto related config
+  (setq org-goto-interface 'outline-path-completion)
+  (setq org-outline-path-complete-in-steps nil)
 
-org-mode images config
-#+BEGIN_SRC emacs-lisp
-(setq org-startup-with-inline-images t) ; Show inline images by default
-(setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
-#+END_SRC
+  ; org-mode images related config
+  (setq org-startup-with-inline-images t) ; Show inline images by default
+  (setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
 
-Custom json babel code-bock type 'json'
-Will just return its contents (passthrough) when evaluated
-#+BEGIN_SRC emacs-lisp
-;;; ob-passthrough.el ---  passthrough evaluator          -*- lexical-binding: t; -*-
-(require 'ob)
-(defun org-babel-execute:passthrough (body params)
-  body)
-;; json output is json
-(defalias 'org-babel-execute:json 'org-babel-execute:passthrough)
-(provide 'ob-passthrough)
-;;; ob-passthrough.el ends here
-#+END_SRC
-
-Load org-babel languages
-#+BEGIN_SRC emacs-lisp
-; add python to org-mode babel (allows executing python code in org files src blocks)
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (shell . t)
-   (passthrough . t)))
-#+END_SRC
-
-Evil-leader org-mode specific bindings
-#+BEGIN_SRC emacs-lisp
-(evil-leader/set-key-for-mode
+  ; evil-leader org-mode bindings
+  (evil-leader/set-key-for-mode
     'org-mode
         "m'" 'org-edit-special
         "mt" 'org-todo
@@ -547,13 +531,30 @@ Evil-leader org-mode specific bindings
         "mbt" 'org-babel-tangle
         "mn" 'org-narrow-to-subtree
         "mN" 'widen)
-#+END_SRC
 
-Add buffer-local before-save-hook that will update org-mode checkboxes
-#+begin_src emacs-lisp
-(add-hook 'org-mode-hook
-  (lambda ()
-    (add-hook 'before-save-hook 'org-update-checkbox-count nil 'make-it-local)))
+
+  ;; Custom json babel code-bock type 'json'
+  ;; Will just return its contents (passthrough) when evaluated
+  ;;; ob-passthrough.el ---  passthrough evaluator          -*- lexical-binding: t; -*-
+  (require 'ob)
+  (defun org-babel-execute:passthrough (body params)
+  body)
+  ;; json output is json
+  (defalias 'org-babel-execute:json 'org-babel-execute:passthrough)
+  (provide 'ob-passthrough)
+  ;;; ob-passthrough.el ends here
+
+  ; add python to org-mode babel (allows executing python code in org files src blocks)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (shell . t)
+     (passthrough . t)))
+
+  :config
+  (add-hook 'org-mode-hook
+	    (lambda ()
+	      (add-hook 'before-save-hook 'org-update-checkbox-count nil 'make-it-local))))
 #+end_src
 
 *** Custom org-mode functions
@@ -600,20 +601,8 @@ Hide substrees in selected region
   :ensure t
   :config
   (evil-leader/set-key "m'" 'edit-indirect-region)
-
-  ; When in edit-indirect buffer, override wq to commit edit-indirect buffer
-  (defun my-evil-save-and-close (old-fun &rest args)
-    (if edit-indirect--overlay
-      (edit-indirect-commit)
-      (apply old-fun args)))
-  (advice-add #'evil-save-and-close :around #'my-evil-save-and-close)
-
-  ; When in edit-indirect buffer, override q to abort edit-indirect buffer
-  (defun my_delete-window (old-fun &rest args)
-    (if edit-indirect--overlay
-      (edit-indirect-abort)
-      (apply old-fun args)))
-  (advice-add #'delete-window :around #'my_delete-window))
+  (define-key edit-indirect-mode-map (kbd "ZZ") 'edit-indirect-commit)
+  (define-key edit-indirect-mode-map (kbd "ZQ") 'edit-indirect-abort))
 #+END_SRC
 ** Comint
 #+BEGIN_SRC emacs-lisp
@@ -773,6 +762,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
+
+  (setq ivy-dynamic-exhibit-delay-ms 250)
+
   (evil-set-initial-state 'ivy-occur-grep-mode 'normal) ; Enable evil mode when entering an ivy-occur-grep-mode buffer
   (evil-collection-ivy-setup))
 
@@ -839,6 +831,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (evil-leader/set-key
     "pb" 'counsel-projectile-switch-to-buffer
     "fp" 'counsel-projectile-find-file
+    "fP" 'counsel-projectile-find-file-region-or-symbol
     "pp" 'counsel-projectile-switch-project
     "sp" 'counsel-projectile-rg-nil-initial-input
     "sP" 'counsel-projectile-rg-region-or-symbol

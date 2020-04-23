@@ -1,0 +1,6 @@
+# key: properties-drawer
+# name: properties-drawer
+# --
+:PROPERTIES:
+:${1:key}: ${2:value}
+:END:

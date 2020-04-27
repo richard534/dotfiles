@@ -521,6 +521,11 @@ start emacs-server (for use with emacsclient)
   (setq org-startup-with-inline-images t) ; Show inline images by default
   (setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
 
+
+  ; Set colour of org bold (*) markup to red
+  (add-to-list 'org-emphasis-alist
+	       '("*" (:foreground "red")))
+
   ; evil-leader org-mode bindings
   (evil-leader/set-key-for-mode
     'org-mode

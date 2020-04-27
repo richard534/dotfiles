@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: glg-fn-docstring
+# key: glg-fn-docstring
+# --
+\"\"\"${1:summary_of_fn}
+
+${2:longer_fn_info}
+
+Args:
+    ${3:arg_x}
+
+Returns:
+    ${4:returns}
+
+Raises:
+    ${5:raises}\"\"\"
+$0

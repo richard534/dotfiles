@@ -467,8 +467,18 @@ Disabled "electric indent mode" - breaks some modes inc. python
 #+begin_src emacs-lisp
 (use-package wdired
   :init
-  (setq wdired-use-interactive-rename t)
   (evil-collection-wdired-setup))
+#+end_src
+** Dired-narrow
+#+begin_src emacs-lisp
+(use-package dired-narrow
+  :ensure t
+  :init
+  (evil-leader/set-key-for-mode
+    'dired-mode
+    	"mn" 'dired-narrow
+	        "mf" 'dired-narrow-fuzzy
+	        "mr" 'dired-narrow-regexp))
 #+end_src
 ** Vc
 #+begin_src emacs-lisp

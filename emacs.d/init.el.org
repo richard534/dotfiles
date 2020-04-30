@@ -453,6 +453,13 @@ Disabled "electric indent mode" - breaks some modes inc. python
 #+BEGIN_SRC emacs-lisp
 (use-package dired
   :after evil-collection
+  :init
+  (evil-leader/set-key
+    "ad" 'dired
+    "fj" 'dired-jump)
+
+  ;; Auto-refresh dired on file change
+  (add-hook 'dired-mode-hook 'auto-revert-mode)
   :config
   (evil-collection-dired-setup))
 #+END_SRC
@@ -477,7 +484,12 @@ Disabled "electric indent mode" - breaks some modes inc. python
 ** Auto revert
 Emacs auto-reloads buffers when files change on disk.
 #+BEGIN_SRC emacs-lisp
-(global-auto-revert-mode)
+; Auto refresh buffers that have changed on disk
+(global-auto-revert-mode 1)
+; auto refresh non-file buffers (like dired)
+(setq global-auto-revert-non-file-buffers t)
+; Silence auto-revert messages
+(setq auto-revert-verbose nil)
 #+END_SRC
 ** Saveplace
 Remember cursor position of files when reopening them
@@ -930,6 +942,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :ensure t
   :after evil-collection
   :bind ("<f8>" . 'neotree-toggle)
+  :init
+  (evil-leader/set-key "ft" 'neotree-toggle)
   :config
   (evil-collection-neotree-setup) ; Bind evil-collection neotree keys
   (setq neo-window-fixed-size nil)
@@ -1175,28 +1189,6 @@ markdown rendering
 #+BEGIN_SRC emacs-lisp
 (use-package paradox
    :ensure t)
-#+END_SRC
-** Ranger
-#+BEGIN_SRC emacs-lisp
-(use-package ranger
-  :ensure t
-  :bind (:map ranger-mode-map
-    ("C-h" . 'evil-window-left)
-    ("C-j" . 'evil-window-down)
-    ("C-k" . 'evil-window-up)
-    ("C-l" . 'evil-window-right)
-    ("+" . 'dired-create-directory))
-  :init
-  (setq ranger-show-literal nil)
-  (setq ranger-show-hidden t) ; Show dotfiles
-  (ranger-override-dired-mode t) ; Set ranger as default directory handler
-  (setq ranger-cleanup-on-disable t) ; When ranger session closed - kill ranger buffer
-  (setq ranger-modify-header nil) ; use default dired header - not custom ranger one
-
-  ; Bind evil-leader keys
-  (evil-leader/set-key
-    "ar" 'ranger
-    "ad" 'deer))
 #+END_SRC
 ** Undo-tree
 #+BEGIN_SRC emacs-lisp

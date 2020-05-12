@@ -145,8 +145,12 @@ Insert newline at the end of all files - if not already present
 #+END_SRC
 ** Custom
 #+BEGIN_SRC emacs-lisp
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file 'noerror)
+(use-package custom
+  :after evil-collection
+  :config
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file 'noerror)
+  (evil-collection-custom-setup))
 #+END_SRC
 ** Info
 #+BEGIN_SRC emacs-lisp
@@ -711,7 +715,10 @@ Hide substrees in selected region
   :init
   (which-key-mode)
   :config
-  (evil-leader/set-key "hk" 'which-key-show-top-level))
+  ; mnemonic - help-whichkey
+  (evil-leader/set-key
+    "hwt" 'which-key-show-top-level
+    "hwf" 'which-key-show-full-keymap))
 #+END_SRC
 ** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -829,6 +836,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (setq counsel-switch-buffer-preview-virtual-buffers nil)
 
+  ; Set fzf default command to use fd instead of find (default)
+  (setq counsel-fzf-cmd "fd --type f | fzf -f \"%s\"")
+
   ; Bind counsel evil-leader keys
   (evil-leader/set-key
     ;; Finding files
@@ -922,8 +932,18 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
           ("M-p" . nil)
           ("C-n" . company-select-next-or-abort)
           ("C-p" . company-select-previous-or-abort))
-  :hook (after-init . global-company-mode)
   :init
+  (global-company-mode)
+
+  :config
+  ; Set default company backends
+  (setq company-backends
+        '((company-files          ; files & directory
+           company-keywords       ; keywords
+           company-capf           ; completion-at-point-functions
+           company-abbrev         ; abbreviations
+          )))
+
   (setq company-idle-delay 0) ; No delay in showing suggestions.
   (setq company-minimum-prefix-length 1) ; Show suggestions after entering one character.
   (setq company-selection-wrap-around t)) ; once at bottom of suggestions - wrap back to top
@@ -981,13 +1001,22 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     ("C-h" . 'evil-window-left)
     ("C-j" . 'evil-window-down)
     ("C-k" . 'evil-window-up)
-    ("C-l" . 'evil-window-right)))
+    ("C-l" . 'evil-window-right))
+  :config
+  ; Set python to use ipython as shell interpreter
+  (setq python-shell-interpreter "ipython"
+	python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i"))
 #+END_SRC
+** f
+#+begin_src emacs-lisp
+(use-package f
+  :ensure t)
+#+end_src
 ** Elpy
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
   :ensure t
-  :after (evil python flycheck)
+  :after (evil python flycheck f)
   :diminish elpy-mode
   :defer t
   :init
@@ -996,25 +1025,28 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (evil-leader/set-key-for-mode 'python-mode
     "gd" 'elpy-goto-assignment
-    "msb" 'elpy-shell-send-buffer)
+    "msb" 'elpy-shell-send-buffer
+    "fc" 'elpy-black-fix-code)
   :config
   ; Set elpy backend
-  (setq elpy-rpc-backend "jedi")
-   ; Set elpy to use ipython as shell interpreter
-  (setq python-shell-interpreter "ipython"
-    python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i")
+  ;; (setq elpy-rpc-backend "jedi")
+  ;; (setq elpy-rpc-python-command "python3")
+  ; Set path to the virtualenv used by the RPC to use the currently active environment
+  (setq elpy-rpc-virtualenv-path 'current)
+  ;; (setq elpy-rpc-virtualenv-path 'global)
+  ;; (setq elpy-rpc-virtualenv-path 'default)
    ; Config elpy to use flycheck instead of flymake
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   ; Disable "highlight-indentation" elpy module
   (setq elpy-modules (delete 'elpy-module-highlight-indentation elpy-modules))
-  ; Bind evil-leader key to format code. mnemonic - format-code
-  (evil-leader/set-key "fc" 'elpy-black-fix-code)
+
    ; custon fn to clear elpy shell
   (defun elpy-shell-clear-shell ()
     "Clear the current shell buffer."
     (interactive)
     (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
-      (comint-clear-buffer))))
+      (comint-clear-buffer)))
+)
 #+END_SRC
 ** Pyvenv
 #+BEGIN_SRC emacs-lisp
@@ -1077,8 +1109,12 @@ set diff-hl to work with unsaved buffers too
   :ensure t
   :init
   (evil-leader/set-key
-    "gs" 'magit-status
-    "gm" 'magit-dispatch)
+    "gs"  'magit-status
+    "gm"  'magit-dispatch
+    "gS"  'magit-stage-file
+    "gU"  'magit-unstage-file
+    "gfd" 'magit-diff-buffer-file)
+
   :config
   ; st opens magit status
   (evil-ex-define-cmd "st" 'magit-status)

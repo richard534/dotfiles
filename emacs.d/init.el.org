@@ -467,6 +467,28 @@ Disabled "electric indent mode" - breaks some modes inc. python
   :config
   (evil-collection-dired-setup))
 #+END_SRC
+** Ranger
+#+BEGIN_SRC emacs-lisp
+(use-package ranger
+  :ensure t
+  :bind (:map ranger-mode-map
+    ("C-h" . 'evil-window-left)
+    ("C-j" . 'evil-window-down)
+    ("C-k" . 'evil-window-up)
+    ("C-l" . 'evil-window-right)
+    ("+" . 'dired-create-directory))
+  :init
+  (setq ranger-show-literal nil)
+  (setq ranger-show-hidden t) ; Show dotfiles
+  (ranger-override-dired-mode t) ; Set ranger as default directory handler
+  (setq ranger-cleanup-on-disable t) ; When ranger session closed - kill ranger buffer
+  (setq ranger-modify-header nil) ; use default dired header - not custom ranger one
+
+  ; Bind evil-leader keys
+  (evil-leader/set-key
+    "ar" 'ranger
+    "ad" 'deer))
+#+END_SRC
 ** Wdired
 #+begin_src emacs-lisp
 (use-package wdired

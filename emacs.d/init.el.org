@@ -314,6 +314,9 @@ Focus on emacs session when opening emacs gui
     "fJ" `json-pretty-print-buffer
     "sl" 'elpy-shell-clear-shell
 
+    ;; Universal argument (u)
+    "u" 'universal-argument
+
     ;; Text (x)
     ; Inflection (i)
     "xii"  `string-inflection-all-cycle
@@ -322,6 +325,11 @@ Focus on emacs session when opening emacs gui
     "xik" 'string-inflection-kebab-case
     "xic" 'string-inflection-lower-camelcase
     "xiC" 'string-inflection-camelcas
+
+    ; Align (a)
+    "xaa" 'align
+    "xar" 'align-regexp
+    "xac" 'align-current
 
     ;; Region narrowing (n)
     "nr" 'narrow-to-region
@@ -338,7 +346,8 @@ Focus on emacs session when opening emacs gui
     "fY" 'show-and-copy-buffer-file-abs-path
 
     ;; Buffers (b)
-    "bd" 'kill-this-buffer
+    "bd" 'kill-current-buffer
+    "bm" 'kill-other-buffers
     "bn" 'next-buffer
     "bp" 'previous-buffer
     "bR" 'revert-buffer-no-confirm
@@ -1379,6 +1388,20 @@ Pinched from spacemacs
    (cond
     ((eq major-mode 'org-mode) 'counsel-org-goto)
     (t 'counsel-semantic-or-imenu))))
+#+end_src
+
+Kill all buffers except current
+Borrowed from spacemacs
+#+begin_src emacs-lisp
+(defun kill-other-buffers (&optional arg)
+  "Kill all other buffers.
+  If the universal prefix argument is used then will the windows too."
+  (interactive "P")
+  (when (yes-or-no-p (format "Killing all buffers except \"%s\"? "
+                             (buffer-name)))
+    (mapc 'kill-buffer (delq (current-buffer) (buffer-list)))
+    (when (equal '(4) arg) (delete-other-windows))
+    (message "Buffers deleted!")))
 #+end_src
 
 Fn to toggle auto exporting reveal.js html pages on save

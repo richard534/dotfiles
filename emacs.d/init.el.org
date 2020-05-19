@@ -610,15 +610,22 @@ start emacs-server (for use with emacsclient)
   ; evil-leader org-mode bindings
   (evil-leader/set-key-for-mode
     'org-mode
-        "m'" 'org-edit-special
-        "mt" 'org-todo
-        "m," 'org-ctrl-c-ctrl-c
+        "m'"  'org-edit-special
+        "mt"  'org-todo
+        "m,"  'org-ctrl-c-ctrl-c
         "mee" 'org-export-dispatch
         "mit" 'org-toggle-inline-images
         "mbm" 'org-babel-mark-block
         "mbt" 'org-babel-tangle
-        "mn" 'org-narrow-to-subtree
-        "mN" 'widen)
+        "mn"  'org-narrow-to-subtree
+        "mN"  'widen)
+
+  ; evil-keybinds
+  (evil-define-key 'normal org-mode-map
+    "gh" 'outline-up-heading
+    "gl" 'outline-next-visible-heading
+    "gj" 'org-forward-heading-same-level
+    "gk" 'org-backward-heading-same-level)
 
 
   ;; Custom json babel code-bock type 'json'

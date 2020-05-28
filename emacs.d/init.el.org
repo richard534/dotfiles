@@ -1116,7 +1116,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (advice-add 'python-mode :before 'elpy-enable)
 
   (evil-leader/set-key-for-mode 'python-mode
-    "gd" 'elpy-goto-assignment
+    "gd" 'elpy-goto-definition
     "msb" 'elpy-shell-send-buffer
     "fc" 'elpy-black-fix-code)
   :config
@@ -1169,13 +1169,18 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (spaceline-emacs-theme))
 #+END_SRC
 ** Diff-hl
-#+BEGIN_SRC emacs-lisp
-(global-diff-hl-mode)
-#+END_SRC
-set diff-hl to work with unsaved buffers too
-#+BEGIN_SRC emacs-lisp
-(diff-hl-flydiff-mode t)
-#+END_SRC
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :ensure t
+  :config
+  (global-diff-hl-mode)
+
+  ; set diff-hl to work with unsaved buffers too
+  (diff-hl-flydiff-mode t)
+
+  ; add magit hooks
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+#+end_src
 ** Origami
 #+BEGIN_SRC emacs-lisp
 (use-package origami

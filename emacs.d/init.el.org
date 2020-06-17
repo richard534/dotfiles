@@ -361,6 +361,9 @@ environment variables from the user's shell.
     "bb" 'counsel-switch-buffer
     "bx" 'kill-buffer-and-window ; buffer - kill
 
+    ;; Window (w)
+    "wm" 'toggle-maximize-buffer
+
     ;; GUI Toggles (t)
     "tl" 'toggle-truncate-lines
     "tL" 'visual-line-mode
@@ -376,6 +379,7 @@ environment variables from the user's shell.
     "cv" 'evilnc-toggle-invert-comment-line-by-line
     "."  'evilnc-copy-and-comment-operator))
 #+END_SRC
+
 ** Evil-magit
 #+BEGIN_SRC emacs-lisp
 (use-package evil-magit)
@@ -1587,4 +1591,19 @@ Copy name of current file to clipboard
     (when filename
       (kill-new filename))
     (message filename)))
+#+end_src
+
+Toggle maximize buffer
+#+begin_src emacs-lisp
+;; from https://gist.github.com/3402786
+(defun toggle-maximize-buffer ()
+  "Maximize buffer"
+  (interactive)
+  (if (and (= 1 (length (window-list)))
+           (assoc ?_ register-alist))
+      (jump-to-register ?_)
+    (progn
+      (window-configuration-to-register ?_)
+      (delete-other-windows))))
+
 #+end_src

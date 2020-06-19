@@ -53,6 +53,8 @@ alias tree='tree -C'
 alias info='info --vi-keys'
 alias notify='terminal-notifier -title "Terminal" -message "donezo" -subtitle "donedonedone" -sound "default"'
 
+# Setup "secret zsh conf"
+# This conf file won't be uploaded to VCS
 SECRET_CONF=~/.zshrc_local && test -f $SECRET_CONF && source $SECRET_CONF
 
 ## fzf config

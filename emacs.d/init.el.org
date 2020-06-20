@@ -7,6 +7,7 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+(require 'use-package)
 #+END_SRC
 ** Language and encoding
 Add UTF-8 to the front of the priority list for automatic detection
@@ -201,6 +202,7 @@ environment variables from the user's shell.
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t ;; install the evil package if not installed
+  :diminish undo-tree-mode
   :init ;; configure evil before loading it
   ;; Variables required by evil-collection
   (setq evil-want-integration t) ; This is optional since it's already set to t by default.
@@ -515,6 +517,7 @@ Disabled "electric indent mode" - breaks some modes inc. python
     ("C-l" . 'evil-window-right)
     ("+" . 'dired-create-directory))
   :init
+  (setq ranger-was-ranger nil) ; Silence bytecompile error
   (setq ranger-show-literal nil)
   (setq ranger-show-hidden t) ; Show dotfiles
   (ranger-override-dired-mode t) ; Set ranger as default directory handler
@@ -531,17 +534,6 @@ Disabled "electric indent mode" - breaks some modes inc. python
 (use-package wdired
   :init
   (evil-collection-wdired-setup))
-#+end_src
-** Dired-narrow
-#+begin_src emacs-lisp
-(use-package dired-narrow
-  :ensure t
-  :init
-  (evil-leader/set-key-for-mode
-    'dired-mode
-    	"mn" 'dired-narrow
-	        "mf" 'dired-narrow-fuzzy
-	        "mr" 'dired-narrow-regexp))
 #+end_src
 ** Vc
 #+begin_src emacs-lisp
@@ -707,12 +699,6 @@ Hide substrees in selected region
 #+BEGIN_SRC emacs-lisp
 (setq comint-scroll-to-bottom-on-output t)
 #+END_SRC
-** Xscheme
-#+BEGIN_SRC emacs-lisp
-; mit-scheme (sicp) setup
-(setq scheme-program-name "/usr/local/bin/scheme")
-(require 'xscheme)
-#+END_SRC
 ** Emacs Desktop
 #+BEGIN_SRC emacs-lisp
 (desktop-save-mode 1)
@@ -737,8 +723,7 @@ Hide substrees in selected region
 ** Smerge
 #+BEGIN_SRC emacs-lisp
 (use-package smerge-mode
-  :after hydra
-  )
+  :after hydra)
 #+END_SRC
 ** Image
 #+begin_src emacs-lisp
@@ -763,15 +748,6 @@ Hide substrees in selected region
   (evil-leader/set-key
     "bs" 'scratch))
 #+end_src
-** Emojify
-#+BEGIN_SRC emacs-lisp
-(use-package emojify
-  ; When using :hook omit the "-hook" suffix. This would normally look like "after-init-hook"
-  :ensure t
-  :hook (after-init . global-emojify-mode)
-  :config
-  (evil-leader/set-key "ie" 'emojify-insert-emoji))
-#+END_SRC
 ** Which key
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
@@ -1049,6 +1025,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+BEGIN_SRC emacs-lisp
 (use-package json-mode
   :ensure t
+  :mode "\\.json\\'"
   :init
   (setq json-reformat:indent-width 2))
 #+END_SRC
@@ -1077,6 +1054,13 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (add-hook 'clojure-mode-hook #'smartparens-mode)
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 #+end_src
+** Cider
+#+begin_src emacs-lisp
+(use-package cider
+  :ensure t
+  ; :after keyword delays loading until the dependencies are loaded
+  :after clojure-mode)
+#+end_src
 ** Smartparens
 #+begin_src emacs-lisp
 (use-package smartparens
@@ -1103,11 +1087,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq python-shell-interpreter "ipython"
 	python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i"))
 #+END_SRC
-** f
-#+begin_src emacs-lisp
-(use-package f
-  :ensure t)
-#+end_src
 ** Elpy
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
@@ -1118,6 +1097,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :init
   ; Defer loading elpy until python-mode loaded
   (advice-add 'python-mode :before 'elpy-enable)
+
+  ; automatically restart inferior python process when python virtual environment changed
+  (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
 
   (evil-leader/set-key-for-mode 'python-mode
     "gd" 'elpy-goto-definition
@@ -1141,13 +1123,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "Clear the current shell buffer."
     (interactive)
     (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
-      (comint-clear-buffer)))
-)
-#+END_SRC
-** Pyvenv
-#+BEGIN_SRC emacs-lisp
-; automatically restart inferior python process when python virtual environment changed
-(add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+      (comint-clear-buffer))))
 #+END_SRC
 ** Hl-todo
 #+BEGIN_SRC emacs-lisp
@@ -1194,7 +1170,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 ** Terraform
 #+BEGIN_SRC emacs-lisp
 (use-package terraform-mode
-  :ensure t)
+  :ensure t
+  :mode "\\.tf\\'")
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp
@@ -1339,16 +1316,6 @@ markdown rendering
 #+BEGIN_SRC emacs-lisp
 (use-package paradox
    :ensure t)
-#+END_SRC
-** Undo-tree
-#+BEGIN_SRC emacs-lisp
-(use-package undo-tree
-  :diminish undo-tree-mode)
-#+END_SRC
-** Diminish
-#+BEGIN_SRC emacs-lisp
-(require 'diminish)
-(with-eval-after-load 'simple (diminish `auto-fill-function))
 #+END_SRC
 ** Misc functions
 Reload emacs config

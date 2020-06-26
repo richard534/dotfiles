@@ -903,25 +903,25 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq counsel-switch-buffer-preview-virtual-buffers nil)
 
   ; Set fzf default command to use fd instead of find (default)
-  (setq counsel-fzf-cmd "fd --type f | fzf -f \"%s\"")
+  (setq counsel-fzf-cmd "fd --type f --color=never | fzf -f \"%s\"")
 
   ; Bind counsel evil-leader keys
   (evil-leader/set-key
-    ;; Finding files
+    ;; Finding files (f)
     "ff" 'counsel-find-file ; Current dir file search
     "fF" 'counsel-fzf ; Recursive file search
     "fp" 'counsel-fzf ; Using fzf to implement "Find-file-in-project (fp)"
 
-    ;;; Searching
+    ;;; Searching (s)
     "sc" 'evil-ex-nohighlight ; clear highlights
-    ;; Current file
+    ;; Current file (ss)
     "sj" `counsel-jump-in-buffer ; mnemonic - search-jump (list all symbols in buffer)
     "ss" 'swiper
     "sS" 'swiper-region-or-symbol
-    ;; Arbitrary directory
-    "sf" 'counsel-rg
+    ;; Arbitrary directory (sf)
+    "sf" (lambda () (interactive) (counsel-rg nil (file-name-directory buffer-file-name) nil))
     "sF" 'counsel-rg-region-or-symbol
-    ;; Open buffers
+    ;; Open buffers (sb)
     "sb" 'swiper-all
     "sB" 'swiper-all-region-or-symbol
 
@@ -1543,7 +1543,7 @@ Run counsel-rg with currently selected region or symbol
                     (region-beginning) (region-end))
                  (thing-at-point 'symbol t))))
     (evil-magit-maybe-deactivate-mark)
-    (counsel-rg input)))
+    (counsel-rg input (file-name-directory buffer-file-name) nil)))
 #+end_src
 
 Run counsel-projectile-rg with currently selected region or symbol

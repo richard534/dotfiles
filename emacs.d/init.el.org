@@ -666,10 +666,12 @@ Hide substrees in selected region
   :ensure t
   :init
   (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-  (evil-leader/set-key "mert" 'toggle-org-reveal-html-export-on-save)
-  (evil-leader/set-key "merT" 'toggle-org-reveal-current-subtree-html-export-on-save)
-  (evil-leader/set-key "merc" 'org-reveal-export-current-subtree)
-  (evil-leader/set-key "merb" 'org-reveal-export-to-html-and-browse))
+  (evil-leader/set-key-for-mode
+    'org-mode
+    "mert" 'toggle-org-reveal-html-export-on-save
+    "merT" 'toggle-org-reveal-current-subtree-html-export-on-save
+    "merc" 'org-reveal-export-current-subtree
+    "merb" 'org-reveal-export-to-html-and-browse))
 #+end_src
 ** Evil-org
 #+BEGIN_SRC emacs-lisp
@@ -1059,7 +1061,29 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package cider
   :ensure t
   ; :after keyword delays loading until the dependencies are loaded
-  :after clojure-mode)
+  :after clojure-mode
+
+  :init
+  (evil-leader/set-key
+    ; Documenation (h)
+    "mhh" 'cider-doc
+    "mha" 'cider-apropos
+
+    ; Send code to REPL (s)
+    "msi" 'cider-jack-in
+    "msb" 'cider-load-buffer
+    "msB" 'cider-load-buffer-and-switch-to-repl-buffer
+
+    ; Clear (l)
+    "ml" 'cider-repl-clear-buffer
+    "mL" 'cider-find-and-clear-repl-output
+
+    ; Evauluation (e)
+    "mee" 'cider-eval-last-sexp
+    "meb" 'cider-eval-buffer
+    "mer" 'cider-eval-region)
+
+  (evil-collection-cider-setup))
 #+end_src
 ** Smartparens
 #+begin_src emacs-lisp

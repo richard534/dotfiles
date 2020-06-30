@@ -914,7 +914,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :init
   (evil-leader/set-key
     "pb" 'counsel-projectile-switch-to-buffer
-    "fP" 'counsel-projectile-find-file-region-or-symbol
+    "fP" 'counsel-fzf-region-or-symbol
     "pp" 'counsel-projectile-switch-project
     "sp" 'counsel-projectile-rg-nil-initial-input
     "sP" 'counsel-projectile-rg-region-or-symbol
@@ -1560,6 +1560,20 @@ Wrapper fn over counsel-projectile-rg - sets initial input of the command to nil
   (interactive)
   (setq counsel-projectile-rg-initial-input nil)
   (counsel-projectile-rg))
+#+end_src
+
+Run counsel-fzf with currently selected region or symbol
+#+begin_src emacs-lisp
+(defun counsel-fzf-region-or-symbol ()
+  "Run `counsel-fzf' with the selected region or the symbol
+  around point as the initial input."
+  (interactive)
+  (let ((input (if (region-active-p)
+                   (buffer-substring-no-properties
+                    (region-beginning) (region-end))
+                 (thing-at-point 'symbol t))))
+    (evil-magit-maybe-deactivate-mark)
+    (counsel-fzf input)))
 #+end_src
 
 Show and copy current file absolute path in the minibuffer - stolen from spacemacs

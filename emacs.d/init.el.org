@@ -581,7 +581,9 @@ start emacs-server (for use with emacsclient)
 (use-package org
   :diminish org-mode
   :init
-  (setq org-startup-indented t)
+  (setq org-startup-indented t) ; turn on ‘org-indent-mode’ on startup.
+  (eval-after-load 'org-indent '(diminish 'org-indent-mode)) ; diminish ‘org-indent-mode’ on load
+
   (setq org-hide-leading-stars t) ; hide orgmode heading stars
   (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
   (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
@@ -929,6 +931,12 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (evil-leader/set-key
     "se" 'evil-iedit-state/iedit-mode))
 #+end_src
+** Evil-iedit-state
+#+begin_src emacs-lisp
+(use-package evil-iedit-state
+  :ensure t
+  :after (iedit evil))
+#+end_src
 ** Expand-region
 #+begin_src emacs-lisp
 (use-package expand-region
@@ -939,12 +947,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (setq expand-region-contract-fast-key "V"
         expand-region-reset-fast-key "r"))
-#+end_src
-** Evil-iedit-state
-#+begin_src emacs-lisp
-(use-package evil-iedit-state
-  :ensure t
-  :after (iedit evil))
 #+end_src
 ** Smex
 #+begin_src emacs-lisp

@@ -465,6 +465,53 @@ environment variables from the user's shell.
     (kbd "G")       'evil-goto-line
     (kbd "^")       'evil-first-non-blank))
 #+END_SRC
+** Sql
+#+begin_src emacs-lisp
+(use-package sql
+  :mode ("\\.sql\\'" . sql-mode)
+  :init
+  (evil-leader/set-key-for-mode
+    'sql-mode
+
+    ;; listing (l)
+    "mla" 'sql-list-all
+    "mlt" 'sql-list-table
+
+    ;; sqli buffer (b)
+    "mbb" 'sql-show-sqli-buffer
+    "mbs" 'sql-set-sqli-buffer
+
+    ;; interactivity (s)
+    ; start
+    "msi" 'sql-start
+
+    ; send
+    "msq" 'sql-send-string
+    "msf" 'sql-send-paragraph
+    "msl" 'sql-send-line-and-next
+    "msr" 'sql-send-region
+    "msb" 'sql-send-buffer)
+
+  (evil-leader/set-key-for-mode
+    'sql-interactive-mode
+
+    ;; sqli buffer
+    "mbr" 'sql-rename-buffer
+    "mbS" 'sql-save-connection)
+
+    :config
+    ; Add prompt for port when connecting to postgres
+    (setq sql-postgres-login-params (append sql-postgres-login-params '(port)))
+
+    ; Improved prumpt regex's
+    ; https://www.emacswiki.org/emacs/SqlMode
+    (sql-set-product-feature 'postgres :prompt-regexp "^[-[:alnum:]_]*=[#>] ")
+    (sql-set-product-feature 'postgres :prompt-cont-regexp
+                           "^[-[:alnum:]_]*[-(][#>] ")
+
+    (add-hook 'sql-interactive-mode-hook
+        (lambda () (toggle-truncate-lines t))))
+#+end_src
 ** Electric
 Auto-complete pairs of brackets/quotes etc.
 #+BEGIN_SRC emacs-lisp
@@ -701,7 +748,11 @@ Hide substrees in selected region
 #+END_SRC
 ** Comint
 #+BEGIN_SRC emacs-lisp
-(setq comint-scroll-to-bottom-on-output t)
+(use-package comint
+  :init
+  (setq comint-prompt-read-only t)
+  (setq comint-scroll-to-bottom-on-output t)
+  (evil-collection-comint-setup))
 #+END_SRC
 ** Emacs Desktop
 #+BEGIN_SRC emacs-lisp
@@ -1628,4 +1679,13 @@ Toggle maximize buffer
       (window-configuration-to-register ?_)
       (delete-other-windows))))
 
+#+end_src
+
+Start a sqli process with given sql-product (e.g postgres, mysql)
+#+begin_src emacs-lisp
+(defun sql-start ()
+    "set SQL dialect-specific highlighting and start inferior SQLi process"
+    (interactive)
+    (sql-set-product (sql-read-product "SQL product: " (intern "postgres")))
+    (sql-product-interactive))
 #+end_src

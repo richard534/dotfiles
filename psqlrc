@@ -6,11 +6,6 @@
 -- easier to read.
 \x auto
 
--- customize PROMPT1
-\set PROMPT1 '\n%[%033[1;31;40m%] ➤ %[%033[32m%]psql:%[%033[36m%]//%n%[%033[34m%]@%[%033[36m%]%`hostname`:%>%[%033[33m%]/%/ %[%033[K%]%[%033[0m%]\n\n%[%033[1;33m%]%#%[%033[0m%] '
-
--- customize PROMPT2. PROMPT2 is used when psql is waiting for more input
-\set PROMPT2 '[more] %R > '
 
 -- Autocomplete keywords (like SELECT) in upper-case, even if you started
 -- typing them in lower case.
@@ -47,4 +42,3 @@
 \echo 'Type :version to see the PostgreSQL version.'
 \echo 'Type :extensions to see the available extensions.'
 \echo 'Type \\q to exit. \n'
-

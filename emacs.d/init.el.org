@@ -1117,7 +1117,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
   :ensure t
-  :after (evil python flycheck f)
+  :after python
   :diminish elpy-mode
   :defer t
   :init
@@ -1130,7 +1130,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (evil-leader/set-key-for-mode 'python-mode
     "gd" 'elpy-goto-definition
     "msb" 'elpy-shell-send-buffer
-    "fc" 'elpy-black-fix-code)
+    "mfc" 'elpy-black-fix-code
+    "mva" 'pyvenv-activate)
+
   :config
   ; Set elpy backend
   ;; (setq elpy-rpc-backend "jedi")
@@ -1252,7 +1254,17 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
   (with-eval-after-load "magit-diff"
-    (define-key magit-hunk-section-map (kbd "<return>") 'magit-diff-visit-file-other-window)))
+    (define-key magit-hunk-section-map (kbd "<return>") 'magit-diff-visit-file-other-window))
+
+  ; Custom fn to get current branch and put on kill ring (copy)
+  (defun magit-copy-current-branch-to-clipboard  ()
+    "Show the current branch in the echo-area and add it to the `kill-ring'."
+    (interactive)
+    (let ((branch (magit-get-current-branch)))
+      (if branch
+	  (progn (kill-new branch)
+		 (message "%s" branch))
+	(user-error "There is not current branch")))))
 #+END_SRC
 ** Git Timemachine
 #+BEGIN_SRC emacs-lisp

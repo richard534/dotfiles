@@ -364,7 +364,37 @@ environment variables from the user's shell.
     "bx" 'kill-buffer-and-window ; buffer - kill
 
     ;; Window (w)
-    "wm" 'toggle-maximize-buffer
+    "ww"    'other-window
+    "w TAB" 'alternate-window
+    "w="    'balance-windows
+
+    ; Selection/Movement (hjkl)
+    "wH"    'evil-window-move-far-left
+    "wh"    'evil-window-left
+    "wJ"    'evil-window-move-very-bottom
+    "wj"    'evil-window-down
+    "wK"    'evil-window-move-very-top
+    "wk"    'evil-window-up
+    "wL"    'evil-window-move-far-right
+    "wl"    'evil-window-right
+
+    ; Maximize (m)
+    "wm"    'toggle-maximize-buffer
+
+    ; Open window-manipulation hydra (.)
+    "w."    'hydra-window-manipulation/body
+
+    ; Rotation (r)
+    "wr"    'rotate-windows-forward
+    "wR"    'rotate-windows-backward
+
+    ; Horizontal Split (s)
+    "ws"    'split-window-below
+    "wS"    'split-window-below-and-focus
+
+    ; Vertical Split (v)
+    "wv"    'split-window-right
+    "wV"    'split-window-right-and-focus
 
     ;; GUI Toggles (t)
     "tl" 'toggle-truncate-lines
@@ -379,7 +409,58 @@ environment variables from the user's shell.
     "cp" 'evilnc-comment-or-uncomment-paragraphs
     "cr" 'comment-or-uncomment-region
     "cv" 'evilnc-toggle-invert-comment-line-by-line
-    "."  'evilnc-copy-and-comment-operator))
+    "."  'evilnc-copy-and-comment-operator)
+
+  (defhydra hydra-window-manipulation
+    (:color pink :hint nil)
+"
+ Select^^^^               Move^^^^              Split^^               Resize^^             Other^^
+ ──────^^^^─────────────  ────^^^^────────────  ─────^^─────────────  ──────^^───────────  ─────^^──────────────────
+ [_j_/_k_]  down/up       [_J_/_K_] down/up     [_s_] vertical        [_[_] shrink horiz   [_u_] restore prev layout
+ [_h_/_l_]  left/right    [_H_/_L_] left/right  [_S_] verti & follow  [_]_] enlarge horiz  [_U_] restore next layout
+ [_0_.._9_] window 0..9   [_r_]^^   rotate fwd  [_v_] horizontal      [_{_] shrink verti   [_d_] close current
+ [_w_]^^    other window  [_R_]^^   rotate bwd  [_V_] horiz & follow  [_}_] enlarge verti  [_D_] close other
+ [_o_]^^    other frame   ^^^^                  ^^                    ^^
+ [_q_] quit
+"
+
+  ("q" nil :exit t)
+  ("0" winum-select-window-0)
+  ("1" winum-select-window-1)
+  ("2" winum-select-window-2)
+  ("3" winum-select-window-3)
+  ("4" winum-select-window-4)
+  ("5" winum-select-window-5)
+  ("6" winum-select-window-6)
+  ("7" winum-select-window-7)
+  ("8" winum-select-window-8)
+  ("9" winum-select-window-9)
+  ("-" split-window-below-and-focus)
+  ("/" split-window-right-and-focus)
+  ("[" (lambda () (interactive) (shrink-window-horizontally 1)))
+  ("]" (lambda () (interactive (enlarge-window-horizontally 1))))
+  ("{" (lambda () (interactive (shrink-window-vertically 1))))
+  ("}" (lambda () (interactive (enlarge-window-vertically 1))))
+  ("d" delete-window)
+  ("D" delete-other-windows)
+  ("h" evil-window-left)
+  ("j" evil-window-down)
+  ("k" evil-window-up)
+  ("l" evil-window-right)
+  ("H" evil-window-move-far-left)
+  ("J" evil-window-move-very-bottom)
+  ("K" evil-window-move-very-top)
+  ("L" evil-window-move-far-right)
+  ("o" other-frame)
+  ("r" rotate-windows-forward)
+  ("R" rotate-windows-backward)
+  ("s" split-window-below)
+  ("S" split-window-below-and-focus)
+  ("u" winner-undo)
+  ("U" winner-redo)
+  ("v" split-window-right)
+  ("V" split-window-right-and-focus)
+  ("w" other-window)))
 #+END_SRC
 
 ** Evil-magit
@@ -1688,4 +1769,83 @@ Start a sqli process with given sql-product (e.g postgres, mysql)
     (interactive)
     (sql-set-product (sql-read-product "SQL product: " (intern "postgres")))
     (sql-product-interactive))
+#+end_src
+
+Alternate window
+Borrowed from spacemacs
+#+begin_src emacs-lisp
+(defun alternate-window ()
+  "Switch back and forth between current and last window in the
+current frame."
+  (interactive)
+  (let (;; switch to first window previously shown in this frame
+        (prev-window (get-mru-window nil t t)))
+    ;; Check window was not found successfully
+    (unless prev-window (user-error "Last window not found."))
+    (select-window prev-window)))
+#+end_src
+
+Window rotation functions
+Borrowed from spacemacs
+#+begin_src emacs-lisp
+(defun rotate-windows-forward (count)
+  "Rotate each window forwards.
+  A negative prefix argument rotates each window backwards.
+  Dedicated (locked) windows are left untouched."
+  (interactive "p")
+  (let* ((non-dedicated-windows (cl-remove-if 'window-dedicated-p (window-list)))
+         (states (mapcar #'window-state-get non-dedicated-windows))
+         (num-windows (length non-dedicated-windows))
+         (step (+ num-windows count)))
+    (if (< num-windows 2)
+        (error "You can't rotate a single window!")
+      (dotimes (i num-windows)
+        (window-state-put
+         (elt states i)
+         (elt non-dedicated-windows (% (+ step i) num-windows)))))))
+
+(defun rotate-windows-backward (count)
+  "Rotate each window backwards.
+Dedicated (locked) windows are left untouched."
+  (interactive "p")
+  (rotate-windows-forward (* -1 count)))
+
+#+end_src
+
+#+begin_src emacs-lisp
+(defun split-window-below-and-focus ()
+"Split the window vertically and focus the new window."
+    (interactive)
+    (split-window-below)
+    (windmove-down)
+    (when (and (boundp 'golden-ratio-mode)
+                (symbol-value golden-ratio-mode))
+        (golden-ratio)))
+
+
+(defun split-window-right-and-focus ()
+    "Split the window horizontally and focus the new window."
+    (interactive)
+    (split-window-right)
+    (windmove-right)
+    (when (and (boundp 'golden-ratio-mode)
+                (symbol-value golden-ratio-mode))
+    (golden-ratio)))
+
+
+(defun shrink-window-horizontally (delta)
+  (interactive "p")
+  (shrink-window delta t))
+
+(defun shrink-window-vertically (delta)
+  (interactive "p")
+  (shrink-window delta))
+
+(defun enlarge-window-vertically (delta)
+  (interactive "p")
+  (enlarge-window delta))
+
+(defun enlarge-window-horizontally (delta)
+  (interactive "p")
+  (enlarge-window delta t))
 #+end_src

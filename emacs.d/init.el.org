@@ -1442,7 +1442,16 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package impatient-mode
   :ensure t
   :init
-  (evil-leader/set-key "mI" 'impatient-mode))
+  (evil-leader/set-key
+    "mIi" (lambda () (interactive)
+        (unless (get-process "httpd")
+            (message "Starting httpd server...")
+            (httpd-start)
+            (message nil))
+    	(impatient-mode))
+    "mIv"  'imp-visit-buffer
+    "mIfs" 'imp-set-user-filter
+    "mIfr" 'imp-remove-user-filter))
 #+END_SRC
 *** Custom impatient mode filters
 markdown rendering
@@ -1523,22 +1532,23 @@ Open emacs init file
 Rename current file/buffer
 source: https://sites.google.com/site/steveyegge2/my-dot-emacs-file
 #+BEGIN_SRC emacs-lisp
-(defun rename-file-and-buffer (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
-  (interactive "sNew name: ")
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn
+(defun rename-file-and-buffer ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let* ((name (buffer-name))
+        (filename (buffer-file-name))
+        (basename (file-name-nondirectory filename)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (let ((new-name (read-file-name "New name: " (file-name-directory filename) basename nil basename)))
+        (if (get-buffer new-name)
+            (error "A buffer named '%s' already exists!" new-name)
           (rename-file filename new-name 1)
           (rename-buffer new-name)
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil)
-	  (projectile-cache-current-file)
-      (projectile-invalidate-cache nil))))))
+          (message "File '%s' successfully renamed to '%s'"
+                   name (file-name-nondirectory new-name)))))))
 #+END_SRC
 
 Delete file and buffer

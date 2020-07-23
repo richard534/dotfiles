@@ -57,3 +57,6 @@ ln -s ${BASEDIR}/emacs.d/ ~/.emacs.d
 # pgcli
 mkdir ~/.config/pgcli
 ln -s ${BASEDIR}/pgcli-config ~/.config/pgcli/config
+
+# fd
+ln -s ${BASEDIR}/fdignore ~/.fdignore

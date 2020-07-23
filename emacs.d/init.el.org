@@ -985,7 +985,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq counsel-switch-buffer-preview-virtual-buffers nil)
 
   ; Set fzf default command to use fd instead of find (default)
-  (setq counsel-fzf-cmd "fd --type f --color=never | fzf -f \"%s\"")
+  (setq counsel-fzf-cmd "fd --type f --color=never --hidden | fzf -f \"%s\"")
 
   ; Bind counsel evil-leader keys
   (evil-leader/set-key

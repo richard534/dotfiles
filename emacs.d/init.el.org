@@ -736,6 +736,13 @@ start emacs-server (for use with emacsclient)
     "gj" 'org-forward-heading-same-level
     "gk" 'org-backward-heading-same-level)
 
+  ; Unbind default keybinds
+  (define-key org-src-mode-map (kbd "C-c C-k") nil)
+  (define-key org-src-mode-map (kbd "C-c '") nil)
+
+  (evil-define-key 'normal org-src-mode-map
+    "ZZ" 'org-edit-src-exit
+    "ZQ" 'org-edit-src-abort)
 
   ;; Custom json babel code-bock type 'json'
   ;; Will just return its contents (passthrough) when evaluated
@@ -807,8 +814,8 @@ Hide substrees in selected region
   :ensure t
   :config
   (evil-leader/set-key "m'" 'edit-indirect-region)
-  (define-key edit-indirect-mode-map (kbd "ZZ") 'edit-indirect-commit)
-  (define-key edit-indirect-mode-map (kbd "ZQ") 'edit-indirect-abort))
+  (evil-define-key 'normal edit-indirect-mode-map (kbd "ZZ") 'edit-indirect-commit)
+  (evil-define-key 'normal edit-indirect-mode-map (kbd "ZQ") 'edit-indirect-abort))
 #+END_SRC
 ** Comint
 #+BEGIN_SRC emacs-lisp

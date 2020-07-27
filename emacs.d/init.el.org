@@ -1144,6 +1144,12 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :init
   (setq json-reformat:indent-width 2))
 #+END_SRC
+** Yaml-mode
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yaml\\'")
+#+end_src
 ** Flycheck
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck

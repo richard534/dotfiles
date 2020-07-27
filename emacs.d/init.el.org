@@ -217,6 +217,10 @@ environment variables from the user's shell.
   ; disable evil auto indent
   (setq evil-auto-indent nil)
 
+  ; Make evil treat underscore '_' seperated words as a single word
+  (defalias #'forward-evil-word #'forward-evil-symbol)
+  (setq-default evil-symbol-word-search t)
+
   :config ;; configure evil after loading it
   (evil-mode 1)
 

@@ -509,6 +509,15 @@ environment variables from the user's shell.
   (evil-leader/set-key "hdp" 'describe-package)
   (evil-leader/set-key "hdm" 'describe-mode))
 #+END_SRC
+** Elisp-Mode
+#+begin_src emacs-lisp
+(use-package elisp-mode
+  :hook elisp-mode
+  :init
+  (evil-leader/set-key-for-mode 'emacs-lisp-mode
+    "mer" 'eval-region
+    "meb" 'eval-buffer))
+#+end_src
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
 ; Enable line numbers only in modes that inherit prog-mode (programming mode)

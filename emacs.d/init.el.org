@@ -1025,7 +1025,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "ss" 'swiper
     "sS" 'swiper-region-or-symbol
     ;; Arbitrary directory (sf)
-    "sf" (lambda () (interactive) (counsel-rg nil (file-name-directory buffer-file-name) nil))
+    "sf" (lambda () (interactive) (counsel-rg nil (let (current-dir (file-name-directory buffer-file-name)) (if current-dir current-dir nil)) nil))
     "sF" 'counsel-rg-region-or-symbol
     ;; Open buffers (sb)
     "sb" 'swiper-all

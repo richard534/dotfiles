@@ -220,34 +220,10 @@ environment variables from the user's shell.
   :config ;; configure evil after loading it
   (evil-mode 1)
 
-  ;; Unbind evil keys (for use elsewhere)
-  (define-key evil-normal-state-map (kbd "C-n") nil)
-  (define-key evil-insert-state-map (kbd "C-n") nil)
-  (define-key evil-normal-state-map (kbd "C-p") nil)
-  (define-key evil-insert-state-map (kbd "C-p") nil)
-  (define-key evil-motion-state-map (kbd "gd") nil)
-
   ; Rebind keys for vim-like crtl-u pgUp
   (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
-  (define-key evil-motion-state-map (kbd "C-u") 'evil-scroll-up) ; Motion state is an Evil-specific thing, intended for modes where you don't edit text. E.g help buffers
-
-  ; Rebind keys for moving between windows
-  (define-key evil-normal-state-map (kbd "C-h") #'evil-window-left)
-  (define-key evil-normal-state-map (kbd "C-j") #'evil-window-down)
-  (define-key evil-normal-state-map (kbd "C-k") #'evil-window-up)
-  (define-key evil-normal-state-map (kbd "C-l") #'evil-window-right)
-
-  ; Rebind keys for resizing windows
-  (define-key evil-normal-state-map (kbd "M-k") #'evil-window-increase-height)
-  (define-key evil-normal-state-map (kbd "M-j") #'evil-window-decrease-height)
-  (define-key evil-normal-state-map (kbd "M-l") #'evil-window-increase-width)
-  (define-key evil-normal-state-map (kbd "M-h") #'evil-window-decrease-width)
-
-  ; Rebind move window keys
-  (define-key evil-normal-state-map (kbd "C-S-k") 'buf-move-up)
-  (define-key evil-normal-state-map (kbd "C-S-j") 'buf-move-down)
-  (define-key evil-normal-state-map (kbd "C-S-h") 'buf-move-left)
-  (define-key evil-normal-state-map (kbd "C-S-l") 'buf-move-right)
+  ; Motion state is an Evil-specific thing, intended for modes where you don't edit text. E.g help buffers
+  (define-key evil-motion-state-map (kbd "C-u") 'evil-scroll-up)
 
   ; Goto git hunks
   (define-key evil-normal-state-map "g]" `diff-hl-next-hunk)
@@ -367,6 +343,13 @@ environment variables from the user's shell.
     "ww"    'other-window
     "w TAB" 'alternate-window
     "w="    'balance-windows
+    "wd"    'delete-window
+
+    ; Shrink/Enlarge
+    "w[" (lambda () (interactive (shrink-window-horizontally 1)))
+    "w]" (lambda () (interactive (enlarge-window-horizontally 1)))
+    "w{" (lambda () (interactive (shrink-window-vertically 1)))
+    "w}" (lambda () (interactive (enlarge-window-vertically 1)))
 
     ; Selection/Movement (hjkl)
     "wH"    'evil-window-move-far-left
@@ -639,10 +622,6 @@ Disabled "electric indent mode" - breaks some modes inc. python
 (use-package ranger
   :ensure t
   :bind (:map ranger-mode-map
-    ("C-h" . 'evil-window-left)
-    ("C-j" . 'evil-window-down)
-    ("C-k" . 'evil-window-up)
-    ("C-l" . 'evil-window-right)
     ("+" . 'dired-create-directory))
   :init
   (setq ranger-was-ranger nil) ; Silence bytecompile error
@@ -1207,6 +1186,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "msi" 'cider-jack-in
     "msb" 'cider-load-buffer
     "msB" 'cider-load-buffer-and-switch-to-repl-buffer
+    "msqn" 'cider-ns-reload
+    "msqN" 'cider-ns-reload-all
 
     ; Clear (l)
     "ml" 'cider-repl-clear-buffer
@@ -1235,11 +1216,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+BEGIN_SRC emacs-lisp
 (use-package python
   :ensure t
-  :bind (:map inferior-python-mode-map
-    ("C-h" . 'evil-window-left)
-    ("C-j" . 'evil-window-down)
-    ("C-k" . 'evil-window-up)
-    ("C-l" . 'evil-window-right))
   :config
   ; Set python to use ipython as shell interpreter
   (setq python-shell-interpreter "ipython"

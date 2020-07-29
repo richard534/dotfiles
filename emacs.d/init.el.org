@@ -1025,7 +1025,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "ss" 'swiper
     "sS" 'swiper-region-or-symbol
     ;; Arbitrary directory (sf)
-    "sf" (lambda () (interactive) (counsel-rg nil (let (current-dir (file-name-directory buffer-file-name)) (if current-dir current-dir nil)) nil))
+    "sf" 'counsel-rg-current-dir
     "sF" 'counsel-rg-region-or-symbol
     ;; Open buffers (sb)
     "sb" 'swiper-all
@@ -1693,6 +1693,13 @@ Run counsel-rg with currently selected region or symbol
                  (thing-at-point 'symbol t))))
     (evil-magit-maybe-deactivate-mark)
     (counsel-rg input (file-name-directory buffer-file-name) nil)))
+#+end_src
+
+
+#+begin_src emacs-lisp
+(defun counsel-rg-current-dir ()
+  (interactive)
+  (counsel-rg nil (file-name-directory buffer-file-name) nil))
 #+end_src
 
 Run counsel-projectile-rg with currently selected region or symbol

@@ -1301,6 +1301,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
       (comint-clear-buffer))))
 #+END_SRC
+** Dockerfile-mode
+#+begin_src emacs-lisp
+(use-package dockerfile-mode
+  :ensure t)
+#+end_src
 ** Hl-todo
 #+BEGIN_SRC emacs-lisp
 (use-package hl-todo

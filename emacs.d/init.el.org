@@ -1401,6 +1401,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ; Show magit status buffer to fullscreen (except when diffing)
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
 
+  ; Enable margin in magit refs
+  (setq magit-refs-margin '(t age magit-log-margin-width t 18))
+
   :config
   ; st opens magit status
   (evil-ex-define-cmd "st" 'magit-status)

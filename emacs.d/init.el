@@ -17,3 +17,4 @@
   (expand-file-name "init.el.org"
                      user-emacs-directory))
 (put 'narrow-to-region 'disabled nil)
+(put 'magit-clean 'disabled nil)

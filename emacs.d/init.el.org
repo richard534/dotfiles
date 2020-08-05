@@ -637,13 +637,29 @@ Disabled "electric indent mode" - breaks some modes inc. python
   :init
   (evil-leader/set-key
     "ad" 'dired
-    "fj" 'dired-jump)
+    "fj" 'dired-jump
+    "jd" 'dired-jump
+    "jD" 'dired-jump-other-window)
 
   ;; Auto-refresh dired on file change
   (add-hook 'dired-mode-hook 'auto-revert-mode)
   :config
   (evil-collection-dired-setup))
 #+END_SRC
+** Dired-narrow
+#+begin_src emacs-lisp
+(use-package dired-narrow
+  :ensure t
+  :after ranger
+  :bind (:map ranger-mode-map
+              ("/" . dired-narrow)))
+#+end_src
+** Dired-collapse
+#+begin_src emacs-lisp
+(use-package dired-collapse
+  :ensure t
+  :hook (dired-mode . dired-collapse-mode))
+#+end_src
 ** Ranger
 #+BEGIN_SRC emacs-lisp
 (use-package ranger
@@ -961,7 +977,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq projectile-mode-line "Projectile")
   ; Set ivy as projectile completion-engine
   (setq projectile-completion-system 'ivy)
-  (evil-leader/set-key "pI" 'projectile-invalidate-cache))
+  (evil-leader/set-key
+    "pI" 'projectile-invalidate-cache
+    "pd" 'projectile-find-dir))
 #+END_SRC
 ** Ivy
 #+begin_src emacs-lisp

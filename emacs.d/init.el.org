@@ -650,35 +650,32 @@ Disabled "electric indent mode" - breaks some modes inc. python
 #+begin_src emacs-lisp
 (use-package dired-narrow
   :ensure t
-  :after ranger
-  :bind (:map ranger-mode-map
-              ("/" . dired-narrow)))
+  :after dired
+  :init
+  (evil-define-key 'normal dired-mode-map
+    "/" 'dired-narrow))
 #+end_src
 ** Dired-collapse
 #+begin_src emacs-lisp
 (use-package dired-collapse
   :ensure t
+  :after dired
   :hook (dired-mode . dired-collapse-mode))
 #+end_src
-** Ranger
-#+BEGIN_SRC emacs-lisp
-(use-package ranger
+** Dired-ranger
+#+begin_src emacs-lisp
+(use-package dired-ranger
   :ensure t
-  :bind (:map ranger-mode-map
-    ("+" . 'dired-create-directory))
+  :after dired
   :init
-  (setq ranger-was-ranger nil) ; Silence bytecompile error
-  (setq ranger-show-literal nil)
-  (setq ranger-show-hidden t) ; Show dotfiles
-  (ranger-override-dired-mode t) ; Set ranger as default directory handler
-  (setq ranger-cleanup-on-disable t) ; When ranger session closed - kill ranger buffer
-  (setq ranger-modify-header nil) ; use default dired header - not custom ranger one
+  (evil-define-key 'normal dired-mode-map
+    "/" 'dired-narrow)
 
-  ; Bind evil-leader keys
-  (evil-leader/set-key
-    "ar" 'ranger
-    "ad" 'deer))
-#+END_SRC
+  (evil-define-key 'normal dired-mode-map
+    "yy" 'dired-ranger-copy
+    "pp" 'dired-ranger-paste
+    "pP" 'dired-ranger-move))
+#+end_src
 ** Wdired
 #+begin_src emacs-lisp
 (use-package wdired

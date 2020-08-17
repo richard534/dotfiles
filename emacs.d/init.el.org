@@ -1208,6 +1208,12 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (global-flycheck-mode)
   (evil-collection-flycheck-setup))
 #+END_SRC
+** Groovy-mode
+#+begin_src emacs-lisp
+(use-package groovy-mode
+  :ensure t
+  :mode "\\.groovy\\'")
+#+end_src
 ** Clojure-mode
 #+begin_src emacs-lisp
 (use-package clojure-mode

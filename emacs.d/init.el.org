@@ -1419,6 +1419,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "gU"  'magit-unstage-file
     "gfd" 'magit-diff-buffer-file)
 
+  ; When branching off origin/master or master - set upstream to said branch
+  (setq magit-branch-adjust-remote-upstream-alist '(("origin/master" "master")))
+  ; When branching off master - set upstream to origin/master
+  (setq magit-branch-prefer-remote-upstream '("master"))
+
   ; Show magit status buffer to fullscreen (except when diffing)
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
 

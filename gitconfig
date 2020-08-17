@@ -61,3 +61,5 @@
 	tool = smerge
 [github]
 	user = ritaylor-r7
+[branch]
+	autoSetupMerge = always

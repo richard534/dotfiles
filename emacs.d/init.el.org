@@ -1239,8 +1239,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ; :after keyword delays loading until the dependencies are loaded
   :after clojure-mode
 
+
   :init
-  (evil-leader/set-key
+  (evil-leader/set-key-for-mode 'clojure-mode
     ; Documenation (h)
     "mhh" 'cider-doc
     "mha" 'cider-apropos
@@ -1249,17 +1250,39 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "msi" 'cider-jack-in
     "msb" 'cider-load-buffer
     "msB" 'cider-load-buffer-and-switch-to-repl-buffer
-    "msqn" 'cider-ns-reload
-    "msqN" 'cider-ns-reload-all
+    "msx" 'cider-ns-refresh
 
     ; Clear (l)
     "ml" 'cider-repl-clear-buffer
     "mL" 'cider-find-and-clear-repl-output
 
+
     ; Evauluation (e)
     "mee" 'cider-eval-last-sexp
     "meb" 'cider-eval-buffer
     "mer" 'cider-eval-region)
+
+  (evil-leader/set-key-for-mode 'cider-repl-mode
+    ; Documenation (h)
+    "mhh" 'cider-doc
+    "mha" 'cider-apropos
+
+    ; Send code to REPL (s)
+    "msi" 'cider-jack-in
+    "msb" 'cider-load-buffer
+    "msB" 'cider-load-buffer-and-switch-to-repl-buffer
+    "msx" 'cider-ns-refresh
+
+    ; Clear (l)
+    "ml" 'cider-repl-clear-buffer
+    "mL" 'cider-find-and-clear-repl-output
+
+
+    ; Evauluation (e)
+    "mee" 'cider-eval-last-sexp
+    "meb" 'cider-eval-buffer
+    "mer" 'cider-eval-region)
+
 
   (evil-collection-cider-setup))
 #+end_src

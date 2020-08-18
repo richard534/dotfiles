@@ -659,8 +659,7 @@ Disabled "electric indent mode" - breaks some modes inc. python
 #+begin_src emacs-lisp
 (use-package dired-collapse
   :ensure t
-  :after dired
-  :hook (dired-mode . dired-collapse-mode))
+  :after dired)
 #+end_src
 ** Dired-ranger
 #+begin_src emacs-lisp

@@ -1455,6 +1455,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (evil-leader/set-key
     "gs"  'magit-status
     "gm"  'magit-dispatch
+    "gb"  'magit-blame
     "gS"  'magit-stage-file
     "gU"  'magit-unstage-file
     "gfd" 'magit-diff-buffer-file)

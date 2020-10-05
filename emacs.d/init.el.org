@@ -1131,11 +1131,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package company
   :ensure t
   :diminish company-mode
-  :bind (:map company-active-map
-          ("M-n" . nil)
-          ("M-p" . nil)
-          ("C-n" . company-select-next-or-abort)
-          ("C-p" . company-select-previous-or-abort))
   :init
   (global-company-mode)
 
@@ -1150,7 +1145,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (setq company-idle-delay 0) ; No delay in showing suggestions.
   (setq company-minimum-prefix-length 1) ; Show suggestions after entering one character.
-  (setq company-selection-wrap-around t)) ; once at bottom of suggestions - wrap back to top
+  (setq company-selection-wrap-around t) ; once at bottom of suggestions - wrap back to top
+
+  (evil-collection-company-setup))
 #+END_SRC
 ** Company-restclient
 #+begin_src emacs-lisp

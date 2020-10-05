@@ -1252,6 +1252,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "ml" 'cider-repl-clear-buffer
     "mL" 'cider-find-and-clear-repl-output
 
+    ; Format (f)
+    "mfb" 'cider-format-buffer
 
     ; Evauluation (e)
     "mee" 'cider-eval-last-sexp

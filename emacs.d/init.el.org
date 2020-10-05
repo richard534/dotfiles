@@ -1247,10 +1247,13 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "msb" 'cider-load-buffer
     "msB" 'cider-load-buffer-and-switch-to-repl-buffer
     "msx" 'cider-ns-refresh
+    "mss" 'cider-switch-to-repl-buffer
 
     ; Clear (l)
-    "ml" 'cider-repl-clear-buffer
-    "mL" 'cider-find-and-clear-repl-output
+    "ml" (lambda ()
+	   (interactive)
+       (cider-find-and-clear-repl-output 1)
+       (cider-switch-to-repl-buffer))
 
     ; Format (f)
     "mfb" 'cider-format-buffer
@@ -1270,11 +1273,10 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "msb" 'cider-load-buffer
     "msB" 'cider-load-buffer-and-switch-to-repl-buffer
     "msx" 'cider-ns-refresh
+    "mss" 'cider-switch-to-last-clojure-buffer
 
     ; Clear (l)
     "ml" 'cider-repl-clear-buffer
-    "mL" 'cider-find-and-clear-repl-output
-
 
     ; Evauluation (e)
     "mee" 'cider-eval-last-sexp

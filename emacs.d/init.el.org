@@ -1130,6 +1130,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
+  :after evil-collection
   :diminish company-mode
   :init
   (global-company-mode)
@@ -1284,7 +1285,23 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "mer" 'cider-eval-region)
 
 
-  (evil-collection-cider-setup))
+  :config
+  (evil-collection-cider-setup)
+
+  ; Workaround for company bindings - see https://github.com/hlissner/doom-emacs/issues/1335  ;;;;
+
+  (defun rst/set-company-maps (&rest unused)
+
+    (define-key evil-insert-state-map (kbd "C-j") 'company-select-next-or-abort)
+    (define-key evil-insert-state-map (kbd "C-k") 'company-select-previous-or-abort))
+
+  (defun rst/unset-company-maps (&rest unused)
+    (define-key evil-insert-state-map (kbd "C-j") nil)
+    (define-key evil-insert-state-map (kbd "C-k") nil))
+
+  (add-hook 'company-completion-started-hook 'rst/set-company-maps)
+  (add-hook 'company-completion-finished-hook 'rst/unset-company-maps)
+  (add-hook 'company-completion-cancelled-hook 'rst/unset-company-maps))
 #+end_src
 ** Smartparens
 #+begin_src emacs-lisp

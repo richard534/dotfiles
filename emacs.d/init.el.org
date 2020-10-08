@@ -1144,9 +1144,12 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
            company-abbrev         ; abbreviations
           )))
 
-  (setq company-idle-delay 0) ; No delay in showing suggestions.
-  (setq company-minimum-prefix-length 1) ; Show suggestions after entering one character.
-  (setq company-selection-wrap-around t) ; once at bottom of suggestions - wrap back to top
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 2 ; Show suggestions after entering two characters.
+        company-require-match nil
+        company-dabbrev-ignore-case nil
+        company-dabbrev-downcase nil
+        company-selection-wrap-around t); once at bottom of suggestions - wrap back to top
 
   (evil-collection-company-setup))
 #+END_SRC
@@ -1292,8 +1295,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (defun rst/set-company-maps (&rest unused)
 
-    (define-key evil-insert-state-map (kbd "C-j") 'company-select-next-or-abort)
-    (define-key evil-insert-state-map (kbd "C-k") 'company-select-previous-or-abort))
+    (define-key evil-insert-state-map (kbd "C-j") 'company-select-next)
+    (define-key evil-insert-state-map (kbd "C-k") 'company-select-previous))
 
   (defun rst/unset-company-maps (&rest unused)
     (define-key evil-insert-state-map (kbd "C-j") nil)

@@ -1561,6 +1561,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package impatient-mode
   :ensure t
   :init
+  (defun markdown-html (buffer)
+    (princ (with-current-buffer buffer
+	     (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
+	   (current-buffer)))
+
   (evil-leader/set-key
     "mIi" (lambda () (interactive)
         (unless (get-process "httpd")
@@ -1568,17 +1573,12 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
             (httpd-start)
             (message nil))
     	(impatient-mode))
-    "mIv"  'imp-visit-buffer
+    "mIvv"  'imp-visit-buffer
+    "mIvm" (lambda () (interactive)
+	     (imp-set-user-filter 'markdown-html)
+	     (imp-visit-buffer))
     "mIfs" 'imp-set-user-filter
     "mIfr" 'imp-remove-user-filter))
-#+END_SRC
-*** Custom impatient mode filters
-markdown rendering
-#+BEGIN_SRC emacs-lisp
-(defun markdown-html (buffer)
-  (princ (with-current-buffer buffer
-    (format "<!DOCTYPE html><html><title>Impatient Markdown</title><xmp theme=\"united\" style=\"display:none;\"> %s  </xmp><script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script></html>" (buffer-substring-no-properties (point-min) (point-max))))
-  (current-buffer)))
 #+END_SRC
 ** Restclient
 #+begin_src emacs-lisp

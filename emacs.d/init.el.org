@@ -1058,7 +1058,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "sS" 'swiper-region-or-symbol
     ;; Arbitrary directory (sf)
     "sf" 'counsel-rg-current-dir
-    "sF" 'counsel-rg-region-or-symbol
+    "sF" 'counsel-rg-current-dir-region-or-symbol
     ;; Open buffers (sb)
     "sb" 'swiper-all
     "sB" 'swiper-all-region-or-symbol
@@ -1815,7 +1815,7 @@ Run swiper-all with currently selected region or symbol
 
 Run counsel-rg with currently selected region or symbol
 #+begin_src emacs-lisp
-(defun counsel-rg-region-or-symbol ()
+(defun counsel-rg-current-dir-region-or-symbol ()
   "Run `counsel-rg' with the selected region or the symbol
   around point as the initial input."
   (interactive)
@@ -1824,14 +1824,13 @@ Run counsel-rg with currently selected region or symbol
                     (region-beginning) (region-end))
                  (thing-at-point 'symbol t))))
     (evil-magit-maybe-deactivate-mark)
-    (counsel-rg input (file-name-directory buffer-file-name) nil)))
+    (counsel-rg input (symbol-value 'default-directory) nil)))
 #+end_src
-
 
 #+begin_src emacs-lisp
 (defun counsel-rg-current-dir ()
   (interactive)
-  (counsel-rg nil (file-name-directory buffer-file-name) nil))
+  (counsel-rg nil (symbol-value 'default-directory) nil))
 #+end_src
 
 Run counsel-projectile-rg with currently selected region or symbol

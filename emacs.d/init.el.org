@@ -106,10 +106,17 @@ Set default font
 #+END_SRC
 ** Tabs
 #+begin_src emacs-lisp
+;; Some variables in Emacs are "buffer-local", meaning that each buffer is allowed to have a separate value for that variable that overrides the global default
+;; If a variable is buffer-local, then setq sets its local value in the current buffer and setq-default sets the global default value.
+;; If a variable is not buffer-local, then setq and setq-default do the same thing.
+;; https://stackoverflow.com/a/18173666/5298275
+
 (setq-default
   tab-always-indent nil ; make TAB insert tabulation/spaces instead of indenting
   indent-tabs-mode nil ; Pressing tab will produce spaces instead of tab chars
-  tab-width 2)
+  tab-width 2 ; *Display* tabs as x spaces (they are still tab characters - they just looks like x spaces in the editor)
+  c-basic-offset 2 ; Num spaces to idnent for c-based modes (php, java, etc)
+  tab-stop-list (number-sequence 2 60 2))
 #+end_src
 ** Word wrapping
 Word wrapping mode hooks

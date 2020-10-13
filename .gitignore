@@ -32,3 +32,7 @@ emacs.d/recentf
 emacs.d/bookmarks
 emacs.d/smex-items
 emacs.d/anaconda-mode
+emacs.d/.cache/
+emacs.d/.lsp-session-v1
+emacs.d/eclipse.jdt.ls/
+emacs.d/workspace/

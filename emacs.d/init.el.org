@@ -105,13 +105,11 @@ Set default font
 (set-default-font "Source Code Pro 14")
 #+END_SRC
 ** Tabs
-Pressing tab will produce spaces instead of tab chars
-#+BEGIN_SRC emacs-lisp
-(setq indent-tabs-mode nil)
-#+END_SRC
-make TAB insert tabulation/spaces instead of indenting
 #+begin_src emacs-lisp
-(setq tab-always-indent nil)
+(setq-default
+  tab-always-indent nil ; make TAB insert tabulation/spaces instead of indenting
+  indent-tabs-mode nil ; Pressing tab will produce spaces instead of tab chars
+  tab-width 2)
 #+end_src
 ** Word wrapping
 Word wrapping mode hooks
@@ -1151,7 +1149,10 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
         company-dabbrev-downcase nil
         company-selection-wrap-around t); once at bottom of suggestions - wrap back to top
 
-  (evil-collection-company-setup))
+  (evil-collection-company-setup)
+
+  (define-key evil-insert-state-map (kbd "C-j") 'company-select-next)
+  (define-key evil-insert-state-map (kbd "C-k") 'company-select-previous))
 #+END_SRC
 ** Company-restclient
 #+begin_src emacs-lisp
@@ -1207,6 +1208,25 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ; flycheck only run if it finds a linter for the buffer language - enabling mode globally is OK
   (global-flycheck-mode)
   (evil-collection-flycheck-setup))
+#+END_SRC
+** Lsp-mode
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :init
+  (add-hook 'java-mode-hook #'lsp)
+  (setq lsp-enable-symbol-highlighting nil))
+#+end_src
+** Lsp-java
+#+BEGIN_SRC elisp
+(use-package lsp-java
+  :ensure t
+  :after lsp-mode
+  :init
+  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
+        lsp-java-format-settings-profile "GoogleStyle")
+
+  (add-hook 'java-mode-hook (lambda () (setq c-basic-offset 2))))
 #+END_SRC
 ** Groovy-mode
 #+begin_src emacs-lisp
@@ -1289,22 +1309,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
 
   :config
-  (evil-collection-cider-setup)
-
-  ; Workaround for company bindings - see https://github.com/hlissner/doom-emacs/issues/1335  ;;;;
-
-  (defun rst/set-company-maps (&rest unused)
-
-    (define-key evil-insert-state-map (kbd "C-j") 'company-select-next)
-    (define-key evil-insert-state-map (kbd "C-k") 'company-select-previous))
-
-  (defun rst/unset-company-maps (&rest unused)
-    (define-key evil-insert-state-map (kbd "C-j") nil)
-    (define-key evil-insert-state-map (kbd "C-k") nil))
-
-  (add-hook 'company-completion-started-hook 'rst/set-company-maps)
-  (add-hook 'company-completion-finished-hook 'rst/unset-company-maps)
-  (add-hook 'company-completion-cancelled-hook 'rst/unset-company-maps))
+  (evil-collection-cider-setup))
 #+end_src
 ** Smartparens
 #+begin_src emacs-lisp

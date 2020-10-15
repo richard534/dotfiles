@@ -1,38 +1,16 @@
-" All searches will be case insensitive
-set ignorecase
-" search will be case sensitive if it contains an uppercase letter (and vice-versa)
-set smartcase
+" Selected Intellimacs modules
+source ~/.intellimacs/spacemacs.vim
+source ~/.intellimacs/extra.vim
+source ~/.intellimacs/major.vim
+source ~/.intellimacs/hybrid.vim
 
-" Integrate with system clipboard
-set clipboard=unnamedplus,unnamed
+"" Personal keybinds
 
-" highlight all matches when searching
-set hlsearch
+" Find file in project
+nnoremap <leader>fp    :action GotoFile<CR>
 
-" disable bell sound
-set visualbell
+" Search in current file by using Intellij Search
+nnoremap <leader>ss    :action Find<CR>
 
-" set leader key
-let mapleader = '\'
-
-" remap key to remove search highlight
-nnoremap <Leader><space> :noh<cr>
-
-" bind key to insert newline w/o entering insert mode
-nmap <Leader>o o<Esc>
-nmap <Leader>O O<Esc>
-
-" Goto - like key bindings
-nmap gd :action GotoDeclaration<cr>
-nmap gi :action GotoImplementation<cr>
-nmap g[ :action Back<cr>
-nmap g] :action Forward<cr>
-nmap gf :action GotoFile<cr>
-nmap gc :action GotoClass<cr>
-nmap gss :action GotoSymbol<cr>
-nmap gt :action TypeHierarchy<cr>
-nmap guu :action GotoSuperMethod<cr>
-
-nmap <leader>f :action FileStructurePopup<cr>
-nmap <leader>d :action Compare.SameVersion<cr>
-
+imap jk <Esc>
+set timeoutlen=1000

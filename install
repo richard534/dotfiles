@@ -27,8 +27,9 @@ ln -s ${BASEDIR}/ctags-custom.zsh ~/.oh-my-zsh/custom/ctags-custom.zsh
 ln -s ${BASEDIR}/misc-custom.zsh ~/.oh-my-zsh/custom/misc-custom.zsh
 chsh -s /bin/zsh # set default shell to zsh
 
-# intelij vimrc
+# intelij vimrc (using intellimacs keybinds)
 ln -s ${BASEDIR}/ideavimrc ~/.ideavimrc
+ln -s ${BASEDIR}/intellimacs ~/.intellimacs
 
 # git
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global

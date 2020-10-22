@@ -1079,6 +1079,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :ensure t
   :init
   (evil-leader/set-key
+    "pf" 'counsel-projectile-find-file
+    "pF" 'counsel-projectile-find-file-dwim
     "pb" 'counsel-projectile-switch-to-buffer
     "pp" 'counsel-projectile-switch-project
     "sp" 'counsel-projectile-rg-nil-initial-input

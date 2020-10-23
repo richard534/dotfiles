@@ -1,7 +1,0 @@
-#!/bin/bash
-set -e
-
-cd `git rev-parse --git-dir`/.. # goto root dir of this repo
-trap 'rm -f .git/$$.tags' EXIT # when this script revieces exit signal - delete tmp file
-ctags -f .git/$$.tags
-mv .git/$$.tags .git/tags

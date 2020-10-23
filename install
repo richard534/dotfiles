@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# download oh-my-zsh
-git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-
-## Link dotfiles from dotfiles dir -> home dir
 # get source directory within which this bash script is located
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -17,15 +13,27 @@ ln -s ${BASEDIR}/ctags.d ~/.ctags.d
 # tmux
 ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
 
-# zsh/oh-my-zsh
-echo "# Put secret zsh config here" > ~/zshrc_local
-ln -s ${BASEDIR}/zshrc ~/.zshrc
-ln -s ${BASEDIR}/zshenv ~/.zshenv
-ln -s ${BASEDIR}/git-custom.zsh ~/.oh-my-zsh/custom/git-custom.zsh
-ln -s ${BASEDIR}/docker-custom.zsh ~/.oh-my-zsh/custom/docker-custom.zsh
-ln -s ${BASEDIR}/ctags-custom.zsh ~/.oh-my-zsh/custom/ctags-custom.zsh
-ln -s ${BASEDIR}/misc-custom.zsh ~/.oh-my-zsh/custom/misc-custom.zsh
-chsh -s /bin/zsh # set default shell to zsh
+# Symlinking readline startup files
+ln -s ${BASEDIR}/inputrc ~/.inputrc
+
+# NOTE: Manual step for first-time installs on macos
+# brew installs to /usr/local/bin
+# Append path of brew installed bash to whitelisted system shells file
+# Then change default shell:
+
+# sudo su
+# echo /usr/local/bin/bash >> /etc/shells
+# exit
+# chsh -s /usr/local/bin/bash
+
+# Symlink bash startup files
+ln -s ${BASEDIR}/bash_profile ~/.bash_profile
+ln -s ${BASEDIR}/bashrc ~/.bashrc
+
+# Symlink bash aliases file
+ln -s ${BASEDIR}/bash_aliases ~/.bash_aliases
+# Symlink bash functions file
+ln -s ${BASEDIR}/bash_functions ~/.bash_functions
 
 # intelij vimrc (using intellimacs keybinds)
 ln -s ${BASEDIR}/ideavimrc ~/.ideavimrc
@@ -35,8 +43,6 @@ ln -s ${BASEDIR}/intellimacs ~/.intellimacs
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global
 ln -s ${BASEDIR}/gitconfig ~/.gitconfig
 ln -s ${BASEDIR}/gitmessage ~/.gitmessage
-rm -rf ~/.git_template
-ln -s ${BASEDIR}/git_template/ ~/.git_template
 
 # psql
 ln -s ${BASEDIR}/psqlrc ~/.psqlrc
@@ -53,7 +59,7 @@ ln -s ${BASEDIR}/global_extra_conf.py ~/global_extra_conf.py
 
 # emacs
 ln -s ${BASEDIR}/emacs ~/.emacs
-ln -s ${BASEDIR}/emacs.d/ ~/.emacs.d
+ln -s ${BASEDIR}/emacs.d ~/.emacs.d
 
 # pgcli
 mkdir ~/.config/pgcli

@@ -19,7 +19,25 @@ export PROMPT_DIRTRIM=3
 
 # PATH ########################################################################
 
-export PATH=$HOME/dotfiles/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+# Base path
+PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+
+## Personal dotfiles bin dir
+DOTFILES_ROOT="$HOME/dotfiles"
+PATH="$DOTFILES_ROOT/bin:$PATH"
+
+## pyenv
+# Add pyenv bin to path
+PYENV_ROOT="$HOME/.pyenv"
+PATH="$PYENV_ROOT/bin:$PATH"
+# Check if pyenv cmd available. If so run pyenv init
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+# pyenv virtualenv plugin
+eval "$(pyenv virtualenv-init -)"
+
+export PATH
 
 # Bash autocomplete settings ##################################################
 

@@ -1336,75 +1336,52 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+BEGIN_SRC emacs-lisp
 (use-package python
   :ensure t
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode)
   :config
   ; Set python to use ipython as shell interpreter
   (setq python-shell-interpreter "ipython"
 	python-shell-interpreter-args "--simple-prompt -c exec('__import__(\\'readline\\')') -i"))
 #+END_SRC
-** Anaconda-mode
+** Elpy
 #+begin_src emacs-lisp
-(use-package anaconda-mode
+(use-package elpy
   :ensure t
-  :mode ("\\.py\\'" . python-mode)
-  :diminish anaconda-mode
+  :after python
+  :diminish elpy-mode
+  :defer t
   :init
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  ; Defer loading elpy until python-mode loaded
+  (advice-add 'python-mode :before 'elpy-enable)
 
-
-  (evil-leader/set-key-for-mode 'python-mode
-    "msi" 'python-start-or-switch-repl
-    "gd" 'anaconda-mode-find-definitions
-    "gr" 'anaconda-mode-find-references
-    "mhh" 'anaconda-mode-show-doc)
-
-  (evil-collection-anaconda-mode-setup))
-
-
-; Pinched from spacemacs
-(defun python-start-or-switch-repl ()
-    "Start and/or switch to the REPL."
-    (interactive)
-    (let ((shell-process
-            (or (python-shell-get-process)
-                ;; `run-python' has different return values and different
-                ;; errors in different emacs versions. In 24.4, it throws an
-                ;; error when the process didn't start, but in 25.1 it
-                ;; doesn't throw an error, so we demote errors here and
-                ;; check the process later
-                (with-demoted-errors "Error: %S"
-                    ;; in Emacs 24.5 and 24.4, `run-python' doesn't return the
-                    ;; shell process
-                    (call-interactively #'run-python)
-                    (python-shell-get-process)))))
-        (unless shell-process
-        (error "Failed to start python shell properly"))
-        (pop-to-buffer (process-buffer shell-process))
-        (evil-insert-state)))
-#+end_src
-** Pyvenv
-#+begin_src emacs-lisp
-(use-package pyvenv
-  :ensure t
-  :after anaconda-mode
-  :init
   ; automatically restart inferior python process when python virtual environment changed
   (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
 
   (evil-leader/set-key-for-mode 'python-mode
-    "mVa" 'pyvenv-activate
-    "mVd" 'pyvenv-deactivate
-    "mVw" 'pyvenv-workon)
+    "gd" 'elpy-goto-definition
+    "msb" 'elpy-shell-send-buffer
+    "mfc" 'elpy-black-fix-code)
 
-  (setenv "WORKON_HOME" "~/.pyenv/versions/"))
-#+end_src
-** Blacken
-#+begin_src emacs-lisp
-(use-package blacken
-  :ensure t
-  :init
+  ; Pyvenv keybinds
   (evil-leader/set-key-for-mode 'python-mode
-    "m=b" 'blacken-buffer))
+    "mva" 'pyvenv-activate
+    "mvd" 'pyvenv-deactivate
+    "mvw" 'pyvenv-workon)
+
+  :config
+   ; Config elpy to use flycheck instead of flymake
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode)
+
+  ; Disable "highlight-indentation" elpy module
+  (setq elpy-modules (delete 'elpy-module-highlight-indentation elpy-modules))
+
+   ; custon fn to clear elpy shell
+  (defun elpy-shell-clear-shell ()
+    "Clear the current shell buffer."
+    (interactive)
+    (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
+      (comint-clear-buffer))))
 #+end_src
 ** Xref
 #+begin_src emacs-lisp

@@ -621,6 +621,7 @@ Disabled "electric indent mode" - breaks some modes inc. python
 (use-package winum
   :ensure t
   :init
+  (setq winum-auto-setup-mode-line nil)
   (winum-mode)
   ; Bind evil-leader keys
   (evil-leader/set-key
@@ -985,6 +986,36 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "pI" 'projectile-invalidate-cache
     "pd" 'projectile-find-dir))
 #+END_SRC
+** Eyebrowse
+#+begin_src emacs-lisp
+(use-package eyebrowse
+  :ensure t
+  :init
+  (setq eyebrowse-wrap-around t)
+
+  (evil-leader/set-key
+    ; Switch to window 0-9 configs
+    "lw0"    'eyebrowse-switch-to-window-config-0
+    "lw1"    'eyebrowse-switch-to-window-config-1
+    "lw2"    'eyebrowse-switch-to-window-config-2
+    "lw3"    'eyebrowse-switch-to-window-config-3
+    "lw4"    'eyebrowse-switch-to-window-config-4
+    "lw5"    'eyebrowse-switch-to-window-config-5
+    "lw6"    'eyebrowse-switch-to-window-config-6
+    "lw7"    'eyebrowse-switch-to-window-config-7
+    "lw8"    'eyebrowse-switch-to-window-config-8
+    "lw9"    'eyebrowse-switch-to-window-config-9
+    "lww"    'eyebrowse-switch-to-window-config
+
+    "lwc"    'eyebrowse-create-window-config
+    "lwl"    'eyebrowse-next-window-config
+    "lwh"    'eyebrowse-prev-window-config
+    "lwR"    'eyebrowse-rename-window-config
+    "lwd"    'eyebrowse-close-window-config
+    "lw TAB" 'eyebrowse-last-window-config)
+
+  (eyebrowse-mode t))
+#+end_src
 ** Ivy
 #+begin_src emacs-lisp
 (use-package ivy
@@ -1417,7 +1448,10 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package spaceline
   :ensure t
   :init
-  (setq spaceline-highlight-face-func `spaceline-highlight-face-evil-state)
+  (setq
+    spaceline-highlight-face-func `spaceline-highlight-face-evil-state
+    spaceline-workspace-numbers-unicode t
+    spaceline-window-numbers-unicode t)
   :config
   (spaceline-emacs-theme))
 #+END_SRC

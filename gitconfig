@@ -45,10 +45,8 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
-[init]
-	templatedir = ~/.git_template
 [commit]
-        template = ~/.gitmessage
+  template = ~/.gitmessage
 	verbose = true
 [diff]
 	tool = vimdiff

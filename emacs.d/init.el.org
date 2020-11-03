@@ -102,7 +102,7 @@ Remove icons/text from title bar (transparent title bar)
 ** Font
 Set default font
 #+BEGIN_SRC emacs-lisp
-(set-default-font "Source Code Pro 14")
+(set-default-font "Source Code Pro 15")
 #+END_SRC
 ** Tabs
 #+begin_src emacs-lisp

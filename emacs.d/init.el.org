@@ -1602,7 +1602,10 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "ms" 'restclient-http-send-current-stay-in-window
     "mS" 'restclient-http-send-current
     "mr" 'restclient-http-send-current-raw
-    "my" 'restclient-copy-curl-command))
+    "my" 'restclient-copy-curl-command)
+
+  ; Associate files with the .http extension with the major mode "restclient-mode"
+  (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode)))
 #+end_src
 ** Ob-Restclient
 #+begin_src emacs-lisp
@@ -1613,10 +1616,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ; Add restclient to org-babel languages
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((restclient . t)))
-
-  ; Associate files with the .http extension with the major mode "restclient-mode"
-  (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode)))
+   '((restclient . t))))
 #+end_src
 ** Paradox
 #+BEGIN_SRC emacs-lisp

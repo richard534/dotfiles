@@ -748,7 +748,11 @@ start emacs-server (for use with emacsclient)
 
   ; org-mode images related config
   (setq org-startup-with-inline-images t) ; Show inline images by default
-  (setq org-image-actual-width nil) ; try to get the width from an #+ATTR.* keyword and fall back on the original width if none is found.
+
+  ;; if there is a #+ATTR.*: width="200", resize to 200,
+  ;; otherwise resize to 400
+  (setq org-image-actual-width '(400))
+
 
   ; Set colour of org bold (*) markup to red
   (add-to-list 'org-emphasis-alist

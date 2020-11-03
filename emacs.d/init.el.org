@@ -1358,9 +1358,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ; Defer loading elpy until python-mode loaded
   (advice-add 'python-mode :before 'elpy-enable)
 
-  ; automatically restart inferior python process when python virtual environment changed
-  (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-
   (evil-leader/set-key-for-mode 'python-mode
     "gd" 'elpy-goto-definition
     "msb" 'elpy-shell-send-buffer
@@ -1371,6 +1368,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "mva" 'pyvenv-activate
     "mvd" 'pyvenv-deactivate
     "mvw" 'pyvenv-workon)
+
+  ; Set envar $WORKON_HOME envar. Used by pyvenv-workon fn
+  (setenv "WORKON_HOME" "~/.pyenv/versions/")
 
   :config
    ; Config elpy to use flycheck instead of flymake

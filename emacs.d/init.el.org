@@ -766,11 +766,17 @@ start emacs-server (for use with emacsclient)
         "mt"  'org-todo
         "m,"  'org-ctrl-c-ctrl-c
         "mee" 'org-export-dispatch
-        "mit" 'org-toggle-inline-images
         "mbm" 'org-babel-mark-block
         "mbt" 'org-babel-tangle
         "mn"  'org-narrow-to-subtree
-        "mN"  'widen)
+        "mN"  'widen
+
+        ; Toggle (T)
+        "mTc" 'org-toggle-checkbox
+        "mTe" 'org-toggle-pretty-entities
+        "mTi" 'org-toggle-inline-images
+        "mTl" 'org-toggle-link-display
+        "mTh" 'org-toggle-heading)
 
   ; evil-keybinds
   (evil-define-key 'normal org-mode-map
@@ -1005,14 +1011,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "lw7"    'eyebrowse-switch-to-window-config-7
     "lw8"    'eyebrowse-switch-to-window-config-8
     "lw9"    'eyebrowse-switch-to-window-config-9
-    "lww"    'eyebrowse-switch-to-window-config
+    "lww"    'eyebrowse-last-window-config
+    "lwW"    'eyebrowse-switch-to-window-config
 
     "lwc"    'eyebrowse-create-window-config
     "lwl"    'eyebrowse-next-window-config
     "lwh"    'eyebrowse-prev-window-config
     "lwR"    'eyebrowse-rename-window-config
-    "lwd"    'eyebrowse-close-window-config
-    "lw TAB" 'eyebrowse-last-window-config)
+    "lwd"    'eyebrowse-close-window-config)
 
   (eyebrowse-mode t))
 #+end_src

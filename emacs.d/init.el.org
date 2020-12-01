@@ -343,6 +343,7 @@ environment variables from the user's shell.
     "fs" 'save-buffer
     "fy" 'copy-file-name-to-clipboard
     "fY" 'show-and-copy-buffer-file-abs-path
+    "fc" 'copy-file
 
     ;; Buffers (b)
     "bd" 'kill-current-buffer
@@ -738,7 +739,6 @@ start emacs-server (for use with emacsclient)
   (setq org-hide-leading-stars t) ; hide orgmode heading stars
   (setq org-adapt-indentation nil) ; hide orgmode heading indented stars
   (setq org-hide-emphasis-markers t) ; hide bold bullet points etc
-  (setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
   (setq org-cycle-include-plain-lists 'integrate) ; When running org-cycle plain list items will be treated like low-level headlines (will cycle)
   (setq org-M-RET-may-split-line '((item . nil))) ; in the context of a list of items; goto eol before making a new line
   (setq org-confirm-babel-evaluate nil) ; Disable asking for confirmation when executing babel code block for all languages
@@ -754,6 +754,10 @@ start emacs-server (for use with emacsclient)
   ;; otherwise resize to 400
   (setq org-image-actual-width '(400))
 
+  ; org-src-* config
+  (setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
+  (add-to-list 'org-src-lang-modes
+               '("javascript" . js2))
 
   ; Set colour of org bold (*) markup to red
   (add-to-list 'org-emphasis-alist
@@ -1085,6 +1089,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     ; Find file (ff)
     "ff" 'counsel-find-file ; Current dir file search
     "fF" 'counsel-find-file-region-or-symbol ; Current dir file search
+    "fl" 'find-file-literally
 
     ; Find file in project (fp)
     "fp" 'counsel-fzf ; Using fzf to implement "Find-file-in-project (fp)"
@@ -1424,6 +1429,18 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     (with-current-buffer (process-buffer (elpy-shell-get-or-create-process))
       (comint-clear-buffer))))
 #+end_src
+** Js2-mode
+#+BEGIN_SRC elisp
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :ensure t)
+#+END_SRC
+** Prettier
+#+BEGIN_SRC elisp
+(use-package prettier
+  :ensure t
+  :after js2-mode)
+#+END_SRC
 ** Xref
 #+begin_src emacs-lisp
 (use-package xref
@@ -1506,6 +1523,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "gb"  'magit-blame
     "gS"  'magit-stage-file
     "gU"  'magit-unstage-file
+    "gc"  'magit-clone
     "gfd" 'magit-diff-buffer-file)
 
   ; When branching off origin/master or master - set upstream to said branch

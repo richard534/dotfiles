@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: cat-heredoc-to-file-literal-overwrite
+# --
+cat << 'EOF' > /path/to/your/file
+This line will write to the file.
+\${THIS} will also write to the file, without the variable contents substituted.
+EOF

@@ -1,0 +1,7 @@
+# key: cat-heredoc-to-file-substitute-overwrite
+# name: cat-heredoc-to-file-substitute-overwrite
+# --
+cat << EOF > /path/to/your/file
+This line will write to the file.
+\${THIS} will also write to the file, with the variable contents substituted.
+EOF

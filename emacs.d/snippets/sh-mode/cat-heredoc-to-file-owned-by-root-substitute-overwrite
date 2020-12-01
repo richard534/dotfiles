@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# key: cat-heredoc-to-file-owned-by-root-substitute-overwrite
+# --
+cat << EOF | sudo tee /path/to/your/file
+This line will write to the file.
+\${THIS} will also write to the file, with the variable contents substituted.
+EOF

@@ -82,6 +82,10 @@ Remove icons/text from title bar (transparent title bar)
       `((buffer-file-name "%f" "%b")
         ,(format " - GNU Emacs %s" emacs-version)))
 #+END_SRC
+When opening a file from file browser (E.g finder) - don't open a new emacs window, open a new buffer
+#+begin_src emacs-lisp
+(setq ns-pop-up-frames nil)
+#+end_src
 ** Theme
 #+BEGIN_SRC emacs-lisp
 (use-package doom-themes
@@ -317,14 +321,6 @@ environment variables from the user's shell.
     "u" 'universal-argument
 
     ;; Text (x)
-    ; Inflection (i)
-    "xii"  `string-inflection-all-cycle
-    "xiu" 'string-inflection-underscore
-    "xiU" 'string-inflection-upcase
-    "xik" 'string-inflection-kebab-case
-    "xic" 'string-inflection-lower-camelcase
-    "xiC" 'string-inflection-camelcas
-
     ; Align (a)
     "xaa" 'align
     "xar" 'align-regexp
@@ -338,6 +334,7 @@ environment variables from the user's shell.
 
     ;; File (f)
     "fR" 'rename-file-and-buffer ; rename file and buffer
+    "fm" 'move-file-and-buffer-to-dir
     "fD" 'delete-current-buffer-file ; Delete a file and assoc. buffer
     "fS" 'evil-write-all
     "fs" 'save-buffer
@@ -756,6 +753,10 @@ start emacs-server (for use with emacsclient)
 
   ; org-src-* config
   (setq org-src-preserve-indentation t) ; preserve leading whitespace on export (prevents adding leading spaces to editied blocks)
+
+  (setq org-odt-preferred-output-format "docx")
+  (setq org-export-with-toc nil)
+
   (add-to-list 'org-src-lang-modes
                '("javascript" . js2))
 
@@ -767,7 +768,6 @@ start emacs-server (for use with emacsclient)
   (evil-leader/set-key-for-mode
     'org-mode
         "m'"  'org-edit-special
-        "mt"  'org-todo
         "m,"  'org-ctrl-c-ctrl-c
         "mee" 'org-export-dispatch
         "mbm" 'org-babel-mark-block
@@ -778,9 +778,15 @@ start emacs-server (for use with emacsclient)
         ; Toggle (T)
         "mTc" 'org-toggle-checkbox
         "mTe" 'org-toggle-pretty-entities
-        "mTi" 'org-toggle-inline-images
+        "mTi" 'org-toggle-item
+        "mTI" 'org-toggle-inline-images
         "mTl" 'org-toggle-link-display
-        "mTh" 'org-toggle-heading)
+        "mTh" 'org-toggle-heading
+        "mTT"  'org-todo
+
+        ; Insert (i)
+        "mil" 'org-insert-link
+        "mit" 'org-set-tags)
 
   ; evil-keybinds
   (evil-define-key 'normal org-mode-map
@@ -1113,6 +1119,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "hm" 'woman)
 
   ; Add commands to evil jumplist
+  (evil-add-command-properties #'counsel-jump-in-buffer :jump t)
   (evil-add-command-properties #'counsel-find-file :jump t)
   (evil-add-command-properties #'counsel-find-file-region-or-symbol :jump t)
   (evil-add-command-properties #'counsel-fzf :jump t)
@@ -1403,13 +1410,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (evil-leader/set-key-for-mode 'python-mode
     "gd" 'elpy-goto-definition
     "msb" 'elpy-shell-send-buffer
-    "mfc" 'elpy-black-fix-code)
+    "mfc" 'elpy-black-fix-code
+    "m="  'elpy-format-code
 
-  ; Pyvenv keybinds
-  (evil-leader/set-key-for-mode 'python-mode
+    ; Pyvenv keybinds
     "mva" 'pyvenv-activate
     "mvd" 'pyvenv-deactivate
-    "mvw" 'pyvenv-workon)
+    "mvw" 'pyvenv-workon
+    "mr"  'pyvenv-restart-python)
 
   ; Set envar $WORKON_HOME envar. Used by pyvenv-workon fn
   (setenv "WORKON_HOME" "~/.pyenv/versions/")
@@ -1600,7 +1608,17 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 ** String-inflection
 #+BEGIN_SRC emacs-lisp
 (use-package string-inflection
-  :ensure t)
+  :ensure t
+  :config
+  (evil-leader/set-key
+    ;; Text (x)
+    ; Inflection (i)
+    "xii"  `string-inflection-all-cycle
+    "xiu" 'string-inflection-underscore
+    "xiU" 'string-inflection-upcase
+    "xik" 'string-inflection-kebab-case
+    "xic" 'string-inflection-lower-camelcase
+    "xiC" 'string-inflection-camelcase))
 #+END_SRC
 ** Uuidgen
 #+begin_src emacs-lisp
@@ -1735,6 +1753,25 @@ source: https://sites.google.com/site/steveyegge2/my-dot-emacs-file
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
 #+END_SRC
+
+Move current file/buffer to target dir
+Source: https://sites.google.com/site/steveyegge2/my-dot-emacs-file
+#+begin_src emacs-lisp
+(defun move-file-and-buffer-to-dir (dir)
+ "Moves both current buffer and file it's visiting to DIR."
+ (interactive "DNew directory: ")
+ (let* ((name (buffer-name))
+	 (filename (buffer-file-name))
+	 (dir
+	 (if (string-match dir "\\(?:/\\|\\\\)$")
+	 (substring dir 0 -1) dir))
+	 (newname (concat dir "/" name)))
+
+ (if (not filename)
+	(message "Buffer '%s' is not visiting a file!" name)
+ (progn 	(copy-file filename newname 1) 	(delete-file filename) 	(set-visited-file-name newname) 	(set-buffer-modified-p nil) 	t))))
+
+#+end_src
 
 Delete file and buffer
 "Borrowed" from spacemacs

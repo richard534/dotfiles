@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: multiline-comment
+# key: multiline-comment
+# --
+: '
+$0
+'

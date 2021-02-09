@@ -307,7 +307,7 @@ environment variables from the user's shell.
   (global-evil-leader-mode)
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    "<SPC>" 'counsel-M-x
+    "<SPC>" 'helm-M-x
     "r" `anzu-query-replace-at-cursor ; buffer-wide find/replace
     "R"  `projectile-replace ; project-wide find/replace
     "is" `yas-insert-snippet ; insert snippet
@@ -349,7 +349,7 @@ environment variables from the user's shell.
     "bp" 'previous-buffer
     "bR" 'revert-buffer-no-confirm
     "bw" 'read-only-mode
-    "bb" 'counsel-switch-buffer
+    "bb" 'helm-buffers-list
     "bx" 'kill-buffer-and-window ; buffer - kill
 
     ;; Window (w)
@@ -554,7 +554,7 @@ environment variables from the user's shell.
     (kbd "C-d")     'evil-scroll-down
     (kbd "C-u")     'evil-scroll-up
     (kbd "gg")      'evil-goto-first-line
-    (kbd "gb")      'counsel-switch-buffer
+    (kbd "gb")      'helm-buffer-list
     (kbd "G")       'evil-goto-line
     (kbd "^")       'evil-first-non-blank))
 #+END_SRC
@@ -1003,7 +1003,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq projectile-indexing-method 'alien)
   (setq projectile-mode-line "Projectile")
   ; Set ivy as projectile completion-engine
-  (setq projectile-completion-system 'ivy)
+  (setq projectile-completion-system 'helm)
   (evil-leader/set-key
     "pI" 'projectile-invalidate-cache
     "pd" 'projectile-find-dir))
@@ -1038,39 +1038,60 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (eyebrowse-mode t))
 #+end_src
-** Ivy
-#+begin_src emacs-lisp
-(use-package ivy
+** Helm
+#+BEGIN_SRC emacs-lisp
+(use-package helm
   :ensure t
   :after evil-collection
-  :diminish ivy-mode
-  :init
-  (ivy-mode 1)
+  :diminish helm-mode
+  :config
+  (helm-mode 1)
 
-  ; Bind keys
-  (define-key ivy-minibuffer-map (kbd "C-c e") 'counsel-edit)
-  (define-key ivy-minibuffer-map (kbd "C-c o") 'ivy-occur)
-  (define-key ivy-minibuffer-map (kbd "C-<return>") 'ivy-immediate-done)
+  (global-set-key (kbd "M-x") 'helm-M-x)
 
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) ")
+  (define-key helm-map (kbd "<tab>") 'helm-select-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
 
-  (setq ivy-dynamic-exhibit-delay-ms 0)
+  ; TODO test if these are any good
+  ;; (setq
+  ;;   helm-M-x-fuzzy-match t
+  ;;   helm-buffers-fuzzy-matching t
+  ;;   helm-recentf-fuzzy-match t
+  ;;   helm-semantic-fuzzy-match t
+  ;;   helm-imenu-fuzzy-match t)
 
-  (evil-set-initial-state 'ivy-occur-grep-mode 'normal) ; Enable evil mode when entering an ivy-occur-grep-mode buffer
-  (evil-collection-ivy-setup))
+  (evil-leader/set-key
+    ;; Finding files (f)
+    ; Find file (ff)
+    "ff" 'helm-find-files ; Current dir file search
+    ;; "fF" 'counsel-find-file-region-or-symbol ; Current dir file search ; TODO
+    "fl" 'find-file-literally
 
-(defun counsel-edit ()
-  "Edit the current search results in a buffer using wgrep. Stolen from spacemacs"
-  (interactive)
-  (run-with-idle-timer 0 nil 'ivy-wgrep-change-to-wgrep-mode)
-  (ivy-occur))
-#+end_src
-** Ivy-Hydra
-#+begin_src emacs-lisp
-(use-package ivy-hydra
-  :ensure t)
-#+end_src
+    ;; ; Find file in project (fp)
+    ;; "fp" 'helm-projectile-find-file
+    ;; "fP" 'counsel-fzf-region-or-symbol TODO
+
+    ;;; Searching (s)
+    "sc" 'evil-ex-nohighlight ; clear highlights
+    ;; Current file (ss)
+    "sj" 'helm-semantic-or-imenu ; mnemonic - search-jump (list all symbols in buffer)
+    "ss" 'helm-swoop ; TODO stop this from grabbing word @ point. I want no input
+    "sS" 'helm-swoop
+    ;; Arbitrary directory (sf)
+    "sf" 'helm-ag
+    ;; "sF" 'counsel-rg-current-dir-region-or-symbol TODO
+    ;; ;; Open buffers (sb)
+    "sb" 'helm-multi-swoop-all
+    ;; "sB" 'swiper-all-region-or-symbol TODO
+
+    ;; ;; Misc
+    "wb" 'switch-to-minibuffer-window
+    "hm" 'helm-man-woman
+    )
+)
+#+END_SRC
+
+
 ** Wgrep
 #+begin_src emacs-lisp
 (use-package wgrep
@@ -1082,69 +1103,25 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   (evil-collection-wgrep-setup))
 #+end_src
-** Counsel
+** Helm-projectile
 #+begin_src emacs-lisp
-(use-package counsel
+(use-package helm-projectile
   :ensure t
-  :diminish counsel-mode
-  :init
-  (counsel-mode 1)
-
-  (setq counsel-switch-buffer-preview-virtual-buffers nil)
-
-  ; Set fzf default command to use fd instead of find (default)
-  (setq counsel-fzf-cmd "fd --type f --color=never --hidden | fzf -f \"%s\"")
-
-  ; Bind counsel evil-leader keys
+  :config
   (evil-leader/set-key
-    ;; Finding files (f)
-    ; Find file (ff)
-    "ff" 'counsel-find-file ; Current dir file search
-    "fF" 'counsel-find-file-region-or-symbol ; Current dir file search
-    "fl" 'find-file-literally
-
-    ; Find file in project (fp)
-    "fp" 'counsel-fzf ; Using fzf to implement "Find-file-in-project (fp)"
-    "fP" 'counsel-fzf-region-or-symbol
-
-    ;;; Searching (s)
-    "sc" 'evil-ex-nohighlight ; clear highlights
-    ;; Current file (ss)
-    "sj" `counsel-jump-in-buffer ; mnemonic - search-jump (list all symbols in buffer)
-    "ss" 'swiper
-    "sS" 'swiper-region-or-symbol
-    ;; Arbitrary directory (sf)
-    "sf" 'counsel-rg-current-dir
-    "sF" 'counsel-rg-current-dir-region-or-symbol
-    ;; Open buffers (sb)
-    "sb" 'swiper-all
-    "sB" 'swiper-all-region-or-symbol
-
-    ;; Misc
-    "wb" 'switch-to-minibuffer-window
-    "hm" 'woman)
-
-  ; Add commands to evil jumplist
-  (evil-add-command-properties #'counsel-jump-in-buffer :jump t)
-  (evil-add-command-properties #'counsel-find-file :jump t)
-  (evil-add-command-properties #'counsel-find-file-region-or-symbol :jump t)
-  (evil-add-command-properties #'counsel-fzf :jump t)
-  (evil-add-command-properties #'counsel-fzf-region-or-symbol :jump t))
-#+end_src
-** Counsel-projectile
-#+begin_src emacs-lisp
-(use-package counsel-projectile
-  :ensure t
-  :init
-  (evil-leader/set-key
-    "pf" 'counsel-projectile-find-file
-    "pF" 'counsel-projectile-find-file-dwim
-    "pb" 'counsel-projectile-switch-to-buffer
-    "pp" 'counsel-projectile-switch-project
-    "sp" 'counsel-projectile-rg-nil-initial-input
-    "sP" 'counsel-projectile-rg-region-or-symbol
+    "pp" 'helm-projectile-switch-project
+    "pf" 'helm-projectile-find-file
+    ;; "pF" 'counsel-projectile-find-file-dwim ; TODO
+    "pb" 'helm-projectile-switch-to-buffer
+    "ps" 'helm-projectile-ag
+    ;; "sP" 'counsel-projectile-rg-region-or-symbol ; TODO
     "pD" 'projectile-dired
     "pa" 'projectile-toggle-between-implementation-and-test))
+#+end_src
+** Helm-ag
+#+begin_src emacs-lisp
+(use-package helm-ag
+  :ensure t)
 #+end_src
 ** Iedit
 #+begin_src emacs-lisp
@@ -1173,8 +1150,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+end_src
 ** Smex
 #+begin_src emacs-lisp
-(use-package smex
-  :ensure t)
+;; (use-package smex
+;;   :ensure t)
 #+end_src
 ** Dash-at-point
 #+begin_src emacs-lisp

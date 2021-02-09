@@ -786,7 +786,13 @@ start emacs-server (for use with emacsclient)
 
         ; Insert (i)
         "mil" 'org-insert-link
-        "mit" 'org-set-tags)
+        "mit" 'org-set-tags
+
+        ;  Subtree Editing (s)
+        "msr" 'org-refile
+        "msd" 'org-cut-subtree
+        "msl" 'org-demote-subtree
+        "msh" 'org-promote-subtree)
 
   ; evil-keybinds
   (evil-define-key 'normal org-mode-map

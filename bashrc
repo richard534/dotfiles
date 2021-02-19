@@ -62,6 +62,16 @@ bind 'set menu-complete-display-prefix on'
 
 export PS1="\[\033[38;5;11m\]\u\[$(tput sgr0)\]@\h:\[$(tput sgr0)\]\[\033[38;5;6m\][\w]\[$(tput sgr0)\]:\[$(tput sgr0)\]\[\e[91m\]\$(parse_git_branch)\[\e[00m\]$ "
 
+# Bash History ################################################################
+
+# Avoid duplicates
+HISTCONTROL=ignoredups:erasedups
+# When the shell exits, append to the history file instead of overwriting it
+shopt -s histappend
+
+# After each command, append to the history file and reread it
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
 # Read && Execute additional bash files #######################################
 
 # Read and execute ~/.bash_aliases file

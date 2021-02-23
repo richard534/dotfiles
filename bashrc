@@ -17,6 +17,8 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 # Set '\w' char. in prompt variables to trim current dir path at x depth
 export PROMPT_DIRTRIM=3
 
+export EDITOR="emacsclient"
+
 # PATH ########################################################################
 
 # Base path

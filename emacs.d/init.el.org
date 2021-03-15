@@ -605,6 +605,14 @@ environment variables from the user's shell.
     (add-hook 'sql-interactive-mode-hook
         (lambda () (toggle-truncate-lines t))))
 #+end_src
+** Sqlformat
+#+begin_src emacs-lisp
+(use-package sqlformat
+  :ensure t
+  :config
+  (setq sqlformat-command 'pgformatter)
+  (setq sqlformat-args '("-s2" "-g")))
+#+end_src
 ** Electric
 Auto-complete pairs of brackets/quotes etc.
 #+BEGIN_SRC emacs-lisp

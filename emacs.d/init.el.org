@@ -1410,6 +1410,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     "mvw" 'pyvenv-workon
     "mr"  'pyvenv-restart-python)
 
+  (evil-add-command-properties 'elpy-goto-definition :jump t)
+  (evil-add-command-properties 'elpy-goto-assignment :jump t)
+
   ; Set envar $WORKON_HOME envar. Used by pyvenv-workon fn
   (setenv "WORKON_HOME" "~/.pyenv/versions/")
 
@@ -1500,7 +1503,10 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+BEGIN_SRC emacs-lisp
 (use-package terraform-mode
   :ensure t
-  :mode "\\.tf\\'")
+  :mode "\\.tf\\'"
+  :config
+  (evil-leader/set-key-for-mode 'terraform-mode
+    "m=" 'terraform-format-buffer))
 #+END_SRC
 ** Editorconfig
 #+BEGIN_SRC emacs-lisp

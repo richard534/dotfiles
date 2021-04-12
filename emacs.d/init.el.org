@@ -106,7 +106,7 @@ When opening a file from file browser (E.g finder) - don't open a new emacs wind
 ** Font
 Set default font
 #+BEGIN_SRC emacs-lisp
-(set-default-font "Source Code Pro 15")
+(set-frame-font "Source Code Pro 15")
 #+END_SRC
 ** Tabs
 #+begin_src emacs-lisp

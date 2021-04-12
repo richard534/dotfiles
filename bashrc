@@ -39,6 +39,10 @@ fi
 # pyenv virtualenv plugin
 eval "$(pyenv virtualenv-init -)"
 
+## Visual Studio Code
+VS_CODE="/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+PATH="$VS_CODE:$PATH"
+
 export PATH
 
 # Bash autocomplete settings ##################################################

@@ -43,6 +43,9 @@ eval "$(pyenv virtualenv-init -)"
 VS_CODE="/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 PATH="$VS_CODE:$PATH"
 
+## emacs
+PATH="$HOME/.emacs.d/bin:$PATH"
+
 export PATH
 
 # Bash autocomplete settings ##################################################

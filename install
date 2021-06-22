@@ -11,20 +11,12 @@ ln -s ${BASEDIR}/vim/ ~/.vim
 ln -s ${BASEDIR}/ctags.d ~/.ctags.d
 
 # tmux
+# NOTE: Manually need to install "reattach-to-user-namespace"
+# https://formulae.brew.sh/formula/reattach-to-user-namespace
 ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
 
 # Symlinking readline startup files
 ln -s ${BASEDIR}/inputrc ~/.inputrc
-
-# NOTE: Manual step for first-time installs on macos
-# brew installs to /usr/local/bin
-# Append path of brew installed bash to whitelisted system shells file
-# Then change default shell:
-
-# sudo su
-# echo /usr/local/bin/bash >> /etc/shells
-# exit
-# chsh -s /usr/local/bin/bash
 
 # Symlink bash startup files
 ln -s ${BASEDIR}/bash_profile ~/.bash_profile

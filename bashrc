@@ -35,9 +35,9 @@ PATH="$PYENV_ROOT/bin:$PATH"
 # Check if pyenv cmd available. If so run pyenv init
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
+  # pyenv virtualenv plugin
+  eval "$(pyenv virtualenv-init -)"
 fi
-# pyenv virtualenv plugin
-eval "$(pyenv virtualenv-init -)"
 
 ## Visual Studio Code
 VS_CODE="/Applications/Visual Studio Code.app/Contents/Resources/app/bin"

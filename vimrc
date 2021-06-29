@@ -21,62 +21,34 @@ syntax enable
 set encoding=utf-8
 
 " set leader key
-let mapleader = '\'
+" let mapleader = '\'
+map <space> <leader>
 
+<<<<<<< HEAD
 " set vim colourscheme
 set t_Co=256
 let g:rehash256 = 1
 set background=dark
 " show line-numbers
 set number
+=======
+"" Leader Key binds
+" bind key to insert newline w/o entering insert mode
+nnoremap <Leader>o o<Esc>
+nnoremap <Leader>O O<Esc>
+" remap key to remove search highlight
+nnoremap <Leader><space> :noh<cr>
+>>>>>>> fe9407c (feat(vimrc): Rm plugin related conifg)
 
 " don't wrap lines by default
 set nowrap
 
-" org file specific
-" wrap lines
-" only wrap line at specified 'breakat' char's
-autocmd FileType org set wrap | set linebreak
-
-" set avro schema files to json filetype
-au BufNewFile,BufRead *.avsc set filetype=json
-
-" show the line and column number of the cursor position, separated by a comma.
-set ruler
-
-" enable mouse wheel scrolling
-set mouse=a
-
-" enable mouse resizing panes
-set mouse=n
-if !has('nvim')
-	set ttymouse=xterm2
-endif
-
-" enable AutoSave on Vim startup
-let g:auto_save = 1
-
 " highlight all matches when searching
 set hlsearch
-" remap key to remove search highlight
-nnoremap <Leader><space> :noh<cr>
-
-" set vim updatetime option to lower then default(4000)
-" Doing this to improve vim-airgutter plugin
-set updatetime=100
 
 " set timeout for mapped key-sequence to complete
 set timeoutlen=1000
 set ttimeoutlen=0
-
-" on pressing tab, insert spaces
-set expandtab
-" specifies the number of columns that a tab character should represent
-set tabstop=4
-" when indenting with '>', use 4 spaces width
-set shiftwidth=4
-" set how many columns vim uses when you hit Tab in insert mode
-set softtabstop=4
 
 " more natural split opening
 set splitbelow
@@ -86,28 +58,10 @@ set splitright
 set wildmode=longest,list,full
 set wildmenu
 
-" bind <leader>c to toggle highlighting row/col (double c for col)
-:hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-:hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-:nnoremap <Leader>c :set cursorline!<CR>
-:nnoremap <Leader>cc :set cursorcolumn!<CR>
-
-" bind key to buffers command
-nmap ; :Buffers<CR>
-
-" bind fzf.vim keys
-" search for file names
-nmap <Leader>t :Files<CR>
-" search for tags
-nmap <Leader>r :Tags<CR>
-" search for text inside files
-nmap <Leader>i :Rg<CR>
-" bind key to open last file opened
-nmap <silent> <leader>m :History<CR>
-
 " enable folding
 set foldmethod=indent " creates folds based upon line indents
 set foldlevel=99
+<<<<<<< HEAD
 " bind key to fold top level folds
 nnoremap <F4> :%foldc<CR>
 nnoremap <F5> :%foldo<CR>
@@ -115,10 +69,13 @@ nnoremap <F5> :%foldo<CR>
 " highlight trailing whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
+=======
+>>>>>>> fe9407c (feat(vimrc): Rm plugin related conifg)
 
 " set backspace to delete over line-breaks
 set backspace=indent,eol,start
 
+<<<<<<< HEAD
 " autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
 " Open nerdtree automatically
 autocmd StdinReadPre * let s:std_in=1
@@ -158,5 +115,10 @@ augroup json_autocmd
 	autocmd FileType json set foldmethod=syntax
 augroup END
 
+=======
+" disable swapfiles
+set noswapfile
+
+>>>>>>> fe9407c (feat(vimrc): Rm plugin related conifg)
 " useful keymap for select all
 map <C-a> <esc>ggVG<CR>

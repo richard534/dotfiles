@@ -1,7 +1,5 @@
 " turn off vi compatability mode
 set nocompatible
-" source external vundle plugins file
-so ~/.vim/plugins.vim
 
 " turn on filetype detection,plugin and indentation
 " (combination of filetype on, filetype plugin on, filetype indent on)
@@ -19,11 +17,6 @@ set smartcase
 " enable syntax highlighting
 syntax enable
 
-" enable reading manpages in vim
-runtime! ftplugin/man.vim
-" disable indentlines when man page open
-au FileType man :IndentLinesToggle
-
 " set text encoding to utf-8
 set encoding=utf-8
 
@@ -32,7 +25,6 @@ let mapleader = '\'
 
 " set vim colourscheme
 set t_Co=256
-colorscheme molokai
 let g:rehash256 = 1
 set background=dark
 " show line-numbers
@@ -120,9 +112,6 @@ set foldlevel=99
 nnoremap <F4> :%foldc<CR>
 nnoremap <F5> :%foldo<CR>
 
-" python folding plugin "simpylfold" config
-let g:SimpylFold_docstring_preview=1
-
 " highlight trailing whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
@@ -130,63 +119,10 @@ match ExtraWhitespace /\s\+$/
 " set backspace to delete over line-breaks
 set backspace=indent,eol,start
 
-" NERDtree config
-" map key to open NERDtree
-nmap ,m :NERDTreeToggle<CR>
-" map key to find current file in nerdtree
-nmap ,n :NERDTreeFind<CR>
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-" auto delete the buffer of a file you delete with nerdtree
-let NERDTreeAutoDeleteBuffer = 1
-" auto-close nerdTree when its the only remaining window
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" sync nerdtree with currently open file
-nnoremap <leader>w :NERDTreeFind<cr><c-w><c-p>
-" nerdtree "autoscroll from source"
-function! AutoNTFinder()
-    if g:NERDTree.IsOpen() && &buftype == ''
-        let l:winnr = winnr()
-        let l:altwinnr = winnr('#')
-
-        :NERDTreeFind
-
-        execute l:altwinnr . 'wincmd w'
-        execute l:winnr . 'wincmd w'
-    endif
-endfunction
-
-autocmd BufEnter * silent! call AutoNTFinder()
-
 " autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
 " Open nerdtree automatically
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-
-" fugitive git bindings
-nnoremap <Leader>gs :Gstatus<CR>
-nnoremap <Leader>gb :Gblame<CR>
-nnoremap <Leader>gd :Gdiff<CR>
-
-" map key to toggle tagbar plugin
-nnoremap <silent> <Leader>b :TagbarToggle<CR>
-" set tagbar to sort functions/method by order in file
-let g:tagbar_sort = 0
-" do not show help tip on tagbar
-let g:tagbar_compact = 1
-
-" set vim to read "external-tags" file in .git dir
-set tags=./tags;,tags,.git/external-tags;
-
-" config vim-indent-guides plugin
-set ts=4 sw=4 noet
-
-" flake8-vim plugin config
-let g:flake8_quickfix_height=3
-
-" vim-terraform plugin config
-let g:terraform_fold_sections=1
-let g:terraform_remap_spacebar=1
 
 " quickfix window height is automatically adjusted to fit its contents (maximum 10 lines).
 au FileType qf call AdjustWindowHeight(3, 10)
@@ -194,28 +130,8 @@ function! AdjustWindowHeight(minheight, maxheight)
   exe max([min([line("$")+1, a:maxheight]), a:minheight]) . "wincmd _"
 endfunction
 
-" youcompleteme plugin config
-let g:ycm_autoclose_preview_window_after_completion=1
-nnoremap <leader>g :YcmCompleter GoTo<CR>
-nnoremap <leader>n :YcmCompleter GoToReferences<CR>
-nnoremap <leader>d :YcmCompleter GetDoc<CR>
-nnoremap <leader>a :YcmCompleter GetType<CR>1gs
-
-" add virtualenv support to youcompleteme
-let g:ycm_python_interpreter_path = ''
-let g:ycm_python_sys_path = []
-let g:ycm_extra_conf_vim_data = [
-  \  'g:ycm_python_interpreter_path',
-  \  'g:ycm_python_sys_path'
-  \]
-let g:ycm_global_ycm_extra_conf = '~/global_extra_conf.py'
-
 " bind key to run current buffer with python
 nnoremap <buffer> <F9> :exec '!clear; python' shellescape(@%, 1)<cr>
-
-" bind keys to vanilla vim session management commands
-map <F2> :mksession! ~/vim_session <cr> " Quick write session with F2
-map <F3> :source ~/vim_session <cr>     " And load session with F3
 
 " set vim to read files that have changed outside of vim
 set autoread
@@ -229,10 +145,6 @@ nnoremap <Leader>O O<Esc>
 
 " disable vim concealing for json
 let g:vim_json_syntax_conceal = 0
-
-" vim-gitgutter config
-nmap ]h <Plug>GitGutterNextHunk
-nmap [h <Plug>GitGutterPrevHunk
 
 " json filetype config
 au! BufRead,BufNewFile *.json set filetype=json
@@ -248,4 +160,3 @@ augroup END
 
 " useful keymap for select all
 map <C-a> <esc>ggVG<CR>
-

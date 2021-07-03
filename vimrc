@@ -3,7 +3,10 @@ set nocompatible
 
 " turn on filetype detection,plugin and indentation
 " (combination of filetype on, filetype plugin on, filetype indent on)
-filetype plugin indent on
+" filetype plugin indent on
+filetype on
+filetype plugin on
+filetype indent on
 
 " Integrate with system clipboard
 ""sets the default copy register to be both * and +
@@ -22,10 +25,10 @@ set encoding=utf-8
 
 "" Leader Key binds
 " bind key to insert newline w/o entering insert mode
-nnoremap <Leader>o o<Esc>
-nnoremap <Leader>O O<Esc>
+nnoremap <leader>o o<Esc>
+nnoremap <leader>O O<Esc>
 " remap key to remove search highlight
-nnoremap <Leader><space> :noh<cr>
+nnoremap <leader><space> :noh<cr>
 
 " don't wrap lines by default
 set nowrap

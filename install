@@ -7,6 +7,10 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ln -s ${BASEDIR}/vimrc ~/.vimrc
 ln -s ${BASEDIR}/vim/ ~/.vim
 
+# neovim
+mkdir ~/.config/nvim
+ln -s ${BASEDIR}/init.vim ~/.config/nvim/init.vim
+
 # ctags
 ln -s ${BASEDIR}/ctags.d ~/.ctags.d
 

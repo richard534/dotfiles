@@ -2,7 +2,7 @@
     name = Richard Taylor
     email = richard_taylor@rapid7.com
 [core]
-    editor = vim
+	editor = code --wait
     excludesfile = ~/.gitignore_global
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [format]
@@ -63,3 +63,5 @@
 	autoSetupMerge = always
 [push]
 	followTags = true
+[sequence]
+	editor = code --wait

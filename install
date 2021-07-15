@@ -31,6 +31,9 @@ ln -s ${BASEDIR}/bash_aliases ~/.bash_aliases
 # Symlink bash functions file
 ln -s ${BASEDIR}/bash_functions ~/.bash_functions
 
+# zsh
+ln -s ${BASEDIR}/zshrc ~/.zshrc
+
 # intelij vimrc (using intellimacs keybinds)
 ln -s ${BASEDIR}/ideavimrc ~/.ideavimrc
 ln -s ${BASEDIR}/intellimacs ~/.intellimacs

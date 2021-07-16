@@ -32,5 +32,15 @@ export PAGER=less
 # -F makes less quit if the entire output can be displayed on one screen.
 export LESS="-RSXF"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+## pyenv
+# Add pyenv bin to path
+PYENV_ROOT="$HOME/.pyenv"
+PATH="$PYENV_ROOT/bin:$PATH"
+# Check if pyenv cmd available. If so run pyenv init
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+  # pyenv virtualenv plugin
+  eval "$(pyenv virtualenv-init -)"
+fi
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

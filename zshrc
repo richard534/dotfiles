@@ -44,6 +44,11 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv virtualenv-init -)"
 fi
 
+## rust
+PATH="$HOME/.cargo/bin:$PATH"
+
+export PATH
+
 ## direnv
 eval "$(direnv hook zsh)"
 

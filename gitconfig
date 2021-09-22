@@ -2,7 +2,6 @@
     name = Richard Taylor
     email = richard_taylor@rapid7.com
 [core]
-	editor = code --wait
     excludesfile = ~/.gitignore_global
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [format]
@@ -26,6 +25,8 @@
 	rob = ! "echo $(git rev-parse --abbrev-ref HEAD) | { read test; git reset origin/$test; }" # reset to latest commit on origin/$current-branch
 	br  = !sh -c \"git for-each-ref --sort=committerdate refs/heads/ refs/remotes/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' \" # custom git branch command
 	prune-local = !sh -c \"git-prune-local\"
+	root = rev-parse --show-toplevel
+	exec = "!exec "
 [color]
 	ui = auto
     diff = auto
@@ -63,5 +64,3 @@
 	autoSetupMerge = always
 [push]
 	followTags = true
-[sequence]
-	editor = code --wait

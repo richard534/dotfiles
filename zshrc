@@ -15,6 +15,7 @@ PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 ## Personal dotfiles bin dir
 DOTFILES_ROOT="$HOME/dotfiles"
 PATH="$DOTFILES_ROOT/bin:$PATH"
+PATH="$HOME/.emacs.d/bin:$PATH"
 
 export PATH
 

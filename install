@@ -61,7 +61,7 @@ ln -s ${BASEDIR}/emacs ~/.emacs
 ln -s ${BASEDIR}/emacs.d ~/.emacs.d
 
 # doom-emacs
-ln -s ${BASEDIR}/doom.d ~/.doom.d
+ln -s ${BASEDIR}/doom.d $HOME/.doom.d
 
 # pgcli
 mkdir ~/.config/pgcli

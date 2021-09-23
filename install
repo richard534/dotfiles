@@ -58,9 +58,9 @@ ln -s ${BASEDIR}/global_extra_conf.py ~/global_extra_conf.py
 
 # emacs
 ln -s ${BASEDIR}/emacs ~/.emacs
-ln -s ${BASEDIR}/emacs.d ~/.emacs.d
+ln -s ${BASEDIR}/emacs.d $HOME/.emacs.d
 # doom-emacs
-ln -s ${BASEDIR}/doom.d ~/.doom.d
+ln -s ${BASEDIR}/doom.d $HOME/.doom.d
 
 # pgcli
 mkdir ~/.config/pgcli

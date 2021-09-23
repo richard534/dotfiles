@@ -56,4 +56,5 @@
 (set-frame-font "Source Code Pro 15")
 
 
+; Start emacs fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))

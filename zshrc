@@ -49,4 +49,7 @@ PATH="$HOME/.cargo/bin:$PATH"
 
 export PATH
 
+## direnv
+eval "$(direnv hook zsh)"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

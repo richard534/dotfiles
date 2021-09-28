@@ -58,3 +58,6 @@
 
 ; Start emacs fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(map! :leader
+      :desc "Clear highlights vim" "s c" #'evil-ex-nohighlight)

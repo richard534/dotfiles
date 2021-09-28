@@ -97,3 +97,7 @@ flycheck_*.el
 
 # python
 /.venv
+
+# direnv
+.direnv/
+.envrc

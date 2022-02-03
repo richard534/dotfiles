@@ -50,6 +50,15 @@ PATH="$HOME/.cargo/bin:$PATH"
 export PATH
 
 ## direnv
-eval "$(direnv hook zsh)"
+if command -v direnv 1>/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
+## java
+alias java17="export JAVA_HOME=`/usr/libexec/java_home -v 17`"
+alias java11="export JAVA_HOME=`/usr/libexec/java_home -v 11`"
+
+# Default to java version x
+java17
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

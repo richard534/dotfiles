@@ -3,7 +3,7 @@
 # git #########################################################################
 
 parse_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
 # Docker ######################################################################
@@ -19,3 +19,7 @@ drmc() { docker container rm $(docker container ls -aq); }
 
 # Kill all running containers
 dkillall() { docker kill $(docker ps -q); }
+
+git_diff_folders() {
+    git diff $1 --name-only | xargs -L1 dirname | uniq
+}

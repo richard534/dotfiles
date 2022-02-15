@@ -61,3 +61,13 @@
 
 (map! :leader
       :desc "Clear highlights vim" "s c" #'evil-ex-nohighlight)
+
+; Custom magic "copy current branch" cmd
+(defun magit-yank-current-branch-to-kill-ring ()
+  "Show the current branch in the echo-area and add it to the `kill-ring'."
+  (interactive)
+  (let ((branch (magit-get-current-branch)))
+    (if branch
+        (progn (kill-new branch)
+               (message "%s" branch))
+      (user-error "There is not current branch"))))

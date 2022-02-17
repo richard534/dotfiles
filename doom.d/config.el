@@ -59,6 +59,7 @@
 ; Start emacs fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+; evil
 (map! :leader
       :desc "Clear highlights vim" "s c" #'evil-ex-nohighlight)
 
@@ -71,3 +72,11 @@
         (progn (kill-new branch)
                (message "%s" branch))
       (user-error "There is not current branch"))))
+
+
+; expand-region
+(map! :leader
+      :desc "Expand region" "v" #'er/expand-region)
+
+(setq expand-region-contract-fast-key "V"
+      expand-region-reset-fast-key "r")

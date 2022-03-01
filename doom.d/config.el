@@ -80,3 +80,6 @@
 
 (setq expand-region-contract-fast-key "V"
       expand-region-reset-fast-key "r")
+
+(use-package! restclient
+  :mode (("\\.http\\'" . restclient-mode)))

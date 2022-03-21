@@ -61,4 +61,7 @@ alias java11="export JAVA_HOME=`/usr/libexec/java_home -v 11`"
 # Default to java version x
 java17
 
+# Source secrets file
+[ -f ~/.secret ] && source ~/.secret
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

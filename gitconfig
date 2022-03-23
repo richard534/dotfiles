@@ -58,6 +58,7 @@
 	trustExitCode = true
 [merge]
 	tool = smerge
+	conflictstyle = diff3
 [github]
 	user = ritaylor-r7
 [branch]

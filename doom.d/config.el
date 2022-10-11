@@ -53,33 +53,34 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+
 (set-frame-font "Source Code Pro 15")
 
 
-; Start emacs fullscreen
+;; Start emacs fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-; evil
+;; evil
 (map! :leader
-      :desc "Clear highlights vim" "s c" #'evil-ex-nohighlight)
+     :desc "Clear highlights vim" "s c" #'evil-ex-nohighlight)
 
-; Custom magic "copy current branch" cmd
+;; Custom magic "copy current branch" cmd
 (defun magit-yank-current-branch-to-kill-ring ()
-  "Show the current branch in the echo-area and add it to the `kill-ring'."
-  (interactive)
-  (let ((branch (magit-get-current-branch)))
-    (if branch
-        (progn (kill-new branch)
-               (message "%s" branch))
-      (user-error "There is not current branch"))))
+ "Show the current branch in the echo-area and add it to the `kill-ring'."
+ (interactive)
+ (let ((branch (magit-get-current-branch)))
+   (if branch
+       (progn (kill-new branch)
+              (message "%s" branch))
+     (user-error "There is not current branch"))))
 
 
-; expand-region
+;; expand-region
 (map! :leader
-      :desc "Expand region" "v" #'er/expand-region)
+     :desc "Expand region" "v" #'er/expand-region)
 
 (setq expand-region-contract-fast-key "V"
-      expand-region-reset-fast-key "r")
+     expand-region-reset-fast-key "r")
 
 (use-package! restclient
-  :mode (("\\.http\\'" . restclient-mode)))
+ :mode (("\\.http\\'" . restclient-mode)))

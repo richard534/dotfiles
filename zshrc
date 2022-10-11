@@ -61,7 +61,11 @@ alias java11="export JAVA_HOME=`/usr/libexec/java_home -v 11`"
 # Default to java version x
 java17
 
+# GO
+PATH="$HOME/go/bin:$PATH"
+
 # Source secrets file
 [ -f ~/.secret ] && source ~/.secret
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PATH="/usr/local/opt/openssl@3/bin:$PATH"

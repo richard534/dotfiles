@@ -65,5 +65,8 @@
 	autoSetupMerge = always
 [push]
 	followTags = true
+	default = simple
 [gpg]
 	program = gpg1
+[pull]
+	rebase = false

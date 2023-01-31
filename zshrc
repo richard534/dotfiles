@@ -33,37 +33,6 @@ export PAGER=less
 # -F makes less quit if the entire output can be displayed on one screen.
 export LESS="-RSXF"
 
-## pyenv
-# Add pyenv bin to path
-PYENV_ROOT="$HOME/.pyenv"
-PATH="$PYENV_ROOT/bin:$PATH"
-# Check if pyenv cmd available. If so run pyenv init
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-  # pyenv virtualenv plugin
-  eval "$(pyenv virtualenv-init -)"
-fi
-
-## rust
-PATH="$HOME/.cargo/bin:$PATH"
-
-export PATH
-
-## direnv
-if command -v direnv 1>/dev/null 2>&1; then
-  eval "$(direnv hook zsh)"
-fi
-
-## java
-alias java17="export JAVA_HOME=`/usr/libexec/java_home -v 17`"
-alias java11="export JAVA_HOME=`/usr/libexec/java_home -v 11`"
-
-# Default to java version x
-java17
-
-# GO
-PATH="$HOME/go/bin:$PATH"
-
 # Source secrets file
 [ -f ~/.secret ] && source ~/.secret
 

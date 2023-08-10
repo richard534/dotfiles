@@ -1,5 +1,6 @@
 [user]
     name = Richard Taylor
+	email = foo@bar.com
 [core]
     excludesfile = ~/.gitignore_global
 	pager = diff-so-fancy | less --tabs=4 -RFX
@@ -42,8 +43,8 @@
 [branch]
 	autoSetupMerge = always
 [push]
-	followTags = true
-	default = simple
+	followTags = True
+	default = current
 [gpg]
 	program = gpg1
 [pull]

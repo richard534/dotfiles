@@ -23,3 +23,7 @@ dkillall() { docker kill $(docker ps -q); }
 git_diff_folders() {
     git diff $1 --name-only | xargs -L1 dirname | uniq
 }
+
+git_reset_latest_common_ancestor() {
+    git reset $(git merge-base HEAD origin/master)
+}

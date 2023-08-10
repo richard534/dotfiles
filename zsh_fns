@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+git_reset_latest_common_ancestor() {
+    git reset $(git merge-base HEAD origin/master)
+}

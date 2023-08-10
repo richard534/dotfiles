@@ -27,6 +27,7 @@ ln -s ${BASEDIR}/bash_functions ~/.bash_functions
 
 # zsh
 ln -s ${BASEDIR}/zshrc ~/.zshrc
+ln -s ${BASEDIR}/zsh_fns ~/.zsh_fns
 
 # git
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global

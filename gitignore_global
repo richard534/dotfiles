@@ -111,3 +111,7 @@ target/
 .settings/
 .project
 .classpath
+
+# misc
+.vscode
+.sdkmanrc

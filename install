@@ -11,9 +11,6 @@ ln -s ${BASEDIR}/vim/ ~/.vim
 mkdir ~/.config/nvim
 ln -s ${BASEDIR}/init.vim ~/.config/nvim/init.vim
 
-# ctags
-ln -s ${BASEDIR}/ctags.d ~/.ctags.d
-
 # tmux
 # NOTE: Manually need to install "reattach-to-user-namespace"
 # https://formulae.brew.sh/formula/reattach-to-user-namespace
@@ -36,7 +33,6 @@ ln -s ${BASEDIR}/zshrc ~/.zshrc
 
 # intelij vimrc (using intellimacs keybinds)
 ln -s ${BASEDIR}/ideavimrc ~/.ideavimrc
-ln -s ${BASEDIR}/intellimacs ~/.intellimacs
 
 # git
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global
@@ -45,20 +41,6 @@ ln -s ${BASEDIR}/gitmessage ~/.gitmessage
 
 # psql
 ln -s ${BASEDIR}/psqlrc ~/.psqlrc
-
-# flake8 (python linter)
-ln -s ${BASEDIR}/flake8 ~/.config/flake8
-
-# yapf (python linter)
-mkdir ~/.config/yapf
-ln -s ${BASEDIR}/yapf-config ~/.config/yapf/style
-
-# youcompleteme virtualenv utility python script
-ln -s ${BASEDIR}/global_extra_conf.py ~/global_extra_conf.py
-
-# emacs
-ln -s ${BASEDIR}/emacs ~/.emacs
-ln -s ${BASEDIR}/emacs.d ~/.emacs.d
 
 # doom-emacs
 ln -sf ${BASEDIR}/doom.d ~/.doom.d

@@ -1,1 +1,0 @@
-/Users/ritaylor/dotfiles/doom.d

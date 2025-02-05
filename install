@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# get source directory within which this bash script is located
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # vim
 ln -s ${BASEDIR}/vimrc ~/.vimrc
-ln -s ${BASEDIR}/vim/ ~/.vim
 
 # neovim
 mkdir ~/.config/nvim
@@ -16,34 +14,31 @@ ln -s ${BASEDIR}/init.vim ~/.config/nvim/init.vim
 # https://formulae.brew.sh/formula/reattach-to-user-namespace
 ln -s ${BASEDIR}/tmux.conf ~/.tmux.conf
 
-# Symlinking readline startup files
+# readline startup files
 ln -s ${BASEDIR}/inputrc ~/.inputrc
 
-# Symlink bash startup files
+# bash startup files
 ln -s ${BASEDIR}/bash_profile ~/.bash_profile
 ln -s ${BASEDIR}/bashrc ~/.bashrc
-
-# Symlink bash aliases file
+# bash aliases file
 ln -s ${BASEDIR}/bash_aliases ~/.bash_aliases
-# Symlink bash functions file
+# bash functions file
 ln -s ${BASEDIR}/bash_functions ~/.bash_functions
 
 # zsh
 ln -s ${BASEDIR}/zshrc ~/.zshrc
-
-# intelij vimrc (using intellimacs keybinds)
-ln -s ${BASEDIR}/ideavimrc ~/.ideavimrc
 
 # git
 ln -s ${BASEDIR}/gitignore_global ~/.gitignore_global
 ln -s ${BASEDIR}/gitconfig ~/.gitconfig
 ln -s ${BASEDIR}/gitmessage ~/.gitmessage
 
-# psql
-ln -s ${BASEDIR}/psqlrc ~/.psqlrc
 
 # doom-emacs
 ln -sf ${BASEDIR}/doom.d ~/.doom.d
+
+# psql
+ln -s ${BASEDIR}/psqlrc ~/.psqlrc
 
 # pgcli
 mkdir ~/.config/pgcli

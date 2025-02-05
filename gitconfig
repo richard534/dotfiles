@@ -1,6 +1,5 @@
 [user]
     name = Richard Taylor
-    email = richard_taylor@rapid7.com
 [core]
     excludesfile = ~/.gitignore_global
 	pager = diff-so-fancy | less --tabs=4 -RFX
@@ -16,17 +15,8 @@
     diffc = diff --cached
     unstage = reset HEAD --
     last = log -1 HEAD
-    visual = !gitk
-	rootexec = "!exec "
-	oldest-ancestor = !zsh -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
-	branchdiff = !sh -c \"git diff `git oldest-ancestor`..\"
-	branchlog = !sh -c \"git log `git oldest-ancestor`..\"
-	roa = !sh -c \"git reset $(git oldest-ancestor)\" # reset to oldest ancestor
-	rob = ! "echo $(git rev-parse --abbrev-ref HEAD) | { read test; git reset origin/$test; }" # reset to latest commit on origin/$current-branch
 	br  = !sh -c \"git for-each-ref --sort=committerdate refs/heads/ refs/remotes/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' \" # custom git branch command
-	prune-local = !sh -c \"git-prune-local\"
 	root = rev-parse --show-toplevel
-	exec = "!exec "
 [color]
 	ui = auto
     diff = auto
@@ -49,18 +39,6 @@
 [commit]
   template = ~/.gitmessage
 	verbose = true
-[diff]
-	tool = vimdiff
-[difftool]
-	prompt = false
-[mergetool "smerge"]
-	cmd = smerge mergetool \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
-	trustExitCode = true
-[merge]
-	tool = smerge
-	conflictstyle = diff3
-[github]
-	user = ritaylor-r7
 [branch]
 	autoSetupMerge = always
 [push]

@@ -49,4 +49,4 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! string-inflection :pin "fd7926ac17293e9124b31f706a4e8f38f6a9b855")
+(package! string-inflection :pin "617df25e91351feffe6aff4d9e4724733449d608")

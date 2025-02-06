@@ -35,7 +35,7 @@ ln -s ${BASEDIR}/gitmessage ~/.gitmessage
 
 
 # doom-emacs
-ln -sf ${BASEDIR}/doom.d ~/.doom.d
+ln -s ${BASEDIR}/doom.d ~/.doom.d
 
 # psql
 ln -s ${BASEDIR}/psqlrc ~/.psqlrc

@@ -3,3 +3,11 @@
 git_reset_latest_common_ancestor() {
     git reset $(git merge-base HEAD origin/master)
 }
+
+git_cp_branch_to_clip() {
+    git branch --show-current | pbcopy
+}
+
+git_cp_app_branch_to_clip() {
+   echo "$(basename -s .git `git config --get remote.origin.url`)-$(git branch --show-current)" | pbcopy
+}
